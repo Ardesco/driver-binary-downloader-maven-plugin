@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="yes"?>
+<root>
+    <version id="2.21.0">
+        <internetexplorer>
+            <windows bit="64">
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </windows>
+            <windows bit="32">
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </windows>
+        </internetexplorer>
+        <googlechrome>
+            <windows>
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </windows>
+            <linux bit="64">
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </linux>
+            <linux bit="32">
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </linux>
+            <mac>
+                <filelocation></filelocation>
+                <md5hash></md5hash>
+            </mac>
+        </googlechrome>
+    </version>
+</root>
