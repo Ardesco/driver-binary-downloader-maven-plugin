@@ -30,7 +30,7 @@ public class SeleniumServerMojo extends AbstractMojo {
 
     /**
      * Always download the server binaries, even if you already have them.
-     * (If MD5 Checks are disabled it will only use the filename to determine if the stadalone server binary has already been downloaded)
+     * (If MD5 Checks are disabled it will only use the filename to determine if the standalone server binary has already been downloaded)
      *
      * @parameter default-value="false"
      */
