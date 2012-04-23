@@ -42,13 +42,13 @@ public class RepositoryParser {
             }
 
             public String returnFilePath() {
-                Node filePathNode = repositoryMap.query("/root/version[@id='" + version + "']/" + driver.getDriverName() + "/" + os.getOsName() + "[@bit='" + bit.getBitValue() + "']/filelocation").get(1);
+                Node filePathNode = repositoryMap.query("/root/" + driver.getDriverName() + "/version[@id='" + version + "']/" + os.getOsName() + "[@" + bit.getBitValue() + "]/filelocation").get(1);
                 return filePathNode.getValue();
             }
 
-            public String fileMD5Hash() {
-                Node md5HashNode = repositoryMap.query("/root/version[@id='" + version + "']/" + driver.getDriverName() + "/" + os.getOsName() + "[@bit='" + bit.getBitValue() + "']/md5hash").get(1);
-                return md5HashNode.getValue();
+            public String fileSHA1Hash() {
+                Node sha1HashNode = repositoryMap.query("/root/" + driver.getDriverName() + "/version[@id='" + version + "']/" + os.getOsName() + "[@" + bit.getBitValue() + "]/sha1hash").get(1);
+                return sha1HashNode.getValue();
             }
         }
 

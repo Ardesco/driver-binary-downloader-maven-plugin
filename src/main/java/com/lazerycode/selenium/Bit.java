@@ -1,16 +1,16 @@
 package com.lazerycode.selenium;
 
 public enum Bit {
-    SIXTYFOURBIT(64),
-    THIRTYTWOBIT(32);
+    SIXTYFOURBIT("sixtyfourbit='true'"),
+    THIRTYTWOBIT("thirtytwobit='true'");
 
-    private final int bitValue;
+    private final String bitValue;
 
-    Bit(int bitValue) {
+    Bit(String bitValue) {
         this.bitValue = bitValue;
     }
 
-    public int getBitValue() {
+    public String getBitValue() {
         return this.bitValue;
     }
 }

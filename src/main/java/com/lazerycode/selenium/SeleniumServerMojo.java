@@ -26,7 +26,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter default-value="false"
      */
-    protected boolean disableMD5HashCheck;
+    protected boolean disableSHA1HashCheck;
 
     /**
      * Always download the server binaries, even if you already have them.

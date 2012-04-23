@@ -4,5 +4,5 @@ public interface SelectOS {
 
     String returnFilePath();
 
-    String fileMD5Hash();
+    String fileSHA1Hash();
 }
