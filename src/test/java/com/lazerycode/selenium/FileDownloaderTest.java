@@ -31,6 +31,7 @@ public class FileDownloaderTest {
     public void downloadAFile() throws Exception {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.setRemoteURL(new URL(webServerAddress + webServerPort + "/download.txt"));
+        downloadTestFile.setLocalFilePath("/tmp/");
         downloadTestFile.download();
     }
 }

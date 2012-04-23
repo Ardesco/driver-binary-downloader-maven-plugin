@@ -60,7 +60,7 @@ public class SeleniumServerMojo extends AbstractMojo {
 
     /**
      * A map of driver standalone versions to download eg:
-     *
+     * <p/>
      * <googlechrome>19</googlechrome>
      * <internetexplorer>2.21.0</internetexplorer>
      *
@@ -71,6 +71,10 @@ public class SeleniumServerMojo extends AbstractMojo {
     private RepositoryParser searchMap;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
+        getLog().info(" ");
+        getLog().info("-------------------------------------------------------");
+        getLog().info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLE'S");
+        getLog().info("-------------------------------------------------------");
+        getLog().info(" ");
     }
 }
