@@ -5,6 +5,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
+import java.util.Map;
 
 public class SeleniumServerMojo extends AbstractMojo {
     /**
@@ -22,7 +23,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected File xmlFileMap;
 
     /**
-     * Disable running an MD5 check on downloaded standalone server binaries
+     * Disable running an SHA1 check on downloaded standalone server binaries
      *
      * @parameter default-value="false"
      */
@@ -35,11 +36,37 @@ public class SeleniumServerMojo extends AbstractMojo {
      * @parameter default-value="false"
      */
     protected boolean alwaysUpdate;
+
     /**
-     * The version of Selenium being currently used
-     * (It's assumed that the Selenium version is related to standalone server binary version)
+     * Get 64 bit versions of the standalone server
+     *
+     * @parameter default-value="false"
      */
-    protected String seleniumVersion;
+    protected boolean getSixtyFourBit;
+
+    /**
+     * Get 32 bit versions of the standalone server
+     *
+     * @parameter default-value="true"
+     */
+    protected boolean getThirtyTwoBit;
+
+    /**
+     * Get the highest version of each driver in RepositoryMap.xml
+     *
+     * @parameter
+     */
+    protected boolean getLatestVersions;
+
+    /**
+     * A map of driver standalone versions to download eg:
+     *
+     * <googlechrome>19</googlechrome>
+     * <internetexplorer>2.21.0</internetexplorer>
+     *
+     * @parameter
+     */
+    protected Map<String, String> getVersions;
 
     private RepositoryParser searchMap;
 
