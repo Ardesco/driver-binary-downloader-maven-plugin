@@ -1,22 +1,26 @@
 package com.lazerycode.selenium;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static org.apache.commons.io.FileUtils.copyURLToFile;
 import static org.codehaus.plexus.util.FileUtils.cleanDirectory;
+import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
 
 public class FileDownloader extends SeleniumServerMojo {
 
     private URL remoteFile;
     private String filename;
-    private String downloadPath = System.getProperty("java.io.tmpdir");
+    private String downloadPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + "/";
     private String localFilePath;
     private int timeout = 30000;
 
@@ -43,7 +47,7 @@ public class FileDownloader extends SeleniumServerMojo {
 
     public void setRemoteURL(URL value) throws Exception {
         this.remoteFile = value;
-        this.filename = new File(value.toURI()).getName();
+        this.filename = value.getFile();
     }
 
     public URL getRemoteURL() {
@@ -83,7 +87,10 @@ public class FileDownloader extends SeleniumServerMojo {
             os.close();
             is.close();
         }
+        zip.close();
         //Clean up temp dir
         cleanDirectory(this.downloadPath);
+        deleteDirectory(this.downloadPath);
+        getLog().info("File copied to " + new File(this.localFilePath).getAbsolutePath());
     }
 }
