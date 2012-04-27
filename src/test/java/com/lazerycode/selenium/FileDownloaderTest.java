@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
-import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -35,7 +34,7 @@ public class FileDownloaderTest {
         downloadTestFile.setRemoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
 
         downloadTestFile.setLocalFilePath(downloadDirectory);
-        downloadTestFile.download();
+        downloadTestFile.downloadZipAndExtractFiles();
 
         assertThat(new File(downloadDirectory + "download.txt").exists(), is(equalTo(true)));
     }

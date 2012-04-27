@@ -1,7 +1,5 @@
 package com.lazerycode.selenium;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -58,39 +56,32 @@ public class FileDownloader extends SeleniumServerMojo {
         return this.filename;
     }
 
-    public void download() throws Exception {
-        //Download zip file
-        File downloadedZip = new File(this.downloadPath + File.separator + this.filename);
-        copyURLToFile(this.remoteFile, downloadedZip, this.timeout, this.timeout);
+    public void downloadZipAndExtractFiles() throws Exception {
+        File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
+        copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
         //Extract files from zip file and copy them to correct location
-        ZipFile zip = new ZipFile(downloadedZip);
+        ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipFileEntry = entries.nextElement();
             File extractedFile = new File(this.localFilePath, zipFileEntry.getName());
-            if (zipFileEntry.isDirectory()) { // if its a directory, create it
+            if (zipFileEntry.isDirectory()) {
                 continue;
-            }
-
-            if (!extractedFile.exists()) {
+            } else if (!extractedFile.exists()) {
                 extractedFile.getParentFile().mkdirs();
                 extractedFile.createNewFile();
             }
-
-            InputStream is = zip.getInputStream(zipFileEntry); // get the input stream
+            InputStream is = zip.getInputStream(zipFileEntry);
             OutputStream os = new FileOutputStream(extractedFile);
-            byte[] buffer = new byte[4096];
-            int readData;
-            while ((readData = is.read(buffer)) != -1) {
-                os.write(buffer, 0, readData);
+            while (is.available() > 0) {
+                os.write(is.read());
             }
             os.close();
             is.close();
         }
         zip.close();
-        //Clean up temp dir
         cleanDirectory(this.downloadPath);
         deleteDirectory(this.downloadPath);
-        getLog().info("File copied to " + new File(this.localFilePath).getAbsolutePath());
+        getLog().info("File copied to " + this.localFilePath);
     }
 }
