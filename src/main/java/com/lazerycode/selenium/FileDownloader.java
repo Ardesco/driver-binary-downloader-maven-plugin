@@ -59,6 +59,8 @@ public class FileDownloader extends SeleniumServerMojo {
     public void downloadZipAndExtractFiles() throws Exception {
         File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
         copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
+        //TODO Throw exception if file cannot be downloaded (enable a way to suppress this)
+        //TODO Check SHA1 hash to ensure downloaded file is valid (if check turned on)
         //Extract files from zip file and copy them to correct location
         ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();

@@ -54,7 +54,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     /**
      * Get the highest version of each driver in RepositoryMap.xml
      *
-     * @parameter
+     * @parameter default-value="false"
      */
     protected boolean getLatestVersions;
 
@@ -73,8 +73,27 @@ public class SeleniumServerMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info(" ");
         getLog().info("-------------------------------------------------------");
-        getLog().info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLE'S");
+        getLog().info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLES...");
         getLog().info("-------------------------------------------------------");
         getLog().info(" ");
+        if (this.getVersions.size() == 0) this.getLatestVersions = true;
+        parseRequiredFiles();
+        //TODO go and get the files
+        getLog().info(" ");
+        getLog().info("-------------------------------------------------------");
+        getLog().info(" SELENIUM STAND-ALONE EXECUTABLES DOWNLOAD COMPLETE");
+        getLog().info("-------------------------------------------------------");
+        getLog().info(" ");
+    }
+
+    private void parseRequiredFiles() {
+        if (this.getLatestVersions == true) {
+         //TODO Scan all driver entries and get latest version.
+        } else {
+            //TODO Validate the getVersions map and advise the user if we can't match any of them.
+            //TODO throw exception if driver/version not found (enable a way to suppress this)
+
+        }
+
     }
 }
