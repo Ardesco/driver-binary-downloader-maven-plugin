@@ -99,7 +99,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                 VersionHandler driverVersions= new VersionHandler();
                 Elements versions = driver.getChildElements("version");
                 for(int n = 1; n < versions.size(); n++){
-                    driverVersions.addVersion(versions.get(n).getAttribute("version").getValue());
+                    driverVersions.addVersion(versions.get(n).getAttribute("id").getValue());
                 }
                 this.getVersions.put(driver.getLocalName(), driverVersions.calculateHighestVersion());
             }
