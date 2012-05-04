@@ -7,13 +7,9 @@ import java.util.List;
 
 public class VersionHandler {
     public VersionHandler() {
-
     }
 
     private List<DefaultArtifactVersion> versionContainer = new ArrayList<DefaultArtifactVersion>();
-
-    DefaultArtifactVersion version = new DefaultArtifactVersion("1.11");
-    DefaultArtifactVersion version2 = new DefaultArtifactVersion("1.11");
 
     public void addVersion(String version) {
         this.versionContainer.add(new DefaultArtifactVersion(version));
