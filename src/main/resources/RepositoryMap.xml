@@ -1,4 +1,26 @@
-<?xml version="1.1" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE root [
+        <!ELEMENT root (internetexplorer|googlechrome)*>
+        <!ELEMENT internetexplorer (version)*>
+        <!ELEMENT version (windows|linux|mac)*>
+        <!ATTLIST version
+                id CDATA #REQUIRED>
+        <!ELEMENT windows (filelocation|sha1hash)*>
+        <!ATTLIST windows
+                sixtyfourbit CDATA #IMPLIED
+                thirtytwobit CDATA #IMPLIED>
+        <!ELEMENT filelocation (#PCDATA)>
+        <!ELEMENT sha1hash (#PCDATA)>
+        <!ELEMENT googlechrome (version)*>
+        <!ELEMENT linux (filelocation|sha1hash)*>
+        <!ATTLIST linux
+                sixtyfourbit CDATA #IMPLIED
+                thirtytwobit CDATA #IMPLIED>
+        <!ELEMENT mac (filelocation|sha1hash)*>
+        <!ATTLIST mac
+                sixtyfourbit CDATA #REQUIRED
+                thirtytwobit CDATA #REQUIRED>
+        ]>
 <root>
     <internetexplorer>
         <version id="2.21.0">
