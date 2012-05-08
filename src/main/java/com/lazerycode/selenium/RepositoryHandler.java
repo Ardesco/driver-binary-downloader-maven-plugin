@@ -2,6 +2,7 @@ package com.lazerycode.selenium;
 
 import nu.xom.*;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class RepositoryHandler {
     private boolean getLatest;
     private File xmlFileMap;
     private boolean ignoreInvalidVersions;
+    private static final SystemStreamLog logger = new SystemStreamLog();
 
     public RepositoryHandler(Map<String, String> versionMap, boolean getLatest, File xmlFileMap, boolean ignoreInvalidVersions) {
         this.versionMap = versionMap;
@@ -44,8 +46,10 @@ public class RepositoryHandler {
                 Nodes versionCount = repositoryList.query("/root/" + pairs.getKey() + "/version[@id='" + pairs.getValue() + "']");
                 if (versionCount.size() == 0) {
                     if (!this.ignoreInvalidVersions) {
-                        //log to warn here
-                        throw new MojoFailureException("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
+                        this.logger.error("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
+                        throw new MojoFailureException("Invalid version!");
+                    } else {
+                        this.logger.warn("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
                     }
                 } else {
                     versionsFound.put(pairs.getKey().toString(), pairs.getValue().toString());
@@ -62,10 +66,10 @@ public class RepositoryHandler {
             repositoryList = xmlParser.build(this.xmlFileMap);
             return repositoryList;
         } catch (ParsingException ex) {
-//            getLog().error("Unable to parse the repository map!");
+            this.logger.error("Unable to parse the repository map!");
             throw new MojoFailureException("Unable to parse repository map");
         } catch (IOException ex) {
-//            getLog().error("Unable to access " + this.xmlFileMap.toString() + "!");
+            this.logger.error("Unable to access " + this.xmlFileMap.toString() + "!");
             throw new MojoFailureException("Unable to find repository map");
         }
     }
