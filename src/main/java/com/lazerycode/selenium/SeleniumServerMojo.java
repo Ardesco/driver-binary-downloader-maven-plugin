@@ -81,7 +81,8 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info("-------------------------------------------------------");
         getLog().info(" ");
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
-        parseRequiredFiles();
+        RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap);
+        filesToDownload.parseRequiredFiles();
         //TODO go and get the files
         getLog().info(" ");
         getLog().info("-------------------------------------------------------");
@@ -90,37 +91,5 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info(" ");
     }
 
-    private void parseRequiredFiles() throws MojoFailureException {
-        Document repositoryList = createRepositoryListDocument();
-        if (this.getLatestVersions == true) {
-            Nodes driverStandalones = repositoryList.query("/root/*");
-            for(int i = 1; i < driverStandalones.size(); i++){
-                Element driver = driverStandalones.get(i).getDocument().getRootElement();
-                VersionHandler driverVersions= new VersionHandler();
-                Elements versions = driver.getChildElements("version");
-                for(int n = 1; n < versions.size(); n++){
-                    driverVersions.addVersion(versions.get(n).getAttribute("id").getValue());
-                }
-                this.getVersions.put(driver.getLocalName(), driverVersions.calculateHighestVersion());
-            }
-        } else {
-            //TODO Validate the getVersions map and advise the user if we can't match any of them.
-            //TODO throw exception if driver/version not found (enable a way to suppress this)
-        }
-    }
 
-    private Document createRepositoryListDocument() throws MojoFailureException {
-        Builder xmlParser = new Builder(true);
-        Document repositoryList;
-        try {
-            repositoryList = xmlParser.build(this.xmlFileMap);
-            return repositoryList;
-        } catch (ParsingException ex) {
-            getLog().error("Unable to parse the repository map!");
-            throw new MojoFailureException("Unable to parse repository map");
-        } catch (IOException ex) {
-            getLog().error("Unable to access " + this.xmlFileMap.toString() + "!");
-            throw new MojoFailureException("Unable to find repository map");
-        }
-    }
 }
