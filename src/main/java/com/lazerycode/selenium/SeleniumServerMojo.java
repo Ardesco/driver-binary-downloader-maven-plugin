@@ -72,6 +72,13 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     protected Map<String, String> getVersions;
 
+    /**
+     * If there are invalid versions specified in the POM ignore them and just download the valid ones.
+     *
+     * @parameter default-value="false"
+     */
+    protected boolean ignoreInvalidVersionsRequested;
+
     private RepositoryParser searchMap;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -81,7 +88,7 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info("-------------------------------------------------------");
         getLog().info(" ");
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
-        RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap);
+        RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsRequested);
         filesToDownload.parseRequiredFiles();
         //TODO go and get the files
         getLog().info(" ");

@@ -1,5 +1,6 @@
 package com.lazerycode.selenium;
 
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class RepositoryHandlerTest {
     @Test
     public void getLatestVersions() throws Exception{
         Map<String, String> versionsFound = new HashMap<String, String>();
-        RepositoryHandler versions = new RepositoryHandler(new HashMap<String, String>(), true, new File(repositoryMap.toURI()));
+        RepositoryHandler versions = new RepositoryHandler(new HashMap<String, String>(), true, new File(repositoryMap.toURI()), false);
         versionsFound = versions.parseRequiredFiles();
 
         assertThat(versionsFound.get("internetexplorer"), is(equalTo("2.21.0")));
@@ -27,13 +28,33 @@ public class RepositoryHandlerTest {
 
     @Test
     public void getSpecificVersions() throws Exception{
-        Map<String, String> versionsFound = new HashMap<String, String>();
-        versionsFound.put("googlechrome", "18");
-        RepositoryHandler versions = new RepositoryHandler(new HashMap<String, String>(), false, new File(repositoryMap.toURI()));
-        versionsFound = versions.parseRequiredFiles();
+        Map<String, String> versionsToFind = new HashMap<String, String>();
+        versionsToFind.put("googlechrome", "18");
+        RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), false);
+        Map<String, String> versionsFound = versions.parseRequiredFiles();
 
         assertThat(versionsFound.size(), is(equalTo(1)));
         assertThat(versionsFound.get("googlechrome"), is(equalTo("18")));
+    }
+
+    @Test(expected = MojoFailureException.class)
+    public void throwErrorOnInvalidVersion() throws Exception{
+        Map<String, String> versionsToFind = new HashMap<String, String>();
+        versionsToFind.put("googlechrome", "foo");
+        RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), false);
+        Map<String, String> versionsFound = versions.parseRequiredFiles();
+    }
+
+    @Test
+    public void ignoreInvalidVersion() throws Exception{
+        Map<String, String> versionsToFind = new HashMap<String, String>();
+        versionsToFind.put("googlechrome", "foo");
+        versionsToFind.put("internetexplorer", "2.21.0");
+        RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), true);
+        Map<String, String> versionsFound = versions.parseRequiredFiles();
+
+        assertThat(versionsFound.size(), is(equalTo(1)));
+        assertThat(versionsFound.get("internetexplorer"), is(equalTo("2.21.0")));
     }
 }
 

@@ -6,6 +6,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class RepositoryHandler {
@@ -13,31 +14,45 @@ public class RepositoryHandler {
     private Map<String, String> versionMap;
     private boolean getLatest;
     private File xmlFileMap;
+    private boolean ignoreInvalidVersions;
 
-    public RepositoryHandler(Map<String, String> versionMap, boolean getLatest, File xmlFileMap){
+    public RepositoryHandler(Map<String, String> versionMap, boolean getLatest, File xmlFileMap, boolean ignoreInvalidVersions) {
         this.versionMap = versionMap;
         this.getLatest = getLatest;
         this.xmlFileMap = xmlFileMap;
+        this.ignoreInvalidVersions = ignoreInvalidVersions;
     }
 
     public Map<String, String> parseRequiredFiles() throws MojoFailureException {
+        Map<String, String> versionsFound = new HashMap<String, String>();
         Document repositoryList = createRepositoryListDocument();
         if (this.getLatest == true) {
             Nodes driverStandalones = repositoryList.query("/root/*");
-            for(int i = 0; i < driverStandalones.size(); i++){
+            for (int i = 0; i < driverStandalones.size(); i++) {
                 Element driver = (Element) driverStandalones.get(i);
-                VersionHandler driverVersions= new VersionHandler();
+                VersionHandler driverVersions = new VersionHandler();
                 Elements versions = driver.getChildElements("version");
-                for(int n = 0; n < versions.size(); n++){
+                for (int n = 0; n < versions.size(); n++) {
                     driverVersions.addVersion(versions.get(n).getAttribute("id").getValue());
                 }
-                this.versionMap.put(driver.getLocalName(), driverVersions.calculateHighestVersion());
+                versionsFound.put(driver.getLocalName(), driverVersions.calculateHighestVersion());
             }
         } else {
-            //TODO Validate the getVersions map and advise the user if we can't match any of them.
-            //TODO throw exception if driver/version not found (enable a way to suppress this)
+            Iterator it = this.versionMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                Nodes versionCount = repositoryList.query("/root/" + pairs.getKey() + "/version[@id='" + pairs.getValue() + "']");
+                if (versionCount.size() == 0) {
+                    if (!this.ignoreInvalidVersions) {
+                        //log to warn here
+                        throw new MojoFailureException("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
+                    }
+                } else {
+                    versionsFound.put(pairs.getKey().toString(), pairs.getValue().toString());
+                }
+            }
         }
-        return this.versionMap;
+        return versionsFound;
     }
 
     private Document createRepositoryListDocument() throws MojoFailureException {
