@@ -1,15 +1,19 @@
 package com.lazerycode.selenium;
 
-import nu.xom.*;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * Selenium Standalone Server Maven Plugin
+ *
+ * @author Mark Collin
+ * @goal selenium
+ * @requiresProject true
+ */
 
 public class SeleniumServerMojo extends AbstractMojo {
     /**
