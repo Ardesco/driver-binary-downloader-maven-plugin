@@ -1,9 +1,10 @@
 package com.lazerycode.selenium;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+
+import java.io.*;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.UUID;
@@ -18,6 +19,8 @@ public class FileDownloader extends SeleniumServerMojo {
 
     private URL remoteFile;
     private String filename;
+    private boolean performHashCheck = true;
+    private String SHA1Hash;
     private String downloadPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + "/";
     private String localFilePath;
     private int timeout = 30000;
@@ -30,8 +33,26 @@ public class FileDownloader extends SeleniumServerMojo {
      *
      * @return The filepath that the file will be downloaded to.
      */
-    public String getLocalFilePath() {
+    public String localFilePath() {
         return this.localFilePath;
+    }
+
+    /**
+     * Set the SHA1 hash that will be used to check that the file is valid
+     *
+     * @param value The SHA1 Hash
+     */
+    public void sha1Hash(String value) {
+        this.SHA1Hash = value;
+    }
+
+    /**
+     * Perform a SHA1 Hash check on downloaded files to ensure they are not corrupted.
+     *
+     * @param value
+     */
+    public void performSHA1HashCheck(boolean value) {
+        this.performHashCheck = value;
     }
 
     /**
@@ -39,28 +60,29 @@ public class FileDownloader extends SeleniumServerMojo {
      *
      * @param value The filepath that the file will be downloaded to.
      */
-    public void setLocalFilePath(String value) {
+    public void localFilePath(String value) {
         this.localFilePath = value;
     }
 
-    public void setRemoteURL(URL value) throws Exception {
+    public void remoteURL(URL value) throws MojoExecutionException {
         this.remoteFile = value;
         this.filename = value.getFile();
     }
 
-    public URL getRemoteURL() {
+    public URL remoteURL() {
         return this.remoteFile;
     }
 
-    public String getFilename() {
+    public String localfilename() {
         return this.filename;
     }
 
     public void downloadZipAndExtractFiles() throws Exception {
         File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
         copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
-        //TODO Throw exception if file cannot be downloaded (enable a way to suppress this)
-        //TODO Check SHA1 hash to ensure downloaded file is valid (if check turned on)
+        //TODO Will Throw an IOException if file cannot be downloaded (enable a way to suppress this?)
+        //Perform hash check, throw exception if invalid
+        //TODO retry if invalid?  If so how many retries (1 retry maybe, chance's of corrupting two times in a row is minimal more likely file has changed)?
         //Extract files from zip file and copy them to correct location
         ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();

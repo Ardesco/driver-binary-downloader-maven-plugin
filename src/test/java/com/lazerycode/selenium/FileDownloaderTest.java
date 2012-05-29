@@ -31,11 +31,21 @@ public class FileDownloaderTest {
     @Test
     public void downloadAFile() throws Exception {
         FileDownloader downloadTestFile = new FileDownloader();
-        downloadTestFile.setRemoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
+        downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
 
-        downloadTestFile.setLocalFilePath(downloadDirectory);
+        downloadTestFile.localFilePath(downloadDirectory);
         downloadTestFile.downloadZipAndExtractFiles();
 
         assertThat(new File(downloadDirectory + "download.txt").exists(), is(equalTo(true)));
+    }
+
+    @Test
+    public void hashCheck() throws Exception {
+        FileDownloader downloadTestFile = new FileDownloader();
+        downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
+        // Hash of download.zip is 638213e8a5290cd4d227d57459d92655e8fb1f17
+        downloadTestFile.localFilePath(downloadDirectory);
+        //TODO complete
+        //TODO assert found hash = above hash
     }
 }

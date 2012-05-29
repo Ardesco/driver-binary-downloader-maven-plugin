@@ -93,8 +93,12 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info(" ");
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
         RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsRequested);
-        filesToDownload.parseRequiredFiles();
-        //TODO go and get the files
+        try{
+        DownloadHandler driverGetter = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap);
+        driverGetter.getDrivers();
+        } catch (Exception e){
+            //foo
+        }
         getLog().info(" ");
         getLog().info("-------------------------------------------------------");
         getLog().info(" SELENIUM STAND-ALONE EXECUTABLES DOWNLOAD COMPLETE");
