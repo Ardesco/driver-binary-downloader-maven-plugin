@@ -83,6 +83,11 @@ public class FileDownloader extends SeleniumServerMojo {
         //TODO Will Throw an IOException if file cannot be downloaded (enable a way to suppress this?)
         //Perform hash check, throw exception if invalid
         //TODO retry if invalid?  If so how many retries (1 retry maybe, chance's of corrupting two times in a row is minimal more likely file has changed)?
+        if(this.performHashCheck){
+            if(!this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))){
+                throw new MojoExecutionException("Hash for downloaded file does not match, '" + zipToDownload.getName() + "' is invalid!");
+            }
+        }
         //Extract files from zip file and copy them to correct location
         ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();

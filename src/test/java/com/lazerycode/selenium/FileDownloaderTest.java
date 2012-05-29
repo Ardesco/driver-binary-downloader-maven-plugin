@@ -1,5 +1,6 @@
 package com.lazerycode.selenium;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class FileDownloaderTest {
     public void downloadAFile() throws Exception {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
-
+        downloadTestFile.performSHA1HashCheck(false);
         downloadTestFile.localFilePath(downloadDirectory);
         downloadTestFile.downloadZipAndExtractFiles();
 
@@ -43,9 +44,19 @@ public class FileDownloaderTest {
     public void hashCheck() throws Exception {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
-        // Hash of download.zip is 638213e8a5290cd4d227d57459d92655e8fb1f17
+        downloadTestFile.sha1Hash("638213e8a5290cd4d227d57459d92655e8fb1f17");
         downloadTestFile.localFilePath(downloadDirectory);
-        //TODO complete
-        //TODO assert found hash = above hash
+        downloadTestFile.downloadZipAndExtractFiles();
+
+        assertThat(new File(downloadDirectory + "download.txt").exists(), is(equalTo(true)));
+    }
+
+    @Test(expected = MojoExecutionException.class)
+    public void invalidHashCheck() throws Exception {
+        FileDownloader downloadTestFile = new FileDownloader();
+        downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
+        downloadTestFile.sha1Hash("invalidHash");
+        downloadTestFile.localFilePath(downloadDirectory);
+        downloadTestFile.downloadZipAndExtractFiles();
     }
 }
