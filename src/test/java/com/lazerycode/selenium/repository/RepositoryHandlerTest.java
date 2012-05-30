@@ -1,5 +1,6 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.repository;
 
+import com.lazerycode.selenium.repository.RepositoryHandler;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 

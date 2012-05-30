@@ -1,4 +1,9 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.download;
+
+import com.lazerycode.selenium.Bit;
+import com.lazerycode.selenium.Driver;
+import com.lazerycode.selenium.OperatingSystem;
+import com.lazerycode.selenium.repository.RepositoryParser;
 
 import java.io.File;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.download;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.AfterClass;

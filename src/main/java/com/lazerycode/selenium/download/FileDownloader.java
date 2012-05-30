@@ -1,5 +1,6 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.download;
 
+import com.lazerycode.selenium.SeleniumServerMojo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;

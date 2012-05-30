@@ -1,5 +1,6 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.repository;
 
+import com.lazerycode.selenium.*;
 import nu.xom.*;
 
 import java.io.File;

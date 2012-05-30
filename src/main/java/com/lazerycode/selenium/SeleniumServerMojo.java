@@ -1,5 +1,8 @@
 package com.lazerycode.selenium;
 
+import com.lazerycode.selenium.download.DownloadHandler;
+import com.lazerycode.selenium.repository.RepositoryHandler;
+import com.lazerycode.selenium.repository.RepositoryParser;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
