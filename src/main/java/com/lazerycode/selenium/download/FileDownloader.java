@@ -25,6 +25,7 @@ public class FileDownloader extends SeleniumServerMojo {
     private String downloadPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + "/";
     private String localFilePath;
     private int timeout = 30000;
+    private int totalNumberOfRetryAttempts = 1;
 
     public FileDownloader() {
     }
@@ -79,16 +80,7 @@ public class FileDownloader extends SeleniumServerMojo {
     }
 
     public void downloadZipAndExtractFiles() throws Exception {
-        File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
-        copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
-        //TODO Will Throw an IOException if file cannot be downloaded (enable a way to suppress this?)
-        //Perform hash check, throw exception if invalid
-        //TODO retry if invalid?  If so how many retries (1 retry maybe, chance's of corrupting two times in a row is minimal more likely file has changed)?
-        if(this.performHashCheck){
-            if(!this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))){
-                throw new MojoExecutionException("Hash for downloaded file does not match, '" + zipToDownload.getName() + "' is invalid!");
-            }
-        }
+        File zipToDownload = downloadFile();
         //Extract files from zip file and copy them to correct location
         ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
@@ -113,5 +105,45 @@ public class FileDownloader extends SeleniumServerMojo {
         cleanDirectory(this.downloadPath);
         deleteDirectory(this.downloadPath);
         getLog().info("File copied to " + this.localFilePath);
+    }
+
+    private File downloadFile() throws IOException, MojoExecutionException {
+        File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
+        int retryCount = 0;
+        while (true) {
+            if (this.performHashCheck && zipToDownload.exists()) {
+                getLog().info("File '" + zipToDownload.getName() + "' exists...");
+                if (hashCheckSHA1(zipToDownload)) break;
+            }
+            getLog().info("Downloading '" + zipToDownload.getName() + "'...");
+            try {
+                copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
+                if (this.performHashCheck) {
+                    if (hashCheckSHA1(zipToDownload)) break;
+                } else {
+                    break;
+                }
+            } catch (IOException ex) {
+                getLog().info("Failed to download '" + zipToDownload.getName() + "'!");
+            }
+            if (this.totalNumberOfRetryAttempts == retryCount) {
+                throw new MojoExecutionException("Unable to successfully downloaded '" + zipToDownload.getName() + "'!");
+            } else {
+                getLog().info("Current retry attempts: " + retryCount);
+                getLog().info("Trying to download '" + zipToDownload.getName() + "' again...");
+            }
+            retryCount++;
+        }
+        return zipToDownload;
+    }
+
+    private boolean hashCheckSHA1(File zipToDownload) throws IOException {
+        if (this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))) {
+            getLog().info("File '" + zipToDownload.getName() + "' verified as valid.");
+            return true;
+        } else {
+            getLog().info("File '" + zipToDownload.getName() + "' Failed SHA1 Hash check...");
+            return false;
+        }
     }
 }
