@@ -2,7 +2,6 @@ package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.SeleniumServerMojo;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.*;
@@ -119,41 +118,36 @@ public class FileDownloader extends SeleniumServerMojo {
 
     private File downloadFile() throws IOException, MojoExecutionException {
         File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
-        int retryCount = 0;
-        while (true) {
-            if (this.performHashCheck && zipToDownload.exists()) {
-                getLog().info("File '" + zipToDownload.getName() + "' exists...");
-                if (hashCheckSHA1(zipToDownload)) break;
-            }
+
+        if (!fileExistsAndIsValid(zipToDownload)) {
             getLog().info("Downloading '" + zipToDownload.getName() + "'...");
-            try {
-                copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
-                if (this.performHashCheck) {
-                    if (hashCheckSHA1(zipToDownload)) break;
-                } else {
-                    break;
+            for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
+                try {
+                    copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
+                    if (fileExistsAndIsValid(zipToDownload)) break;
+                } catch (IOException ex) {
+                    getLog().info("Problem downloading '" + zipToDownload.getName() + "'..." + ex.getLocalizedMessage());
                 }
-            } catch (IOException ex) {
-                getLog().info("Failed to download '" + zipToDownload.getName() + "'!");
             }
-            if (this.totalNumberOfRetryAttempts == retryCount) {
-                throw new MojoExecutionException("Unable to successfully downloaded '" + zipToDownload.getName() + "'!");
-            } else {
-                getLog().info("Current retry attempts: " + retryCount);
-                getLog().info("Trying to download '" + zipToDownload.getName() + "' again...");
-            }
-            retryCount++;
+        } else {
+            getLog().info("A valid copy of '" + zipToDownload.getName() + "' already exists.");
         }
+
+        if (!fileExistsAndIsValid(zipToDownload)) throw new MojoExecutionException("Unable to successfully downloaded '" + zipToDownload.getName() + "'!");
+
         return zipToDownload;
     }
 
-    private boolean hashCheckSHA1(File zipToDownload) throws IOException {
-        if (this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))) {
-            getLog().info("File '" + zipToDownload.getName() + "' verified as valid.");
+    private boolean fileExistsAndIsValid(File fileToCheck) throws IOException {
+        if (fileToCheck.exists()) {
+            if (performHashCheck) return hashCheckSHA1(fileToCheck);
             return true;
-        } else {
-            getLog().info("File '" + zipToDownload.getName() + "' Failed SHA1 Hash check...");
-            return false;
         }
+        return false;
+    }
+
+    private boolean hashCheckSHA1(File zipToDownload) throws IOException {
+        if (this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))) return true;
+        return false;
     }
 }
