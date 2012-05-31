@@ -25,6 +25,7 @@ public class FileDownloader extends SeleniumServerMojo {
     private String downloadPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + "/";
     private String localFilePath;
     private int timeout = 30000;
+    private int defaultNumberOfRetryAttempts = 1;
     private int totalNumberOfRetryAttempts = 1;
 
     public FileDownloader() {
@@ -55,6 +56,15 @@ public class FileDownloader extends SeleniumServerMojo {
      */
     public void performSHA1HashCheck(boolean value) {
         this.performHashCheck = value;
+    }
+
+    public void specifyTotalNumberOfRetryAttempts(int value) {
+        if (value < 0) {
+            getLog().warn("Invalid number of retry attempts specified, defaulting to '" + this.defaultNumberOfRetryAttempts + "'...");
+            this.totalNumberOfRetryAttempts = this.defaultNumberOfRetryAttempts;
+        } else {
+            this.totalNumberOfRetryAttempts = value;
+        }
     }
 
     /**
