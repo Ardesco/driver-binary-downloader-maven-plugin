@@ -30,11 +30,11 @@ public class RepositoryHandler {
         if (this.getLatest == true) {
             return getLatestVersionsFromRepositoryMap(createRepositoryListDocument());
         } else {
-            return getSpecifiedVersionsFromRepositoryMap(createRepositoryListDocument());
+            return verifySpecifiedVersionsAreInTheRepositoryMap(createRepositoryListDocument());
         }
     }
 
-    private Map<String, String> getSpecifiedVersionsFromRepositoryMap(Document repositoryList) throws MojoFailureException {
+    private Map<String, String> verifySpecifiedVersionsAreInTheRepositoryMap(Document repositoryList) throws MojoFailureException {
         Map<String, String> versionsFound = new HashMap<String, String>();
         Iterator it = this.versionMap.entrySet().iterator();
         while (it.hasNext()) {
