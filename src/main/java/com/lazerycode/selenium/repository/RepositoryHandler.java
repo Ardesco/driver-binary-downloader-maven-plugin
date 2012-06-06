@@ -27,45 +27,51 @@ public class RepositoryHandler {
     }
 
     public Map<String, String> parseRequiredFiles() throws MojoFailureException {
-        Map<String, String> versionsFound = new HashMap<String, String>();
-        Document repositoryList = createRepositoryListDocument();
         if (this.getLatest == true) {
-            Nodes driverStandalones = repositoryList.query("/root/*");
-            for (int i = 0; i < driverStandalones.size(); i++) {
-                Element driver = (Element) driverStandalones.get(i);
-                VersionHandler driverVersions = new VersionHandler();
-                Elements versions = driver.getChildElements("version");
-                for (int n = 0; n < versions.size(); n++) {
-                    driverVersions.addVersion(versions.get(n).getAttribute("id").getValue());
-                }
-                versionsFound.put(driver.getLocalName(), driverVersions.calculateHighestVersion());
-            }
+            return getLatestVersionsFromRepositoryMap(createRepositoryListDocument());
         } else {
-            Iterator it = this.versionMap.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry) it.next();
-                Nodes versionCount = repositoryList.query("/root/" + pairs.getKey() + "/version[@id='" + pairs.getValue() + "']");
-                if (versionCount.size() == 0) {
-                    if (!this.ignoreInvalidVersions) {
-                        this.logger.error("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
-                        throw new MojoFailureException("Invalid version!");
-                    } else {
-                        this.logger.warn("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
-                    }
+            return getSpecifiedVersionsFromRepositoryMap(createRepositoryListDocument());
+        }
+    }
+
+    private Map<String, String> getSpecifiedVersionsFromRepositoryMap(Document repositoryList) throws MojoFailureException {
+        Map<String, String> versionsFound = new HashMap<String, String>();
+        Iterator it = this.versionMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            Nodes versionCount = repositoryList.query("/root/" + pairs.getKey() + "/version[@id='" + pairs.getValue() + "']");
+            if (versionCount.size() == 0) {
+                if (!this.ignoreInvalidVersions) {
+                    this.logger.error("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
+                    throw new MojoFailureException("Invalid version!");
                 } else {
-                    versionsFound.put(pairs.getKey().toString(), pairs.getValue().toString());
+                    this.logger.warn("Unable to find '" + pairs.getKey() + "' versionCount '" + pairs.getKey() + "'!");
                 }
+            } else {
+                versionsFound.put(pairs.getKey().toString(), pairs.getValue().toString());
             }
         }
         return versionsFound;
     }
 
+    private Map<String, String> getLatestVersionsFromRepositoryMap(Document repositoryList) {
+        Map<String, String> versionsFound = new HashMap<String, String>();
+        Nodes seleniumStandaloneExecutables = repositoryList.query("/root/*");
+        for (int i = 0; i < seleniumStandaloneExecutables.size(); i++) {
+            Element driver = (Element) seleniumStandaloneExecutables.get(i);
+            VersionHandler seleniumVersions = new VersionHandler();
+            Elements versions = driver.getChildElements("version");
+            for (int n = 0; n < versions.size(); n++) {
+                seleniumVersions.addVersion(versions.get(n).getAttribute("id").getValue());
+            }
+            versionsFound.put(driver.getLocalName(), seleniumVersions.calculateHighestVersion());
+        }
+        return versionsFound;
+    }
+
     private Document createRepositoryListDocument() throws MojoFailureException {
-        Builder xmlParser = new Builder(true);
-        Document repositoryList;
         try {
-            repositoryList = xmlParser.build(this.xmlFileMap);
-            return repositoryList;
+            return new Builder(true).build(this.xmlFileMap);
         } catch (ParsingException ex) {
             this.logger.error("Unable to parse the repository map!");
             throw new MojoFailureException("Unable to parse repository map");
