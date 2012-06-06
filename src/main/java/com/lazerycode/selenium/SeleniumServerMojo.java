@@ -96,11 +96,11 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info(" ");
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
         RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsRequested);
-        try{
-        DownloadHandler driverGetter = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap);
-        driverGetter.getDrivers();
-        } catch (Exception e){
-            //foo
+        try {
+            DownloadHandler standaloneExecutableDownloader = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap);
+            standaloneExecutableDownloader.getStandaloneExecutables();
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to download all of the standalone executibles: " + e.getLocalizedMessage());
         }
         getLog().info(" ");
         getLog().info("-------------------------------------------------------");

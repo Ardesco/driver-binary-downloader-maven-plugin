@@ -23,7 +23,7 @@ private Map<String,String> driversToGet;
         this.getStandaloneExecutible = new RepositoryParser(this.repositoryMap);
     }
 
-    public void getDrivers() throws Exception{
+    public void getStandaloneExecutables() throws Exception{
         Iterator it = this.driversToGet.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();

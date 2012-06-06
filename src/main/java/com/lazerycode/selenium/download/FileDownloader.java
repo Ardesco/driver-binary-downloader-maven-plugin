@@ -126,7 +126,7 @@ public class FileDownloader extends SeleniumServerMojo {
                     copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
                     if (fileExistsAndIsValid(zipToDownload)) break;
                 } catch (IOException ex) {
-                    getLog().info("Problem downloading '" + zipToDownload.getName() + "'..." + ex.getLocalizedMessage());
+                    getLog().info("Problem downloading '" + zipToDownload.getName() + "'... " + ex.getLocalizedMessage());
                 }
             }
         } else {
