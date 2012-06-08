@@ -16,11 +16,13 @@ private Map<String,String> driversToGet;
     private FileDownloader getter = new FileDownloader();
     private File repositoryMap;
     private RepositoryParser getStandaloneExecutible;
+    private File rootStandaloneServerDirectory;
 
-    public DownloadHandler(Map <String, String> driversToGet, File repositoryMap) throws Exception{
+    public DownloadHandler(Map <String, String> driversToGet, File repositoryMap, File rootStandaloneServerDirectory) throws Exception{
         this.driversToGet = driversToGet;
         this.repositoryMap = repositoryMap;
         this.getStandaloneExecutible = new RepositoryParser(this.repositoryMap);
+        this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
     }
 
     public void getStandaloneExecutables() throws Exception{
@@ -29,9 +31,10 @@ private Map<String,String> driversToGet;
             Map.Entry pairs = (Map.Entry) it.next();
             //TODO build XPATH to getStandaloneExecutible location
             //root/${BROWSER}/${VERSION}/${OS}[${BITRATE}/filelocation
-            ;
-            this.getter.localFilePath("");
+
+            this.getter.localFilePath(this.rootStandaloneServerDirectory);
             this.getter.remoteURL(new URL(this.getStandaloneExecutible.forDriver(Driver.IE, "2.21.0").andOS(Bit.SIXTYFOURBIT, OperatingSystem.WINDOWS).returnFilePath()));
+            this.getter.downloadZipAndExtractFiles();
         }
     }
 

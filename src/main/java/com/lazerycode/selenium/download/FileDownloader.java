@@ -1,8 +1,8 @@
 package com.lazerycode.selenium.download;
 
-import com.lazerycode.selenium.SeleniumServerMojo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import java.io.*;
 import java.net.URL;
@@ -15,17 +15,18 @@ import static org.apache.commons.io.FileUtils.copyURLToFile;
 import static org.codehaus.plexus.util.FileUtils.cleanDirectory;
 import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
 
-public class FileDownloader extends SeleniumServerMojo {
+public class FileDownloader {
 
     private URL remoteFile;
     private String filename;
     private boolean performHashCheck = true;
+    private boolean forceUncheckedFileUpdate = false;
     private String SHA1Hash;
-    private String downloadPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + "/";
     private String localFilePath;
     private int timeout = 30000;
     private int defaultNumberOfRetryAttempts = 1;
     private int totalNumberOfRetryAttempts = 1;
+    private static final SystemStreamLog logger = new SystemStreamLog();
 
     public FileDownloader() {
     }
@@ -57,9 +58,18 @@ public class FileDownloader extends SeleniumServerMojo {
         this.performHashCheck = value;
     }
 
+    /**
+     * Force files that have not been checked using a SHA1 hash to be updated
+     *
+     * @param value
+     */
+    public void forceUncheckedFileUpdate(boolean value) {
+        this.forceUncheckedFileUpdate = value;
+    }
+
     public void specifyTotalNumberOfRetryAttempts(int value) {
         if (value < 0) {
-            getLog().warn("Invalid number of retry attempts specified, defaulting to '" + this.defaultNumberOfRetryAttempts + "'...");
+            this.logger.warn("Invalid number of retry attempts specified, defaulting to '" + this.defaultNumberOfRetryAttempts + "'...");
             this.totalNumberOfRetryAttempts = this.defaultNumberOfRetryAttempts;
         } else {
             this.totalNumberOfRetryAttempts = value;
@@ -71,8 +81,8 @@ public class FileDownloader extends SeleniumServerMojo {
      *
      * @param value The filepath that the file will be downloaded to.
      */
-    public void localFilePath(String value) {
-        this.localFilePath = value;
+    public void localFilePath(File value) {
+        this.localFilePath = value.getAbsolutePath();
     }
 
     public void remoteURL(URL value) throws MojoExecutionException {
@@ -90,18 +100,26 @@ public class FileDownloader extends SeleniumServerMojo {
 
     public void downloadZipAndExtractFiles() throws Exception {
         File zipToDownload = downloadFile();
-        //Extract files from zip file and copy them to correct location
+        //TODO Delete all existing files in directory?  Probably should to prevent any left over files from a previous version from causing potential problems.
+        unzipFile(zipToDownload);
+        this.logger.info("File copied to " + this.localFilePath);
+    }
+
+    /**
+     * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
+     *
+     * @param zipToDownload
+     * @throws IOException
+     */
+    private void unzipFile(File zipToDownload) throws IOException {
         ZipFile zip = new ZipFile(zipToDownload);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipFileEntry = entries.nextElement();
             File extractedFile = new File(this.localFilePath, zipFileEntry.getName());
-            if (zipFileEntry.isDirectory()) {
-                continue;
-            } else if (!extractedFile.exists()) {
-                extractedFile.getParentFile().mkdirs();
-                extractedFile.createNewFile();
-            }
+            if (zipFileEntry.isDirectory()) continue;
+            extractedFile.getParentFile().mkdirs();
+            extractedFile.createNewFile();
             InputStream is = zip.getInputStream(zipFileEntry);
             OutputStream os = new FileOutputStream(extractedFile);
             while (is.available() > 0) {
@@ -111,26 +129,25 @@ public class FileDownloader extends SeleniumServerMojo {
             is.close();
         }
         zip.close();
-        cleanDirectory(this.downloadPath);
-        deleteDirectory(this.downloadPath);
-        getLog().info("File copied to " + this.localFilePath);
     }
 
     private File downloadFile() throws IOException, MojoExecutionException {
-        File zipToDownload = new File(this.downloadPath + File.separator + this.filename);
+        File zipToDownload = new File(this.localFilePath + File.separator + this.filename);
+
+        if (this.forceUncheckedFileUpdate && !this.performHashCheck && zipToDownload.exists()) zipToDownload.delete();
 
         if (!fileExistsAndIsValid(zipToDownload)) {
-            getLog().info("Downloading '" + zipToDownload.getName() + "'...");
+            this.logger.info("Downloading '" + zipToDownload.getName() + "'...");
             for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
                 try {
                     copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
                     if (fileExistsAndIsValid(zipToDownload)) break;
                 } catch (IOException ex) {
-                    getLog().info("Problem downloading '" + zipToDownload.getName() + "'... " + ex.getLocalizedMessage());
+                    this.logger.info("Problem downloading '" + zipToDownload.getName() + "'... " + ex.getLocalizedMessage());
                 }
             }
         } else {
-            getLog().info("A valid copy of '" + zipToDownload.getName() + "' already exists.");
+            this.logger.info("A valid copy of '" + zipToDownload.getName() + "' already exists.");
         }
 
         if (!fileExistsAndIsValid(zipToDownload)) throw new MojoExecutionException("Unable to successfully downloaded '" + zipToDownload.getName() + "'!");

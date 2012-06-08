@@ -34,24 +34,23 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected File xmlFileMap;
 
     /**
-     * Disable running an SHA1 check on downloaded standalone server binaries
+     * Disable running a SHA1 check on downloaded standalone server binaries
      *
      * @parameter default-value="false"
      */
     protected boolean disableSHA1HashCheck;
 
     /**
-     * Always downloadZipAndExtractFiles the server binaries, even if you already have them.
-     * (If MD5 Checks are disabled it will only use the filename to determine if the standalone server binary has already been downloaded)
+     * If you have disabled SHA1 hash checking, force a download of the standalone binaries.
      *
      * @parameter default-value="false"
      */
-    protected boolean alwaysUpdate;
+    protected boolean forceUncheckedFileUpdate;
 
     /**
      * Get 64 bit versions of the standalone server
      *
-     * @parameter default-value="false"
+     * @parameter default-value="true"
      */
     protected boolean getSixtyFourBit;
 
@@ -70,21 +69,23 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected boolean getLatestVersions;
 
     /**
-     * A map of driver standalone versions to downloadZipAndExtractFiles eg:
-     * <p/>
+     * A map of driver standalone versions to download eg:
+     *
      * <googlechrome>19</googlechrome>
      * <internetexplorer>2.21.0</internetexplorer>
+     *
+     * Unrecognised browser names/versions will cause an exception to be thrown
      *
      * @parameter
      */
     protected Map<String, String> getVersions;
 
     /**
-     * If there are invalid versions specified in the POM ignore them and just download the valid ones.
+     * If there are invalid browser names/versions specified in the POM ignore them and just download the valid ones.
      *
      * @parameter default-value="false"
      */
-    protected boolean ignoreInvalidVersionsRequested;
+    protected boolean ignoreInvalidVersionsMapEntries;
 
     private RepositoryParser searchMap;
 
@@ -95,9 +96,9 @@ public class SeleniumServerMojo extends AbstractMojo {
         getLog().info("-------------------------------------------------------");
         getLog().info(" ");
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
-        RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsRequested);
+        RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsMapEntries);
         try {
-            DownloadHandler standaloneExecutableDownloader = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap);
+            DownloadHandler standaloneExecutableDownloader = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap, this.rootStandaloneServerDirectory);
             standaloneExecutableDownloader.getStandaloneExecutables();
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to download all of the standalone executibles: " + e.getLocalizedMessage());
