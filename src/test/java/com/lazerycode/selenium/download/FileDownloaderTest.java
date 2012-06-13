@@ -16,7 +16,7 @@ public class FileDownloaderTest {
 
     private static JettyServer localWebServer = new JettyServer();
     private static String webServerAddress = "http://localhost";
-    private static int webServerPort = 8081;
+    private static int webServerPort = 9081;
     private static String downloadDirectory = System.getProperty("project.build.directory") + "/downloaded/";
 
     @BeforeClass
@@ -34,7 +34,7 @@ public class FileDownloaderTest {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
         downloadTestFile.performSHA1HashCheck(false);
-        downloadTestFile.localFilePath(downloadDirectory);
+        downloadTestFile.localFilePath(new File(downloadDirectory));
         downloadTestFile.downloadZipAndExtractFiles();
 
         assertThat(new File(downloadDirectory + "download.txt").exists(), is(equalTo(true)));
@@ -45,7 +45,7 @@ public class FileDownloaderTest {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
         downloadTestFile.sha1Hash("638213e8a5290cd4d227d57459d92655e8fb1f17");
-        downloadTestFile.localFilePath(downloadDirectory);
+        downloadTestFile.localFilePath(new File(downloadDirectory));
         downloadTestFile.downloadZipAndExtractFiles();
 
         assertThat(new File(downloadDirectory + "download.txt").exists(), is(equalTo(true)));
@@ -56,7 +56,7 @@ public class FileDownloaderTest {
         FileDownloader downloadTestFile = new FileDownloader();
         downloadTestFile.remoteURL(new URL(webServerAddress + ":" + webServerPort + "/download.zip"));
         downloadTestFile.sha1Hash("invalidHash");
-        downloadTestFile.localFilePath(downloadDirectory);
+        downloadTestFile.localFilePath(new File(downloadDirectory));
         downloadTestFile.downloadZipAndExtractFiles();
     }
 }
