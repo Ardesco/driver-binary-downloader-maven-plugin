@@ -1,6 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.repository.RepositoryHandler;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
@@ -21,7 +20,7 @@ public class RepositoryHandlerTest {
     public void getLatestVersions() throws Exception{
         Map<String, String> versionsFound = new HashMap<String, String>();
         RepositoryHandler versions = new RepositoryHandler(new HashMap<String, String>(), true, new File(repositoryMap.toURI()), false);
-        versionsFound = versions.parseRequiredFiles();
+        versionsFound = versions.parseRequiredBrowserAndVersion();
 
         assertThat(versionsFound.get("internetexplorer"), is(equalTo("2.21.0")));
         assertThat(versionsFound.get("googlechrome"), is(equalTo("19")));
@@ -32,7 +31,7 @@ public class RepositoryHandlerTest {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "18");
         RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), false);
-        Map<String, String> versionsFound = versions.parseRequiredFiles();
+        Map<String, String> versionsFound = versions.parseRequiredBrowserAndVersion();
 
         assertThat(versionsFound.size(), is(equalTo(1)));
         assertThat(versionsFound.get("googlechrome"), is(equalTo("18")));
@@ -43,7 +42,7 @@ public class RepositoryHandlerTest {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "foo");
         RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), false);
-        Map<String, String> versionsFound = versions.parseRequiredFiles();
+        Map<String, String> versionsFound = versions.parseRequiredBrowserAndVersion();
     }
 
     @Test
@@ -52,7 +51,7 @@ public class RepositoryHandlerTest {
         versionsToFind.put("googlechrome", "foo");
         versionsToFind.put("internetexplorer", "2.21.0");
         RepositoryHandler versions = new RepositoryHandler(versionsToFind, false, new File(repositoryMap.toURI()), true);
-        Map<String, String> versionsFound = versions.parseRequiredFiles();
+        Map<String, String> versionsFound = versions.parseRequiredBrowserAndVersion();
 
         assertThat(versionsFound.size(), is(equalTo(1)));
         assertThat(versionsFound.get("internetexplorer"), is(equalTo("2.21.0")));

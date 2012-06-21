@@ -1,5 +1,6 @@
 package com.lazerycode.selenium;
 
+import com.lazerycode.selenium.configuration.BitRate;
 import com.lazerycode.selenium.download.DownloadHandler;
 import com.lazerycode.selenium.repository.RepositoryHandler;
 import com.lazerycode.selenium.repository.RepositoryParser;
@@ -48,18 +49,18 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected boolean forceUncheckedFileUpdate;
 
     /**
-     * Get 64 bit versions of the standalone server
+     * The Operating systems you would like to download standalone executables for.
      *
-     * @parameter default-value="true"
+     * @parameter default-value="${operatingSystems}"
      */
-    protected boolean getSixtyFourBit;
+    protected OperatingSystem operatingSystems;
 
     /**
-     * Get 32 bit versions of the standalone server
+     * The bit rate of the standalone executables you would like to download.
      *
-     * @parameter default-value="true"
+     * @parameter default-value="${bitRate}"
      */
-    protected boolean getThirtyTwoBit;
+    protected BitRate bitRate;
 
     /**
      * Get the highest version of each driver in RepositoryMap.xml
@@ -98,7 +99,7 @@ public class SeleniumServerMojo extends AbstractMojo {
         if (this.getVersions.size() == 0) this.getLatestVersions = true;
         RepositoryHandler filesToDownload = new RepositoryHandler(this.getVersions, this.getLatestVersions, this.xmlFileMap, this.ignoreInvalidVersionsMapEntries);
         try {
-            DownloadHandler standaloneExecutableDownloader = new DownloadHandler(filesToDownload.parseRequiredFiles(), this.xmlFileMap, this.rootStandaloneServerDirectory);
+            DownloadHandler standaloneExecutableDownloader = new DownloadHandler(filesToDownload.parseRequiredBrowserAndVersion(), this.xmlFileMap, this.rootStandaloneServerDirectory, this.bitRate, this.operatingSystems);
             standaloneExecutableDownloader.getStandaloneExecutables();
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to download all of the standalone executibles: " + e.getLocalizedMessage());

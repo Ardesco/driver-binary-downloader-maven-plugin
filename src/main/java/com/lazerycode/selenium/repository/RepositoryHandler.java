@@ -26,7 +26,7 @@ public class RepositoryHandler {
         this.ignoreInvalidVersions = ignoreInvalidVersions;
     }
 
-    public Map<String, String> parseRequiredFiles() throws MojoFailureException {
+    public Map<String, String> parseRequiredBrowserAndVersion() throws MojoFailureException {
         if (this.getLatest == true) {
             return getLatestVersionsFromRepositoryMap(createRepositoryListDocument());
         } else {
