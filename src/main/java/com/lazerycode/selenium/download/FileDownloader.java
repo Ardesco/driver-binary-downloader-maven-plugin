@@ -1,13 +1,13 @@
 package com.lazerycode.selenium.download;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import com.lazerycode.selenium.download.CheckFileHash;
+import com.lazerycode.selenium.download.HashType;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 
 import java.io.*;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -21,7 +21,8 @@ public class FileDownloader {
     private String filename;
     private boolean performHashCheck = true;
     private boolean forceUncheckedFileUpdate = false;
-    private String SHA1Hash;
+    private String expectedHash;
+    private HashType expectedHashType;
     private String localFilePath;
     private int timeout = 30000;
     private int defaultNumberOfRetryAttempts = 1;
@@ -41,12 +42,14 @@ public class FileDownloader {
     }
 
     /**
-     * Set the SHA1 hash that will be used to check that the file is valid
+     * Set the hash and hash type that will be used to check that the file is valid
      *
-     * @param value The SHA1 Hash
+     * @param hashValue
+     * @param hashType
      */
-    public void sha1Hash(String value) {
-        this.SHA1Hash = value;
+    public void setHash(String hashValue, HashType hashType) {
+        this.expectedHash = hashValue;
+        this.expectedHashType = hashType;
     }
 
     /**
@@ -157,14 +160,14 @@ public class FileDownloader {
 
     private boolean fileExistsAndIsValid(File fileToCheck) throws IOException {
         if (fileToCheck.exists()) {
-            if (performHashCheck) return hashCheckSHA1(fileToCheck);
+            if (performHashCheck) {
+                CheckFileHash hashChecker = new CheckFileHash();
+                hashChecker.hashDetails(this.expectedHash, this.expectedHashType);
+                hashChecker.fileToCheck(fileToCheck);
+                return hashChecker.hasAValidHash();
+            }
             return true;
         }
-        return false;
-    }
-
-    private boolean hashCheckSHA1(File zipToDownload) throws IOException {
-        if (this.SHA1Hash.equals(DigestUtils.shaHex(new FileInputStream(zipToDownload)))) return true;
         return false;
     }
 }
