@@ -104,34 +104,9 @@ public class FileDownloader {
     public void downloadZipAndExtractFiles() throws Exception {
         File zipToDownload = downloadFile();
         //TODO Delete all existing files in directory?  Probably should to prevent any left over files from a previous version from causing potential problems.
-        unzipFile(zipToDownload);
+        ExtractFilesFromZip fileExtractor = new ExtractFilesFromZip(this.localFilePath);
+        fileExtractor.unzipFile(zipToDownload);
         this.logger.info("File copied to " + this.localFilePath);
-    }
-
-    /**
-     * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
-     *
-     * @param zipToDownload
-     * @throws IOException
-     */
-    private void unzipFile(File zipToDownload) throws IOException {
-        ZipFile zip = new ZipFile(zipToDownload);
-        Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry zipFileEntry = entries.nextElement();
-            File extractedFile = new File(this.localFilePath, zipFileEntry.getName());
-            if (zipFileEntry.isDirectory()) continue;
-            extractedFile.getParentFile().mkdirs();
-            extractedFile.createNewFile();
-            InputStream is = zip.getInputStream(zipFileEntry);
-            OutputStream os = new FileOutputStream(extractedFile);
-            while (is.available() > 0) {
-                os.write(is.read());
-            }
-            os.close();
-            is.close();
-        }
-        zip.close();
     }
 
     private File downloadFile() throws IOException, MojoExecutionException {
