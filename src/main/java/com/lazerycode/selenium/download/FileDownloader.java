@@ -1,44 +1,86 @@
 package com.lazerycode.selenium.download;
 
-import com.lazerycode.selenium.download.CheckFileHash;
-import com.lazerycode.selenium.download.HashType;
+import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.apache.maven.plugin.MojoFailureException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import static org.apache.commons.io.FileUtils.copyURLToFile;
-import static org.codehaus.plexus.util.FileUtils.cleanDirectory;
-import static org.codehaus.plexus.util.FileUtils.deleteDirectory;
 
 public class FileDownloader {
 
+    private static final Logger LOG = Logger.getLogger(FileDownloader.class);
     private URL remoteFile;
     private String filename;
-    private boolean performHashCheck = true;
-    private boolean forceUncheckedFileUpdate = false;
     private String expectedHash;
     private HashType expectedHashType;
-    private String localFilePath;
-    private int timeout = 30000;
-    private int defaultNumberOfRetryAttempts = 1;
+    private String fileDownloadDirectory;
+    private int readTimeout = 15000;
+    private int connectTimeout = 15000;
     private int totalNumberOfRetryAttempts = 1;
-    private static final SystemStreamLog logger = new SystemStreamLog();
 
-    public FileDownloader() {
+    public FileDownloader(File downloadDirectory, int retries, int connectTimeout, int readTimeout) throws MojoFailureException {
+        localFilePath(downloadDirectory);
+        specifyTotalNumberOfRetryAttempts(retries);
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
     }
 
     /**
-     * Get the current location that files will be downloaded to.
+     * Set the number of retry attempts to use when downloading the file
      *
-     * @return The filepath that the file will be downloaded to.
+     * @param retries
      */
-    public String localFilePath() {
-        return this.localFilePath;
+    private void specifyTotalNumberOfRetryAttempts(int retries) {
+        if (retries < 1) {
+            LOG.warn("Invalid number of retry attempts specified, defaulting to '1'...");
+            this.totalNumberOfRetryAttempts = 1;
+        } else {
+            this.totalNumberOfRetryAttempts = retries;
+        }
+    }
+
+    /**
+     * Set the location directory where files will be downloaded to/
+     *
+     * @param downloadDirectory The directory that the file will be downloaded to.
+     */
+    private void localFilePath(File downloadDirectory) throws MojoFailureException {
+        if (!downloadDirectory.exists()) downloadDirectory.mkdirs();
+        if (!downloadDirectory.isDirectory())
+            throw new MojoFailureException("Download Directory specified is not a directory!");
+        this.fileDownloadDirectory = downloadDirectory.getAbsolutePath();
+    }
+
+    /**
+     * Check if the file exists and perform a hash check on it to see if it is valid
+     *
+     * @param fileToCheck
+     * @return
+     * @throws IOException
+     */
+    private boolean fileExistsAndIsValid(File fileToCheck) throws IOException, MojoExecutionException {
+        if (fileToCheck.exists()) {
+            CheckFileHash hashChecker = new CheckFileHash();
+            hashChecker.hashDetails(this.expectedHash, this.expectedHashType);
+            hashChecker.fileToCheck(fileToCheck);
+            return hashChecker.hasAValidHash();
+        }
+        return false;
+    }
+
+    /**
+     * Set the URL that will be used to download the remote file.
+     *
+     * @param value
+     * @throws MojoExecutionException
+     */
+    public void remoteURL(URL value) throws MojoExecutionException {
+        this.remoteFile = value;
+        this.filename = value.getFile();
     }
 
     /**
@@ -53,96 +95,34 @@ public class FileDownloader {
     }
 
     /**
-     * Perform a SHA1 Hash check on downloaded files to ensure they are not corrupted.
+     * Perform the file download
      *
-     * @param value
+     * @return
+     * @throws IOException
+     * @throws MojoExecutionException
      */
-    public void performSHA1HashCheck(boolean value) {
-        this.performHashCheck = value;
-    }
+    public File downloadFile() throws IOException, MojoExecutionException {
+        File fileToDownload = new File(this.fileDownloadDirectory + File.separator + this.filename);
 
-    /**
-     * Force files that have not been checked using a SHA1 hash to be updated
-     *
-     * @param value
-     */
-    public void forceUncheckedFileUpdate(boolean value) {
-        this.forceUncheckedFileUpdate = value;
-    }
-
-    public void specifyTotalNumberOfRetryAttempts(int value) {
-        if (value < 0) {
-            this.logger.warn("Invalid number of retry attempts specified, defaulting to '" + this.defaultNumberOfRetryAttempts + "'...");
-            this.totalNumberOfRetryAttempts = this.defaultNumberOfRetryAttempts;
-        } else {
-            this.totalNumberOfRetryAttempts = value;
-        }
-    }
-
-    /**
-     * Set the path that files will be downloaded to.
-     *
-     * @param value The filepath that the file will be downloaded to.
-     */
-    public void localFilePath(File value) {
-        this.localFilePath = value.getAbsolutePath();
-    }
-
-    public void remoteURL(URL value) throws MojoExecutionException {
-        this.remoteFile = value;
-        this.filename = value.getFile();
-    }
-
-    public URL remoteURL() {
-        return this.remoteFile;
-    }
-
-    public String localfilename() {
-        return this.filename;
-    }
-
-    public void downloadZipAndExtractFiles() throws Exception {
-        File zipToDownload = downloadFile();
-        //TODO Delete all existing files in directory?  Probably should to prevent any left over files from a previous version from causing potential problems.
-        ExtractFilesFromZip fileExtractor = new ExtractFilesFromZip(this.localFilePath);
-        fileExtractor.unzipFile(zipToDownload);
-        this.logger.info("File copied to " + this.localFilePath);
-    }
-
-    private File downloadFile() throws IOException, MojoExecutionException {
-        File zipToDownload = new File(this.localFilePath + File.separator + this.filename);
-
-        if (this.forceUncheckedFileUpdate && !this.performHashCheck && zipToDownload.exists()) zipToDownload.delete();
-
-        if (!fileExistsAndIsValid(zipToDownload)) {
-            this.logger.info("Downloading '" + zipToDownload.getName() + "'...");
+        LOG.info("Checking to see if file '" + fileToDownload.getName() + "' already exists and is valid.");
+        if (!fileExistsAndIsValid(fileToDownload)) {
+            LOG.info("Valid copy of '" + fileToDownload.getName() + "' does not exist, downloading a new copy'...");
             for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
                 try {
-                    copyURLToFile(this.remoteFile, zipToDownload, this.timeout, this.timeout);
-                    if (fileExistsAndIsValid(zipToDownload)) break;
+                    copyURLToFile(this.remoteFile, fileToDownload, this.connectTimeout, this.readTimeout);
+                    LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
+                    if (fileExistsAndIsValid(fileToDownload)) return fileToDownload;
                 } catch (IOException ex) {
-                    this.logger.info("Problem downloading '" + zipToDownload.getName() + "'... " + ex.getLocalizedMessage());
+                    LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
+                    if (n + 1 < this.totalNumberOfRetryAttempts) LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
                 }
             }
         } else {
-            this.logger.info("A valid copy of '" + zipToDownload.getName() + "' already exists.");
+            LOG.info("A valid copy of '" + fileToDownload.getName() + "' already exists.");
+            return fileToDownload;
         }
 
-        if (!fileExistsAndIsValid(zipToDownload)) throw new MojoExecutionException("Unable to successfully downloaded '" + zipToDownload.getName() + "'!");
-
-        return zipToDownload;
-    }
-
-    private boolean fileExistsAndIsValid(File fileToCheck) throws IOException {
-        if (fileToCheck.exists()) {
-            if (performHashCheck) {
-                CheckFileHash hashChecker = new CheckFileHash();
-                hashChecker.hashDetails(this.expectedHash, this.expectedHashType);
-                hashChecker.fileToCheck(fileToCheck);
-                return hashChecker.hasAValidHash();
-            }
-            return true;
-        }
-        return false;
+        LOG.error("Unable to successfully downloaded '" + fileToDownload.getName() + "'!");
+        throw new MojoExecutionException("Unable to successfully downloaded '" + fileToDownload.getName() + "'!");
     }
 }

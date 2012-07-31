@@ -12,6 +12,7 @@ public class ExtractFilesFromZip {
     }
 
     private String localFilePath;
+    private String extractedFileAbsolutePath = "";
 
     /**
      * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
@@ -35,7 +36,18 @@ public class ExtractFilesFromZip {
             }
             os.close();
             is.close();
+            //TODO this is a bit flaky, what if last file extracted is not what we expect?
+            this.extractedFileAbsolutePath = extractedFile.getAbsolutePath();
         }
         zip.close();
+    }
+
+    /**
+     * Return the absolute path of the last file extracted from the Zip.
+     *
+     * @return
+     */
+    public String getExtractedFileAbsolutePath() {
+        return this.extractedFileAbsolutePath;
     }
 }

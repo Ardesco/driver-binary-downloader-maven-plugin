@@ -2,6 +2,7 @@ package com.lazerycode.selenium.download;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,9 +45,9 @@ public class CheckFileHash {
      * @return
      * @throws java.io.IOException
      */
-    public boolean hasAValidHash() throws IOException {
-        if (this.fileToCheck == null) throw new FileNotFoundException("File to check has not been set!");
-        if (this.expectedFileHash == null || this.typeOfHash == null) throw new NullPointerException("Hash details have not been set!");
+    public boolean hasAValidHash() throws IOException, MojoExecutionException {
+        if (this.fileToCheck == null) throw new MojoExecutionException("File to check has not been set!");
+        if (this.expectedFileHash == null || this.typeOfHash == null) throw new MojoExecutionException("Hash details have not been set!");
 
         String actualFileHash = "";
         boolean isHashValid = false;
