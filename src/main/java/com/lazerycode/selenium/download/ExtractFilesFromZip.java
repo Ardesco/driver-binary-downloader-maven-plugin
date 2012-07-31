@@ -11,6 +11,7 @@ public class ExtractFilesFromZip {
         this.localFilePath = localFilePath;
     }
 
+    //TODO add logging
     private String localFilePath;
     private String extractedFileAbsolutePath = "";
 
