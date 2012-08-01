@@ -2,31 +2,31 @@ package com.lazerycode.selenium.repository;
 
 public class FileDetails {
 
-    private String filelocation;
+    private String fileLocation;
+    private String hashType;
     private String hash;
-    private String hashtype;
 
-    public void fileLocation(String value){
-        this.filelocation = value;
+    public void setFileLocation(String value) {
+        this.fileLocation = value;
     }
 
-    public String fileLocation(){
-        return this.filelocation;
+    public String getFileLocation() {
+        return this.fileLocation;
     }
 
-    public void hash(String value){
+    public void setHash(String value) {
         this.hash = value;
     }
 
-    public String hash(){
+    public String getHash() {
         return this.hash;
     }
 
-    public void hashtype(String value){
-        this.hashtype = value;
+    public void setHashType(String value) {
+        this.hashType = value;
     }
 
-    public String hashtype(){
-        return this.hashtype;
+    public String getHashType() {
+        return this.hashType;
     }
 }

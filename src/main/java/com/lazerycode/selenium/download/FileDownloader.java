@@ -56,7 +56,7 @@ public class FileDownloader {
     }
 
     /**
-     * Check if the file exists and perform a hash check on it to see if it is valid
+     * Check if the file exists and perform a getHash check on it to see if it is valid
      *
      * @param fileToCheck
      * @return
@@ -84,7 +84,7 @@ public class FileDownloader {
     }
 
     /**
-     * Set the hash and hash type that will be used to check that the file is valid
+     * Set the getHash and getHash type that will be used to check that the file is valid
      *
      * @param hashValue
      * @param hashType

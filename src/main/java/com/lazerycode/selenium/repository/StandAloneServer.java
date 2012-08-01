@@ -7,18 +7,18 @@ import java.util.Map;
 
 public class StandAloneServer {
 
-    private Map standAloneServer = new HashMap<Driver, VersionObject>();
+    private Map standAloneServer = new HashMap<Driver, SeleniumVersion>();
 
-    public void addStandaloneExecutableType(String value) {
+    public void addStandaloneExecutableForDriverType(String value) {
         Driver type = Driver.IE;
         if (!this.standAloneServer.containsKey(type)) {
-            this.standAloneServer.put(type, new VersionObject());
+            this.standAloneServer.put(type, new SeleniumVersion());
         }
     }
 
-    public VersionObject returnObject(Driver driverType) {
+    public SeleniumVersion returnStandaloneExecutableForDriverType(Driver driverType) {
         if (!this.standAloneServer.containsKey(driverType)) {
-            return (VersionObject) this.standAloneServer.get(driverType);
+            return (SeleniumVersion) this.standAloneServer.get(driverType);
         }
         return null;
     }

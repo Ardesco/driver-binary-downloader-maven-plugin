@@ -48,7 +48,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter default-value="${operatingSystems}"
      */
-    protected OperatingSystem operatingSystems;
+    protected OS operatingSystems;
 
     /**
      * The bit rate of the standalone executables you would like to download.

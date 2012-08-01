@@ -2,7 +2,7 @@ package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.Bit;
 import com.lazerycode.selenium.Driver;
-import com.lazerycode.selenium.OperatingSystem;
+import com.lazerycode.selenium.OS;
 import com.lazerycode.selenium.configuration.BitRate;
 import com.lazerycode.selenium.repository.RepositoryParser;
 import org.apache.log4j.Logger;
@@ -21,12 +21,12 @@ public class DownloadHandler {
     private int fileDownloadRetryAttempts;
     private File rootStandaloneServerDirectory;
     private File downloadedZipFileDirectory;
-    private OperatingSystem osList;
+    private OS osList;
     private BitRate bitRate;
     private int fileDownloadConnectTimeout;
     private int fileDownloadReadTimeout;
 
-    public DownloadHandler(Map<String, String> browserAndVersion, File repositoryMap, File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, BitRate bitRate, OperatingSystem operatingSystems, int fileDownloadConnectTimeout, int fileDownloadReadTimeout) throws Exception {
+    public DownloadHandler(Map<String, String> browserAndVersion, File repositoryMap, File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, BitRate bitRate, OS operatingSystems, int fileDownloadConnectTimeout, int fileDownloadReadTimeout) throws Exception {
         this.browserAndVersion = browserAndVersion;
         this.repositoryMap = repositoryMap;
         this.getStandaloneExecutible = new RepositoryParser(this.repositoryMap);
@@ -48,7 +48,7 @@ public class DownloadHandler {
             //root/${BROWSER}/${VERSION}/${OS}[${BITRATE}/filelocation
             //TODO log the executable we are trying to download.
             FileDownloader downloader = new FileDownloader(this.downloadedZipFileDirectory, this.fileDownloadRetryAttempts, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
-            downloader.remoteURL(new URL(this.getStandaloneExecutible.forDriver(Driver.IE, "2.21.0").andOS(Bit.SIXTYFOURBIT, OperatingSystem.WINDOWS).returnFilePath()));
+            downloader.remoteURL(new URL(this.getStandaloneExecutible.forDriver(Driver.IE, "2.21.0").andOS(Bit.SIXTYFOURBIT, OS.WINDOWS).returnFilePath()));
             ExtractFilesFromZip fileExtractor = new ExtractFilesFromZip("Path to extract to");
             fileExtractor.unzipFile(downloader.downloadFile());
             LOG.info("File copied to " + fileExtractor.getExtractedFileAbsolutePath());

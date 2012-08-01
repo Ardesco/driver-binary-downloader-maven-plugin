@@ -29,15 +29,15 @@ public class RepositoryParser {
             this.version = version;
         }
 
-        public SelectOS andOS(Bit bit, OperatingSystem os) {
+        public SelectOS andOS(Bit bit, OS os) {
             return new AndOS(bit, os);
         }
 
         private class AndOS implements SelectOS {
-            final OperatingSystem os;
+            final OS os;
             final Bit bit;
 
-            public AndOS(Bit bit, OperatingSystem os) {
+            public AndOS(Bit bit, OS os) {
                 this.os = os;
                 this.bit = bit;
             }
