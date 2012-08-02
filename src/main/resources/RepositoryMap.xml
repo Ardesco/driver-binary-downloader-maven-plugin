@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!DOCTYPE root [
-        <!ELEMENT root (internetexplorer|googlechrome)*>
-        <!ELEMENT internetexplorer (version)*>
-        <!ELEMENT version (windows|linux|mac)*>
-        <!ATTLIST version
-                id CDATA #REQUIRED>
-        <!ELEMENT windows (filelocation|hash|hashtype)*>
-        <!ATTLIST windows
-                sixtyfourbit CDATA #IMPLIED
-                thirtytwobit CDATA #IMPLIED>
-        <!ELEMENT filelocation (#PCDATA)>
-        <!ELEMENT hash (#PCDATA)>
-        <!ELEMENT hashtype (#PCDATA)>
-        <!ELEMENT googlechrome (version)*>
-        <!ELEMENT linux (filelocation|hash)*>
-        <!ATTLIST linux
-                sixtyfourbit CDATA #IMPLIED
-                thirtytwobit CDATA #IMPLIED>
-        <!ELEMENT mac (filelocation|hash)*>
-        <!ATTLIST mac
-                sixtyfourbit CDATA #REQUIRED
-                thirtytwobit CDATA #REQUIRED>
-        ]>
 <root>
-    <internetexplorer>
+    <driver id="internetexplorer">
         <version id="2.21.0">
             <windows sixtyfourbit="true">
                 <filelocation>http://selenium.googlecode.com/files/IEDriverServer_x64_2.21.0.zip</filelocation>
@@ -48,8 +25,8 @@
                 <hashtype>sha1</hashtype>
             </windows>
         </version>
-    </internetexplorer>
-    <googlechrome>
+    </driver>
+    <driver id="googlechrome">
         <version id="19">
             <windows thirtytwobit="true" sixtyfourbit="true">
                 <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_19.0.1068.0.zip</filelocation>
@@ -98,5 +75,5 @@
                 <hashtype>sha1</hashtype>
             </mac>
         </version>
-    </googlechrome>
+    </driver>
 </root>

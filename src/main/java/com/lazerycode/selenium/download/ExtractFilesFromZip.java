@@ -21,8 +21,9 @@ public class ExtractFilesFromZip {
      * @param zipToDownload
      * @throws java.io.IOException
      */
-    public void unzipFile(File zipToDownload) throws IOException {
+    public void unzipFile(File zipToDownload, String extractedFilePath) throws IOException {
         ZipFile zip = new ZipFile(zipToDownload);
+        //TODO extract to specific path
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipFileEntry = entries.nextElement();
@@ -41,14 +42,5 @@ public class ExtractFilesFromZip {
             this.extractedFileAbsolutePath = extractedFile.getAbsolutePath();
         }
         zip.close();
-    }
-
-    /**
-     * Return the absolute path of the last file extracted from the Zip.
-     *
-     * @return
-     */
-    public String getExtractedFileAbsolutePath() {
-        return this.extractedFileAbsolutePath;
     }
 }

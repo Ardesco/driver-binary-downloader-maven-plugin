@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="driver"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="driver">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="version"/>
+            </xs:sequence>
+            <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="version">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="windows"/>
+                <xs:sequence minOccurs="0">
+                    <xs:element maxOccurs="unbounded" ref="linux"/>
+                    <xs:element ref="mac"/>
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attribute name="id" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="windows">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="filelocation"/>
+                <xs:element ref="hash"/>
+                <xs:element ref="hashtype"/>
+            </xs:sequence>
+            <xs:attribute name="sixtyfourbit"/>
+            <xs:attribute name="thirtytwobit"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="linux">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="filelocation"/>
+                <xs:element ref="hash"/>
+                <xs:element ref="hashtype"/>
+            </xs:sequence>
+            <xs:attribute name="sixtyfourbit"/>
+            <xs:attribute name="thirtytwobit"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="mac">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="filelocation"/>
+                <xs:element ref="hash"/>
+                <xs:element ref="hashtype"/>
+            </xs:sequence>
+            <xs:attribute name="sixtyfourbit"/>
+            <xs:attribute name="thirtytwobit"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="filelocation" type="xs:string"/>
+    <xs:element name="hash" type="xs:string"/>
+    <xs:element name="hashtype" type="xs:string"/>
+</xs:schema>

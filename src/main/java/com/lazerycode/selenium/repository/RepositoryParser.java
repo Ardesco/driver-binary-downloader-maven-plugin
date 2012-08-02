@@ -1,57 +1,70 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.*;
-import nu.xom.*;
+import com.lazerycode.selenium.OS;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Nodes;
+import nu.xom.ParsingException;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RepositoryParser {
 
     private Document repositoryMap;
+    private StandAloneServer mappedRepository;
+    private boolean onlyGetLatestVersions = true;
 
-    public RepositoryParser(File value) throws ParsingException, IOException {
+    private Map<String, String> getSpecificExecutableVersions;
+    private ArrayList<OS> operatingSystemList;
+    private boolean getSixtyFourBitBinaries;
+    private boolean getThirtyTwoBitBinaries;
+
+    public RepositoryParser(File repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions) throws MojoFailureException {
         Builder parser = new Builder();
-        this.repositoryMap = parser.build(value);
+        try {
+            this.repositoryMap = parser.build(repositoryMapLocation);
+        } catch (ParsingException pe) {
+            throw new MojoFailureException(pe.getLocalizedMessage());
+        } catch (IOException ioe) {
+            throw new MojoFailureException(ioe.getLocalizedMessage());
+        }
+        this.operatingSystemList = operatingSystems;
+        this.getThirtyTwoBitBinaries = thirtyTwoBit;
+        this.getSixtyFourBitBinaries = sixtyFourBit;
+        this.onlyGetLatestVersions = onlyGetLatestVersions;
     }
 
-    public SelectDriver forDriver(Driver driver, String version) {
-        return new ForDriver(driver, version);
+    public void specifySpecificExecutableVersions(Map<String, String> executableVersions) {
+        this.onlyGetLatestVersions = false;
+        this.getSpecificExecutableVersions = executableVersions;
     }
 
-    private class ForDriver implements SelectDriver {
+    private Nodes getAllChildren(String xpath) {
+        return repositoryMap.query(xpath + "/*");
+    }
 
-        final Driver driver;
-        final String version;
+    private StandAloneServer parseRepositoryMap() {
 
-        public ForDriver(Driver driver, String version) {
-            this.driver = driver;
-            this.version = version;
+        //if getSpecificExecutableVersions is set a simple mapping to known path should work
+        // e.g. /root/driver id="${getSpecificExecutableVersions}.getKey()"/version id="${getSpecificExecutableVersions}.getValue()"/OS LIST/BIT boolean/rest known
+
+
+
+        Nodes drivers = getAllChildren("/root");
+        for (int i = 0; i < drivers.size(); i++) {
+            this.mappedRepository.addStandaloneExecutableForDriverType(drivers.get(i).getValue());
+
         }
 
-        public SelectOS andOS(Bit bit, OS os) {
-            return new AndOS(bit, os);
-        }
+        return this.mappedRepository;
+    }
 
-        private class AndOS implements SelectOS {
-            final OS os;
-            final Bit bit;
-
-            public AndOS(Bit bit, OS os) {
-                this.os = os;
-                this.bit = bit;
-            }
-
-            public String returnFilePath() {
-                Node filePathNode = repositoryMap.query("/root/" + driver.getDriverName() + "/version[@id='" + version + "']/" + os.getOsName() + "[@" + bit.getBitValue() + "]/filelocation").get(1);
-                return filePathNode.getValue();
-            }
-
-            public String fileSHA1Hash() {
-                Node sha1HashNode = repositoryMap.query("/root/" + driver.getDriverName() + "/version[@id='" + version + "']/" + os.getOsName() + "[@" + bit.getBitValue() + "]/sha1hash").get(1);
-                return sha1HashNode.getValue();
-            }
-        }
-
+    public HashMap<String, FileDetails> getFilesToDownload(){
+        return null;
     }
 }
