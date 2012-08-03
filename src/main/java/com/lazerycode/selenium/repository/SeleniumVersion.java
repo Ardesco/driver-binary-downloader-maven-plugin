@@ -3,6 +3,8 @@ package com.lazerycode.selenium.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO obselete?
+
 public class SeleniumVersion {
     private Map version = new HashMap<String, String>();
 

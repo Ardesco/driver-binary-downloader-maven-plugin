@@ -1,5 +1,7 @@
 package com.lazerycode.selenium;
 
+//TODO obselete?
+
 public enum Driver {
     IE("internetexplorer"),
     GOOGLECHROME("googlechrome");

@@ -7,6 +7,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO obselete?
+
 public class OperatingSystem {
 
     private Map operatingSystem = new HashMap<OS, BitRate>();

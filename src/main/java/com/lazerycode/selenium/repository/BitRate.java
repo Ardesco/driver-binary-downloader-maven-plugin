@@ -7,6 +7,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO Obselete?
+
 public class BitRate {
     private Map standAloneServerBitRate = new HashMap<Driver, FileDetails>();
 
