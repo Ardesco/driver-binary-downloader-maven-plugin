@@ -191,6 +191,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                 }
             }
         }
+
         return operatingSystemsSelected;
     }
 

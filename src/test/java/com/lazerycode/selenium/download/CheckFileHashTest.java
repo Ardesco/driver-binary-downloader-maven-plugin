@@ -1,4 +1,4 @@
-package com.lazerycode.selenium;
+package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.download.CheckFileHash;
 import org.apache.maven.plugin.MojoExecutionException;
