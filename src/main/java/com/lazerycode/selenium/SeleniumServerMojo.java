@@ -20,6 +20,8 @@ import java.util.Map;
  *
  * @author Mark Collin
  * @goal selenium
+ * @phase test-compile
+ * @execute phase="test-compile"
  * @requiresProject true
  */
 
@@ -207,9 +209,9 @@ public class SeleniumServerMojo extends AbstractMojo {
      * Set the RepositoryMap used to get file information.
      * If the supplied map is invalid it will default to the pre-packaged one here.
      *
-     * @throws MojoFailureException
+     * @throws MojoExecutionException
      */
-    private void setRepositoryMapFile() throws MojoFailureException {
+    private void setRepositoryMapFile() throws MojoExecutionException {
         if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
             LOG.info("Unable to find a custom repository map, defaulting to bundled version...");
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
@@ -217,7 +219,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             try {
                 this.xmlRepositoryMap = this.customRepositoryMap.toURI().toURL().openStream();
             } catch (IOException ioe) {
-                throw new MojoFailureException(ioe.getLocalizedMessage());
+                throw new MojoExecutionException(ioe.getLocalizedMessage());
             }
         }
     }
