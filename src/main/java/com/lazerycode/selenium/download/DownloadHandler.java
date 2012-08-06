@@ -36,8 +36,7 @@ public class DownloadHandler {
             Map.Entry<String, FileDetails> fileToDownload = (Map.Entry<String, FileDetails>) iterator.next();
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
-            //TODO pass in root standalone server directory, extration path should be relative to this
-            fileExtractor.unzipFile(downloader.downloadFile(), fileToDownload.getKey());
+            fileExtractor.unzipFile(downloader.downloadFile(), this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey());
             LOG.info("File(s) copied to " + fileToDownload.getKey());
         }
     }

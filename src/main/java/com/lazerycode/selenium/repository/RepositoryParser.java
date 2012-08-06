@@ -123,7 +123,7 @@ public class RepositoryParser {
             Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "']");
             if (this.selectivelyParseDriverExecutableList) {
                 //Map versions based upon this.getSpecificExecutableVersions
-                //TODO break out
+                //TODO break out into function
                 for (Iterator foob = this.getSpecificExecutableVersions.entrySet().iterator(); foob.hasNext(); ) {
                     Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) foob.next();
                     if (driverDetail.getKey().equalsIgnoreCase(driverID)) {

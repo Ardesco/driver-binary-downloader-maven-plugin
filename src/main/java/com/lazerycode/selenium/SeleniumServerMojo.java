@@ -28,6 +28,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter
      */
+    //TODO set default
     protected File rootStandaloneServerDirectory;
 
     /**
@@ -36,6 +37,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter
      */
+    //TODO set default
     protected File downloadedZipFileDirectory;
 
     /**
@@ -44,6 +46,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter default-value="${project.basedir}/src/main/resources/RepositoryMap.xml"
      */
+    //TODO set default
     protected File xmlRepositoryMap;
 
     /**
@@ -177,6 +180,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     private ArrayList<OS> buildOSArrayList(Map<String, Boolean> operatingSystems) throws MojoExecutionException {
         ArrayList<OS> operatingSystemsSelected = new ArrayList<OS>();
         if (operatingSystems.size() < 1) {
+            //Default to all Operating Systems
             for (OS selectedOS : OS.values()) {
                 operatingSystemsSelected.add(selectedOS);
             }
