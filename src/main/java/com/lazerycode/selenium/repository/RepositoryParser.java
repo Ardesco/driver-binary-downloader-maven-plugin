@@ -116,6 +116,36 @@ public class RepositoryParser {
         return nodeToAdd;
     }
 
+    /**
+     * Scan through a list of nodes and match any that have been specifically requested.
+     * Return a list of nodes to use
+     *
+     * @param listOfVersions
+     * @param driverID
+     * @return
+     */
+    private Nodes getSpecificVersions(Nodes listOfVersions, String driverID) {
+        Nodes filteredVersions = new Nodes();
+
+        for (Iterator iterator = this.getSpecificExecutableVersions.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) iterator.next();
+            if (driverDetail.getKey().equalsIgnoreCase(driverID)) {
+                for (int j = 0; j < listOfVersions.size(); j++) {
+                    String currentVersion = ((Element) listOfVersions.get(j)).getAttribute("id").getValue();
+                    ArrayList<String> wantedVersions = driverDetail.getValue();
+                    for (int current = 0; current < wantedVersions.size(); current++) {
+                        if (wantedVersions.get(current).equalsIgnoreCase(currentVersion)) {
+                            filteredVersions.append(listOfVersions.get(j));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return filteredVersions;
+    }
+
     private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers) {
         Nodes filteredVersions = new Nodes();
 
@@ -123,22 +153,10 @@ public class RepositoryParser {
             String driverID = ((Element) usedDrivers.get(i)).getAttribute("id").getValue();
             Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "']");
             if (this.selectivelyParseDriverExecutableList) {
-                //Map versions based upon this.getSpecificExecutableVersions
-                //TODO break out into function
-                for (Iterator foob = this.getSpecificExecutableVersions.entrySet().iterator(); foob.hasNext(); ) {
-                    Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) foob.next();
-                    if (driverDetail.getKey().equalsIgnoreCase(driverID)) {
-                        for (int j = 0; j < availableVersions.size(); j++) {
-                            String currentVersion = ((Element) availableVersions.get(j)).getAttribute("id").getValue();
-                            ArrayList<String> wantedVersions = driverDetail.getValue();
-                            for (int current = 0; current < wantedVersions.size(); current++) {
-                                if (wantedVersions.get(current).equalsIgnoreCase(currentVersion)) {
-                                    filteredVersions.append(availableVersions.get(j));
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                Nodes specificVersions = getSpecificVersions(availableVersions, driverID);
+                for (int specificVersion = 0; specificVersion < specificVersions.size(); specificVersion++) {
+                    Node node = specificVersions.get(specificVersion);
+                    filteredVersions.append(node);
                 }
             } else if (this.onlyGetLatestVersions) {
                 if (availableVersions.size() > 0) filteredVersions.append(getHighestVersion(availableVersions));
