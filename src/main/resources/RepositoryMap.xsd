@@ -49,7 +49,7 @@
             <xs:attribute name="thirtytwobit"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="mac">
+    <xs:element name="osx">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="filelocation"/>

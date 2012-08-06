@@ -45,11 +45,11 @@
                 <hash>8f024737aee435151caf7186b4cccda4b3154526</hash>
                 <hashtype>sha1</hashtype>
             </linux>
-            <mac thirtytwobit="true" sixtyfourbit="true">
+            <osx thirtytwobit="true" sixtyfourbit="true">
                 <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_19.0.1068.0.zip</filelocation>
                 <hash>4a7448555dc61f900c5144d26afbfe99749433de</hash>
                 <hashtype>sha1</hashtype>
-            </mac>
+            </osx>
         </version>
         <version id="18">
             <windows thirtytwobit="true" sixtyfourbit="true">
@@ -69,11 +69,11 @@
                 <hash>99db222e9b220e569623b140efc9bd0a033426a7</hash>
                 <hashtype>sha1</hashtype>
             </linux>
-            <mac thirtytwobit="true" sixtyfourbit="true">
+            <osx thirtytwobit="true" sixtyfourbit="true">
                 <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_18.0.1022.0.zip</filelocation>
                 <hash>2e880446608eaf22c0364e55b1bfc17aa3b78425</hash>
                 <hashtype>sha1</hashtype>
-            </mac>
+            </osx>
         </version>
     </driver>
 </root>

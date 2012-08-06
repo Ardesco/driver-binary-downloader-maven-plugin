@@ -10,7 +10,6 @@ public class FileDetails {
     private URL fileLocation;
     private HashType hashType;
     private String hash;
-    private String extractionPath;
 
     public void setFileLocation(String value) throws MalformedURLException {
         this.fileLocation = new URL(value);
@@ -29,18 +28,10 @@ public class FileDetails {
     }
 
     public void setHashType(String value) {
-        this.hashType = HashType.valueOf(value);
+        this.hashType = HashType.valueOf(value.toUpperCase());
     }
 
     public HashType getHashType() {
         return this.hashType;
-    }
-
-    public void setExtractionPath(String value) {
-        this.extractionPath = value;
-    }
-
-    public String getExtractionPath() {
-        return this.extractionPath;
     }
 }
