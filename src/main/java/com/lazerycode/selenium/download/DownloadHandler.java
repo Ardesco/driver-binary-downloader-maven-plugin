@@ -17,6 +17,7 @@ public class DownloadHandler {
     private int fileDownloadConnectTimeout;
     private int fileDownloadReadTimeout;
     private Map<String, FileDetails> filesToDownload;
+    private boolean overwriteFilesTHatExist = true;
 
     public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload) throws Exception {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
@@ -31,12 +32,14 @@ public class DownloadHandler {
     public void getStandaloneExecutables() throws Exception {
         LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
         FileDownloader downloader = new FileDownloader(this.downloadedZipFileDirectory, this.fileDownloadRetryAttempts, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
-        ExtractFilesFromZip fileExtractor = new ExtractFilesFromZip(this.downloadedZipFileDirectoryPath);
+//        ExtractFilesFromZip fileExtractor = new ExtractFilesFromZip(this.downloadedZipFileDirectoryPath);
         for (Iterator iterator = this.filesToDownload.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, FileDetails> fileToDownload = (Map.Entry<String, FileDetails>) iterator.next();
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
-            fileExtractor.unzipFile(downloader.downloadFile(), this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey());
+
+            ExtractFilesFromZip.unzipFile(downloader.downloadFile(), this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey(), this.overwriteFilesTHatExist);
+
             LOG.info("File(s) copied to " + fileToDownload.getKey());
         }
     }
