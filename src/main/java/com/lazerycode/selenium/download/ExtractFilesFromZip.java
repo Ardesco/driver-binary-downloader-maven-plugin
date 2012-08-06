@@ -25,9 +25,19 @@ public class ExtractFilesFromZip {
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry zipFileEntry = entries.nextElement();
-            if (zipFileEntry.isDirectory()) continue;
+            LOG.debug("Found: " + zipFileEntry.getName());
+            if (zipFileEntry.isDirectory()) {
+                LOG.debug(zipFileEntry.getName() + " is a directory, moving to next file...");
+                LOG.debug(" ");
+                continue;
+            }
             File extractedFile = new File(extractedToFilePath, zipFileEntry.getName());
-            if(extractedFile.exists() && !overwriteFilesThatExist) continue;
+            LOG.debug(extractedFile.getName() + " exists: " + extractedFile.exists());
+            LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
+            if (extractedFile.exists() && !overwriteFilesThatExist) {
+                LOG.debug("Skipping file: " + extractedFile.getName());
+                continue;
+            }
             extractedFile.getParentFile().mkdirs();
             extractedFile.createNewFile();
             InputStream is = zip.getInputStream(zipFileEntry);
@@ -37,6 +47,7 @@ public class ExtractFilesFromZip {
             }
             os.close();
             is.close();
+            LOG.info("Extracted: " + extractedFile.getAbsolutePath() + File.separator + extractedFile.getName());
         }
         zip.close();
     }
