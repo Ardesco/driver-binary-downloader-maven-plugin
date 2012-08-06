@@ -7,10 +7,18 @@ import org.apache.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -142,10 +150,9 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLE BINARIES...");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
+        CheckRepositoryMapIsValid();
+        SetRepositoryMapFile();
 
-        setRepositoryMapFile();
-
-        //TODO check the RepositoryMap.xml against an xsd to ensure it is valid
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
                 buildOSArrayList(this.operatingSystems),
@@ -211,9 +218,9 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @throws MojoExecutionException
      */
-    private void setRepositoryMapFile() throws MojoExecutionException {
+    private void SetRepositoryMapFile() throws MojoExecutionException {
         if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
-            LOG.info("Unable to find a custom repository map, defaulting to bundled version...");
+            LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...");
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         } else {
             try {
@@ -221,6 +228,30 @@ public class SeleniumServerMojo extends AbstractMojo {
             } catch (IOException ioe) {
                 throw new MojoExecutionException(ioe.getLocalizedMessage());
             }
+        }
+    }
+
+    /**
+     * Validate any custom repository maps that are supplied against the xsd.
+     * Throw an error and stop if it is not valid.
+     * Assume it doesn't exist if we get an IOError and fall back to default file.
+     *
+     * @throws MojoExecutionException
+     */
+    private void CheckRepositoryMapIsValid() throws MojoExecutionException {
+        URL schemaFile = this.getClass().getResource("/RepositoryMap.xsd");
+        Source xmlFile = new StreamSource(this.customRepositoryMap);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            Validator validator = schema.newValidator();
+            validator.validate(xmlFile);
+            LOG.info(xmlFile.getSystemId() + " is valid");
+        } catch (SAXException saxe) {
+            throw new MojoExecutionException(this.customRepositoryMap.getName() + " is not valid: " + saxe.getLocalizedMessage());
+        } catch (IOException ioe) {
+            //Assume it doesn't exist, set to null so that we default to packaged version
+            this.customRepositoryMap = null;
         }
     }
 
