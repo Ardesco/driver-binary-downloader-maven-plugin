@@ -38,6 +38,12 @@ public class RepositoryParser {
         this.onlyGetLatestVersions = onlyGetLatestVersions;
     }
 
+    /**
+     * Supply a specific map of drivers and versions to download.
+     * This implicitly disables the ability to only get the latest versions.
+     *
+     * @param executableVersions
+     */
     public void specifySpecificExecutableVersions(Map<String, String> executableVersions) {
         this.selectivelyParseDriverExecutableList = true;
         this.onlyGetLatestVersions = false;
@@ -61,12 +67,18 @@ public class RepositoryParser {
         return repositoryMap.query(xpath + "/*");
     }
 
+    /**
+     * Read the RepositoryMap.xml and extract a filtered list of drivers that there are download locations for
+     *
+     * @return
+     */
     private Nodes getAllRelevantDriverNodes() {
         Nodes availableDrivers = getAllChildren("/root");
         Nodes usedDrivers = new Nodes();
 
         for (int currentDriver = 0; currentDriver < availableDrivers.size(); currentDriver++) {
             String driverType = ((Element) availableDrivers.get(currentDriver)).getAttribute("id").getValue();
+            //If a specific map of driver executable/version has been passed in use it to filter output
             if (this.selectivelyParseDriverExecutableList) {
                 for (Iterator iterator = this.getSpecificExecutableVersions.entrySet().iterator(); iterator.hasNext(); ) {
                     Map.Entry<String, String> driverDetail = (Map.Entry<String, String>) iterator.next();
@@ -81,6 +93,26 @@ public class RepositoryParser {
         }
 
         return usedDrivers;
+    }
+
+    /**
+     * Take a list of nodes and work out which has the highest version number by comparing the id attribute of all of them
+     *
+     * @param listOfVersions
+     * @return
+     */
+    private Node getHighestVersion(Nodes listOfVersions) {
+        Node nodeToAdd = null;
+        String highestVersion = null;
+        for (int i = 0; i < listOfVersions.size(); i++) {
+            String currentVersion = ((Element) listOfVersions.get(i)).getAttribute("id").getValue();
+            if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
+                highestVersion = currentVersion;
+                nodeToAdd = listOfVersions.get(i);
+            }
+        }
+
+        return nodeToAdd;
     }
 
     private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers) {
@@ -108,23 +140,10 @@ public class RepositoryParser {
                     }
                 }
             } else if (this.onlyGetLatestVersions) {
-                //Add latest version only
-                //TODO break out
-                Node nodeToAdd = null;
-                String highestVersion = null;
-                for (int j = 0; j < availableVersions.size(); j++) {
-                    String currentVersion = ((Element) availableVersions.get(j)).getAttribute("id").getValue();
-                    if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
-                        highestVersion = currentVersion;
-                        nodeToAdd = availableVersions.get(j);
-                    }
-                }
-                if (nodeToAdd != null) filteredVersions.append(nodeToAdd);
+                if (availableVersions.size() > 0) filteredVersions.append(getHighestVersion(availableVersions));
             } else {
-                //Add all versions
-                //TODO break out
-                for (int j = 0; j < availableVersions.size(); j++) {
-                    filteredVersions.append(availableVersions.get(j));
+                for (int currentVersion = 0; currentVersion < availableVersions.size(); currentVersion++) {
+                    filteredVersions.append(availableVersions.get(currentVersion));
                 }
             }
         }
@@ -149,6 +168,14 @@ public class RepositoryParser {
         return fileDownloadInformation;
     }
 
+    /**
+     * Takes a node from the RepositoryMap.xml and extracts file information and builds a zip extraction path.
+     * This information is then added to the downloadable file list.
+     *
+     * @param node
+     * @param osString
+     * @throws MalformedURLException
+     */
     private void addDownloadableFilesToList(Node node, String osString) throws MalformedURLException {
         osString = osString.toLowerCase();
 

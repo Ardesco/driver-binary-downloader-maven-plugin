@@ -144,8 +144,9 @@ public class SeleniumServerMojo extends AbstractMojo {
                 this.ThirtyTwoBitBinaries,
                 this.SixtyFourBitBinaries,
                 this.onlyGetLatestVersions);
-        if (this.getSpecificExecutableVersions.size() > 0)
+        if (this.getSpecificExecutableVersions.size() > 0) {
             executableBinaryMapping.specifySpecificExecutableVersions(this.getSpecificExecutableVersions);
+        }
 
         try {
             DownloadHandler standaloneExecutableDownloader = new DownloadHandler(
@@ -168,7 +169,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     }
 
     /**
-     * Build a valid list of operating systems based upon the values parsed in from the POM
+     * Build a valid list of operating systems based upon the values parsed from the POM
      *
      * @param operatingSystems
      * @return
