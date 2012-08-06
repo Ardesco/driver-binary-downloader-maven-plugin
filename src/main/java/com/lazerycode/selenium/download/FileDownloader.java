@@ -62,7 +62,7 @@ public class FileDownloader {
      * @return
      * @throws IOException
      */
-    private boolean fileExistsAndIsValid(File fileToCheck) throws IOException, MojoExecutionException {
+    public boolean fileExistsAndIsValid(File fileToCheck) throws IOException, MojoExecutionException {
         if (fileToCheck.exists()) {
             CheckFileHash hashChecker = new CheckFileHash();
             hashChecker.hashDetails(this.expectedHash, this.expectedHashType);
@@ -103,23 +103,15 @@ public class FileDownloader {
      */
     public File downloadFile() throws IOException, MojoExecutionException {
         File fileToDownload = new File(this.fileDownloadDirectory + File.separator + this.filename);
-
-        LOG.info("Checking to see if file '" + fileToDownload.getName() + "' already exists and is valid.");
-        if (!fileExistsAndIsValid(fileToDownload)) {
-            LOG.info("Valid copy of '" + fileToDownload.getName() + "' does not exist, downloading a new copy'...");
-            for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
-                try {
-                    copyURLToFile(this.remoteFile, fileToDownload, this.connectTimeout, this.readTimeout);
-                    LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
-                    if (fileExistsAndIsValid(fileToDownload)) return fileToDownload;
-                } catch (IOException ex) {
-                    LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
-                    if (n + 1 < this.totalNumberOfRetryAttempts) LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
-                }
+        for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
+            try {
+                copyURLToFile(this.remoteFile, fileToDownload, this.connectTimeout, this.readTimeout);
+                LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
+                if (fileExistsAndIsValid(fileToDownload)) return fileToDownload;
+            } catch (IOException ex) {
+                LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
+                if (n + 1 < this.totalNumberOfRetryAttempts) LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
             }
-        } else {
-            LOG.info("A valid copy of '" + fileToDownload.getName() + "' already exists.");
-            return fileToDownload;
         }
 
         LOG.error("Unable to successfully downloaded '" + fileToDownload.getName() + "'!");

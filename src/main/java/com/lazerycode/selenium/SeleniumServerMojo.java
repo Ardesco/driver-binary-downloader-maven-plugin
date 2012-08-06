@@ -139,6 +139,17 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     protected int fileDownloadReadTimeout;
 
+    /**
+     * <h3>Force the plugin to overwrite any files that have already been extracted from a valid zip file</h3>
+     * <p>&lt;overwriteFilesThatExist&gt;false&lt;/overwriteFilesThatExist&gt;</p>
+     * <p>crc checks are not performed on files that have been extracted from valid zips, they are assumed to be valid.
+     * This will force the plugin to extract everything from valid zips again and overwrite any existing files.</p>
+     * <p>This does not clean out old files, it only writes new files over the top of existing ones.</p>
+     *
+     * @parameter default-value="false"
+     */
+    protected boolean overwriteFilesThatExist;
+
     private InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
 
@@ -170,8 +181,9 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadRetryAttempts,
                     this.fileDownloadConnectTimeout,
                     this.fileDownloadReadTimeout,
-                    executableBinaryMapping.getFilesToDownload());
-            standaloneExecutableDownloader.getStandaloneExecutables();
+                    executableBinaryMapping.getFilesToDownload(),
+                    this.overwriteFilesThatExist);
+            standaloneExecutableDownloader.getStandaloneExecutableFiles();
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
         }

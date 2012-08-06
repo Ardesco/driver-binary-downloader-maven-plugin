@@ -16,27 +16,37 @@ public class DownloadHandler {
     private int fileDownloadConnectTimeout;
     private int fileDownloadReadTimeout;
     private Map<String, FileDetails> filesToDownload;
-    private boolean overwriteFilesTHatExist = true;
+    private boolean overwriteFilesThatExist = false;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload) throws Exception {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist) throws Exception {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         this.fileDownloadRetryAttempts = fileDownloadRetryAttempts;
         this.fileDownloadConnectTimeout = fileDownloadConnectTimeout;
         this.fileDownloadReadTimeout = fileDownloadReadTimeout;
         this.filesToDownload = filesToDownload;
+        this.overwriteFilesThatExist = overwriteFilesThatExist;
     }
 
-    public void getStandaloneExecutables() throws Exception {
+    public void getStandaloneExecutableFiles() throws Exception {
         LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
+        File fileToUnzip = null;
         FileDownloader downloader = new FileDownloader(this.downloadedZipFileDirectory, this.fileDownloadRetryAttempts, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
         for (Iterator iterator = this.filesToDownload.entrySet().iterator(); iterator.hasNext(); ) {
+            boolean extractFilesFromZip = this.overwriteFilesThatExist;
             Map.Entry<String, FileDetails> fileToDownload = (Map.Entry<String, FileDetails>) iterator.next();
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
-
-            ExtractFilesFromZip.unzipFile(downloader.downloadFile(), this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey(), this.overwriteFilesTHatExist);
-
+            LOG.info(" ");
+            LOG.info("Checking to see if zip file '" + fileToDownload.getValue().getFileLocation().getFile() + "' already exists and is valid.");
+            boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(fileToDownload.getValue().getFileLocation().toURI()));
+            if (!existsAndIsValid) {
+                extractFilesFromZip = true;
+                fileToUnzip = downloader.downloadFile();
+            }
+            if (extractFilesFromZip) {
+                ExtractFilesFromZip.unzipFile(fileToUnzip, this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey(), extractFilesFromZip);
+            }
             LOG.info("File(s) copied to " + fileToDownload.getKey());
         }
     }
