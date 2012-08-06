@@ -15,14 +15,13 @@ import java.util.Map;
 public class RepositoryParser {
 
     private Document repositoryMap;
-    private HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
+    private ArrayList<OS> operatingSystemList;
+    private Map<String, String> bitRates = new HashMap<String, String>();
+    private Map<String, ArrayList<String>> getSpecificExecutableVersions = new HashMap<String, ArrayList<String>>();
     private boolean onlyGetLatestVersions = true;
     private boolean selectivelyParseDriverExecutableList = false;
 
-    private Map<String, ArrayList<String>> getSpecificExecutableVersions;
-    private ArrayList<OS> operatingSystemList;
-    private boolean getSixtyFourBitBinaries;
-    private boolean getThirtyTwoBitBinaries;
+    private HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
 
     public RepositoryParser(File repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions) throws MojoFailureException {
         Builder parser = new Builder();
@@ -34,8 +33,8 @@ public class RepositoryParser {
             throw new MojoFailureException(ioe.getLocalizedMessage());
         }
         this.operatingSystemList = operatingSystems;
-        this.getThirtyTwoBitBinaries = thirtyTwoBit;
-        this.getSixtyFourBitBinaries = sixtyFourBit;
+        if (thirtyTwoBit) this.bitRates.put("32bit", "[@thirtytwobit='true']");
+        if (sixtyFourBit) this.bitRates.put("64bit", "[@sixtyfourbit='true']");
         this.onlyGetLatestVersions = onlyGetLatestVersions;
     }
 
@@ -43,14 +42,21 @@ public class RepositoryParser {
         this.selectivelyParseDriverExecutableList = true;
         this.onlyGetLatestVersions = false;
 
-        for (Iterator iterator = executableVersions.keySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator iterator = executableVersions.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, String> values = (Map.Entry<String, String>) iterator.next();
-            if (!this.getSpecificExecutableVersions.containsKey(values.getKey()))
+            if (!this.getSpecificExecutableVersions.containsKey(values.getKey())) {
                 this.getSpecificExecutableVersions.put(values.getKey(), new ArrayList<String>());
+            }
             ((ArrayList) this.getSpecificExecutableVersions.get(values.getKey())).add(values.getValue());
         }
     }
 
+    /**
+     * Take an existing node, find all the child nodes and return them as a list.
+     *
+     * @param xpath
+     * @return
+     */
     private Nodes getAllChildren(String xpath) {
         return repositoryMap.query(xpath + "/*");
     }
@@ -59,18 +65,18 @@ public class RepositoryParser {
         Nodes availableDrivers = getAllChildren("/root");
         Nodes usedDrivers = new Nodes();
 
-        for (int i = 0; i < availableDrivers.size(); i++) {
-            String driverType = ((Element) availableDrivers.get(i)).getAttribute("id").getValue();
+        for (int currentDriver = 0; currentDriver < availableDrivers.size(); currentDriver++) {
+            String driverType = ((Element) availableDrivers.get(currentDriver)).getAttribute("id").getValue();
             if (this.selectivelyParseDriverExecutableList) {
                 for (Iterator iterator = this.getSpecificExecutableVersions.entrySet().iterator(); iterator.hasNext(); ) {
                     Map.Entry<String, String> driverDetail = (Map.Entry<String, String>) iterator.next();
                     if (driverDetail.getKey().equalsIgnoreCase(driverType)) {
-                        usedDrivers.append((Node) availableDrivers.get(i));
+                        usedDrivers.append((Node) availableDrivers.get(currentDriver));
                         break;
                     }
                 }
             } else {
-                usedDrivers.append((Node) availableDrivers.get(i));
+                usedDrivers.append((Node) availableDrivers.get(currentDriver));
             }
         }
 
@@ -87,13 +93,16 @@ public class RepositoryParser {
                 //Map versions based upon this.getSpecificExecutableVersions
                 //TODO break out
                 for (Iterator foob = this.getSpecificExecutableVersions.entrySet().iterator(); foob.hasNext(); ) {
-                    Map.Entry<String, String> driverDetail = (Map.Entry<String, String>) foob.next();
+                    Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) foob.next();
                     if (driverDetail.getKey().equalsIgnoreCase(driverID)) {
                         for (int j = 0; j < availableVersions.size(); j++) {
                             String currentVersion = ((Element) availableVersions.get(j)).getAttribute("id").getValue();
-                            if (driverDetail.getValue().equalsIgnoreCase(currentVersion)) {
-                                filteredVersions.append(availableVersions.get(j));
-                                break;
+                            ArrayList<String> wantedVersions = driverDetail.getValue();
+                            for (int current = 0; current < wantedVersions.size(); current++) {
+                                if (wantedVersions.get(current).equalsIgnoreCase(currentVersion)) {
+                                    filteredVersions.append(availableVersions.get(j));
+                                    break;
+                                }
                             }
                         }
                     }
@@ -123,6 +132,13 @@ public class RepositoryParser {
         return filteredVersions;
     }
 
+    /**
+     * Extract all the file information needed to download a specific file from the children of a specific node.
+     *
+     * @param downloadableZipInformation
+     * @return
+     * @throws MalformedURLException
+     */
     private FileDetails extractFileInformation(Node downloadableZipInformation) throws MalformedURLException {
         FileDetails fileDownloadInformation = new FileDetails();
 
@@ -133,43 +149,34 @@ public class RepositoryParser {
         return fileDownloadInformation;
     }
 
-    private HashMap<String, FileDetails> parseRepositoryMap() throws MalformedURLException {
+    private void addDownloadableFilesToList(Node node, String osString) throws MalformedURLException {
+        osString = osString.toLowerCase();
 
-        Nodes usedDrivers = getAllRelevantDriverNodes();
-        Nodes usedVersions = getFilteredListOfVersionNodes(usedDrivers);
+        for (Iterator iterator = this.bitRates.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, String> bitRate = (Map.Entry<String, String>) iterator.next();
+            Nodes fileDetails = node.query("./" + osString + bitRate.getValue());
+            String driverType = ((Element) node.getParent()).getAttribute("id").getValue();
+            String driverVersion = ((Element) node).getAttribute("id").getValue();
+            String extractionPath = driverType + File.separator + osString.toLowerCase() + File.separator + bitRate.getKey() + File.separator + driverVersion;
+            if (fileDetails.size() > 0) this.downloadableFileList.put(extractionPath, extractFileInformation(fileDetails.get(0)));
+        }
+    }
 
-        //Go through os list matching have 2 options 32 and 64bit
+    /**
+     * Parse the RepositoryMap.xml and return a HashMap of downloadable files.
+     *
+     * @return
+     * @throws MalformedURLException
+     */
+    public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException {
+        Nodes usedVersions = getFilteredListOfVersionNodes(getAllRelevantDriverNodes());
 
-        for (int i = 0; i < usedVersions.size(); i++) {
-            Node node = usedVersions.get(i);
-            for (int j = 0; j < operatingSystemList.size(); j++) {
-                OS os = operatingSystemList.get(j);
-                String baseXPath = "./" + os.toString().toLowerCase();
-                if (this.getThirtyTwoBitBinaries) {
-                    Nodes bar = node.query(baseXPath + "[@thirtytwobit='true']");
-                    String currentDriver = ((Element) usedVersions.get(i).getParent()).getAttribute("id").getValue();
-                    String currentVersion = ((Element) usedVersions.get(i)).getAttribute("id").getValue();
-                    String extractionPath = currentDriver + File.separator + os.toString().toLowerCase() + File.separator + "32bit" + File.separator + currentVersion;
-                    if (bar.size() > 0) {
-                        this.downloadableFileList.put(extractionPath, extractFileInformation(bar.get(0)));
-                    }
-                }
-                if (this.getSixtyFourBitBinaries) {
-                    Nodes bar = node.query(baseXPath + "[@sixtyfourbit='true']");
-                    String currentDriver = ((Element) usedVersions.get(i).getParent()).getAttribute("id").getValue();
-                    String currentVersion = ((Element) usedVersions.get(i)).getAttribute("id").getValue();
-                    String extractionPath = currentDriver + File.separator + os.toString().toLowerCase() + File.separator + "64bit" + File.separator + currentVersion;
-                    if (bar.size() > 0) {
-                        this.downloadableFileList.put(extractionPath, extractFileInformation(bar.get(0)));
-                    }
-                }
+        for (int selectedVersion = 0; selectedVersion < usedVersions.size(); selectedVersion++) {
+            for (int selectedOperatingSystem = 0; selectedOperatingSystem < operatingSystemList.size(); selectedOperatingSystem++) {
+                addDownloadableFilesToList(usedVersions.get(selectedVersion), operatingSystemList.get(selectedOperatingSystem).toString());
             }
         }
 
         return this.downloadableFileList;
-    }
-
-    public HashMap<String, FileDetails> getFilesToDownload() throws Exception {
-        return parseRepositoryMap();
     }
 }

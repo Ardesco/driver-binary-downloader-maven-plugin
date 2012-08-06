@@ -37,8 +37,8 @@ public class DownloadHandler {
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
             //TODO pass in root standalone server directory, extration path should be relative to this
-            fileExtractor.unzipFile(downloader.downloadFile(), fileToDownload.getValue().getExtractionPath());
-            LOG.info("File(s) copied to " + fileToDownload.getValue().getExtractionPath());
+            fileExtractor.unzipFile(downloader.downloadFile(), fileToDownload.getKey());
+            LOG.info("File(s) copied to " + fileToDownload.getKey());
         }
     }
 
