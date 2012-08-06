@@ -6,6 +6,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class RepositoryParser {
 
     private Document repositoryMap;
-    private FileDetails mappedRepository;
+    private HashMap<String, FileDetails> downloadableFileList;
     private boolean onlyGetLatestVersions = true;
     private boolean selectivelyParseDriverExecutableList = false;
 
@@ -81,7 +82,7 @@ public class RepositoryParser {
 
         for (int i = 0; i < usedDrivers.size(); i++) {
             String driverID = ((Element) usedDrivers.get(i)).getAttribute("id").getValue();
-            Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "'/version");
+            Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "']/version");
             if (this.selectivelyParseDriverExecutableList) {
                 //Map versions based upon this.getSpecificExecutableVersions
                 //TODO break out
@@ -122,11 +123,7 @@ public class RepositoryParser {
         return filteredVersions;
     }
 
-    private FileDetails parseRepositoryMap() {
-
-        //if getSpecificExecutableVersions is set a simple mapping to known path should work
-        // e.g. /root/driver id="${getSpecificExecutableVersions}.getKey()"/version id="${getSpecificExecutableVersions}.getValue()"/OS LIST/BIT boolean/rest known
-
+    private HashMap<String, FileDetails> parseRepositoryMap() throws MalformedURLException{
 
         Nodes usedDrivers = getAllRelevantDriverNodes();
         Nodes usedVersions = getFilteredListOfVersionNodes(usedDrivers);
@@ -151,20 +148,21 @@ public class RepositoryParser {
         }
 
 
-        //generate a final node ArrayList and use it to populate a FileDetails object
-
+        //Extract the file information and generate a map of downloadable files
         for (int i = 0; i < finalList.size(); i++) {
+            FileDetails fileDownloadInformation = new FileDetails();
             Node node =  finalList.get(i);
-//            (Element) node.query("./filelocation").get(1);
-//            (Element) node.query("./hash").get(1);
-//            (Element) node.query("./hashtype").get(1);
-
+            String fileHash = (node.query("./hash").get(1)).getValue();
+            fileDownloadInformation.setFileLocation((node.query("./filelocation").get(1)).getValue());
+            fileDownloadInformation.setHash(fileHash);
+            fileDownloadInformation.setHashType((node.query("./hashtype").get(1)).getValue());
+            this.downloadableFileList.put(fileHash, fileDownloadInformation);
         }
 
-        return this.mappedRepository;
+        return this.downloadableFileList;
     }
 
-    public HashMap<String, FileDetails> getFilesToDownload() {
-        return null;
+    public HashMap<String, FileDetails> getFilesToDownload() throws Exception{
+        return parseRepositoryMap();
     }
 }

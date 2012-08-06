@@ -1,10 +1,13 @@
 package com.lazerycode.selenium.repository;
 
+import com.lazerycode.selenium.OS;
 import org.apache.maven.plugin.MojoFailureException;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,19 +15,32 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class RepositoryHandlerTest {
+public class RepositoryParserTest {
 
-    private URL repositoryMap = this.getClass().getResource("/RepositoryMap.xml");
+    private final URL repositoryMap = this.getClass().getResource("/RepositoryMap.xml");
+    private static ArrayList<OS> osList = new ArrayList<OS>();
 
-//    @Test
-//    public void getLatestVersions() throws Exception{
-//        Map<String, String> versionsFound = new HashMap<String, String>();
-//        RepositoryHandler versions = new RepositoryHandler(new HashMap<String, String>(), true, new File(repositoryMap.toURI()), false);
-//        versionsFound = versions.parseRequiredBrowserAndVersion();
-//
+    @BeforeClass
+    public static void populateOSList(){
+        osList.add(OS.LINUX);
+        osList.add(OS.WINDOWS);
+        osList.add(OS.OSX);
+    }
+
+    @Test
+    public void getLatestVersions() throws Exception{
+        RepositoryParser executableBinaryMapping = new RepositoryParser(
+                new File(this.repositoryMap.toURI()),
+                this.osList,
+                true,
+                true,
+                true);
+        HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
+
+        System.out.println("foo");
 //        assertThat(versionsFound.get("internetexplorer"), is(equalTo("2.21.0")));
 //        assertThat(versionsFound.get("googlechrome"), is(equalTo("19")));
-//    }
+    }
 //
 //    @Test
 //    public void getSpecificVersions() throws Exception{
