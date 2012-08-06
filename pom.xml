@@ -42,7 +42,7 @@
     </issueManagement>
 
     <ciManagement>
-        <system>Jenkins CI</system>
+        <system>TeamCity</system>
         <url>http://ci.lazerycode.com</url>
     </ciManagement>
 

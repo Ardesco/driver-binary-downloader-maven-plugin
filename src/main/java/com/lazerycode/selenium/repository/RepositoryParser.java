@@ -6,6 +6,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class RepositoryParser {
 
     private HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
 
-    public RepositoryParser(File repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions) throws MojoFailureException {
+    public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions) throws MojoFailureException {
         Builder parser = new Builder();
         try {
             this.repositoryMap = parser.build(repositoryMapLocation);

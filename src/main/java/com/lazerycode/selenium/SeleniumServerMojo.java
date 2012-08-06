@@ -9,6 +9,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,28 +28,25 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <h3>Root directory where the standalone server file structure will be created and files will be saved</h3>
      * <p>&lt;rootStandaloneServerDirectory&gt;${project.basedir}/src/main/resources/standalone_executable_root&lt;/rootStandaloneServerDirectory&gt;</p>
      *
-     * @parameter
+     * @parameter default-value="${project.basedir}/selenium_standalone"
      */
-    //TODO set default
     protected File rootStandaloneServerDirectory;
 
     /**
      * <h3>Directory where downloaded standalone executable zip files will be saved</h3>
      * <p>&lt;downloadedZipFileDirectory&gt;${project.basedir}/src/main/resources/downloaded_zip_files&lt;/downloadedZipFileDirectory&gt;</p>
      *
-     * @parameter
+     * @parameter default-value="${project.basedir}/selenium_standalone_zips"
      */
-    //TODO set default
     protected File downloadedZipFileDirectory;
 
     /**
      * <h3>Absolute path to the XML RepositoryMap</h3>
      * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/main/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
      *
-     * @parameter default-value="${project.basedir}/src/main/resources/RepositoryMap.xml"
+     * @parameter default-value=null
      */
-    //TODO set default
-    protected File xmlRepositoryMap;
+    protected File customRepositoryMap;
 
     /**
      * <h3>The Operating systems you would like to download a standalone executable for</h3>
@@ -61,25 +60,25 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
      * <p><strong>Default:</strong>All operating systems.</p>
      *
-     * @parameter
+     * @parameter default-value=null
      */
     protected Map<String, Boolean> operatingSystems;
 
     /**
      * <h3>Download 32 bit standalone executable</h3>.
-     * <p>&lt;ThirtyTwoBitBinaries&gt;true&lt;/ThirtyTwoBitBinaries&gt;</p>
+     * <p>&lt;thirtyTwoBitBinaries&gt;true&lt;/thirtyTwoBitBinaries&gt;</p>
      *
      * @parameter default-value="true"
      */
-    protected boolean ThirtyTwoBitBinaries;
+    protected boolean thirtyTwoBitBinaries;
 
     /**
      * <h3>Download 64 bit standalone executable</h3>
-     * <p>&lt;SixtyFourBitBinaries&gt;true&lt;/SixtyFourBitBinaries&gt;</p>
+     * <p>&lt;sixtyFourBitBinaries&gt;true&lt;/sixtyFourBitBinaries&gt;</p>
      *
      * @parameter default-value="true"
      */
-    protected boolean SixtyFourBitBinaries;
+    protected boolean sixtyFourBitBinaries;
 
     /**
      * <h3>Only get the latest version of each standalone executable in RepositoryMap.xml</h3>
@@ -130,8 +129,10 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     protected int fileDownloadReadTimeout;
 
+    private InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         BasicConfigurator.configure(new MavenLoggerLog4jBridge(getLog()));
         LOG.info(" ");
@@ -140,14 +141,16 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
 
+        setRepositoryMapFile();
+
         //TODO check the RepositoryMap.xml against an xsd to ensure it is valid
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
                 buildOSArrayList(this.operatingSystems),
-                this.ThirtyTwoBitBinaries,
-                this.SixtyFourBitBinaries,
+                this.thirtyTwoBitBinaries,
+                this.sixtyFourBitBinaries,
                 this.onlyGetLatestVersions);
-        if (this.getSpecificExecutableVersions.size() > 0) {
+        if (this.getSpecificExecutableVersions != null && this.getSpecificExecutableVersions.size() > 0) {
             executableBinaryMapping.specifySpecificExecutableVersions(this.getSpecificExecutableVersions);
         }
 
@@ -179,7 +182,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     private ArrayList<OS> buildOSArrayList(Map<String, Boolean> operatingSystems) throws MojoExecutionException {
         ArrayList<OS> operatingSystemsSelected = new ArrayList<OS>();
-        if (operatingSystems.size() < 1) {
+        if (operatingSystems == null || operatingSystems.size() < 1) {
             //Default to all Operating Systems
             for (OS selectedOS : OS.values()) {
                 operatingSystemsSelected.add(selectedOS);
@@ -198,6 +201,25 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
 
         return operatingSystemsSelected;
+    }
+
+    /**
+     * Set the RepositoryMap used to get file information.
+     * If the supplied map is invalid it will default to the pre-packaged one here.
+     *
+     * @throws MojoFailureException
+     */
+    private void setRepositoryMapFile() throws MojoFailureException {
+        if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
+            LOG.info("Unable to find a custom repository map, defaulting to bundled version...");
+            this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
+        } else {
+            try {
+                this.xmlRepositoryMap = this.customRepositoryMap.toURI().toURL().openStream();
+            } catch (IOException ioe) {
+                throw new MojoFailureException(ioe.getLocalizedMessage());
+            }
+        }
     }
 
 }
