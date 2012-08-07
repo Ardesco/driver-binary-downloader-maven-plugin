@@ -10,7 +10,7 @@
 
     <groupId>com.lazerycode.selenium</groupId>
     <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Selenium Binary Downloader Maven Plugin</name>
     <description>A plugin to automatically download individual selenium standalone binaries (e.g. chrromedriver.exe) for your mavenised selenium project.</description>
@@ -57,7 +57,7 @@
         <connection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</developerConnection>
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin</url>
-      <tag>driver-binary-downloader-maven-plugin-0.9.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
