@@ -1,4 +1,4 @@
-selenium-standalone-server-plugin
+Selenium driver-binary-downloader-maven-plugin
 =================================
 
 A Maven plugin that will download the WebDriver stand alone server binaries for use in your mavenised Selenium project.
