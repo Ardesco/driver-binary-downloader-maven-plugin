@@ -52,8 +52,7 @@ public class FileDownloader {
      */
     private void localFilePath(File downloadDirectory) throws MojoFailureException {
         if (!downloadDirectory.exists()) downloadDirectory.mkdirs();
-        if (!downloadDirectory.isDirectory())
-            throw new MojoFailureException("Download Directory specified is not a directory!");
+        if (!downloadDirectory.isDirectory()) throw new MojoFailureException("'" + downloadDirectory.getAbsolutePath() + "' is not a directory!");
         this.fileDownloadDirectory = downloadDirectory.getAbsolutePath();
     }
 

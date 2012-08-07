@@ -23,7 +23,7 @@ public class FileDownloaderTest {
     private static String webServerAddress = "http://localhost";
     private static int webServerPort = 9081;
     private static String webServerURL = webServerAddress + ":" + webServerPort;
-    private static String downloadDirectory = System.getProperty("java.io.tmpdir");
+    private static String downloadDirectory = System.getProperty("java.io.tmpdir") + File.separator + "download_test_file_dir";
 
     @BeforeClass
     public static void start() throws Exception {
@@ -38,7 +38,8 @@ public class FileDownloaderTest {
     @After
     public void cleanUpFiles() throws IOException {
         LOG.info("Cleaning up test files...");
-        FileUtils.deleteDirectory(new File(downloadDirectory));
+        File downloadDirectory = new File(this.downloadDirectory);
+        if (downloadDirectory.exists()) FileUtils.deleteDirectory(downloadDirectory);
         LOG.info("Test complete.");
     }
 
@@ -67,7 +68,7 @@ public class FileDownloaderTest {
         downloadTestFile.setHash("638213e8a5290cd4d227d57459d92655e8fb1f17", HashType.SHA1);
         downloadTestFile.downloadFile();
 
-        assertThat(new File(downloadDirectory + "download.zip").exists(), is(equalTo(true)));
+        assertThat(new File(downloadDirectory + File.separator + "download.zip").exists(), is(equalTo(true)));
     }
 
     //TODO start with invalid file and check valid one is downloaded

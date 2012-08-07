@@ -53,13 +53,18 @@ public class CheckFileHash {
         String actualFileHash = "";
         boolean isHashValid = false;
         LOG.info("Expected Hash: '" + this.expectedFileHash + "'");
+        FileInputStream fileToHashCheck;
         switch (this.typeOfHash) {
             case MD5:
-                actualFileHash = DigestUtils.md5Hex(new FileInputStream(this.fileToCheck));
+                fileToHashCheck = new FileInputStream(this.fileToCheck);
+                actualFileHash = DigestUtils.md5Hex(fileToHashCheck);
+                fileToHashCheck.close();
                 if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
                 break;
             case SHA1:
-                actualFileHash = DigestUtils.shaHex(new FileInputStream(this.fileToCheck));
+                fileToHashCheck = new FileInputStream(this.fileToCheck);
+                actualFileHash = DigestUtils.shaHex(fileToHashCheck);
+                fileToHashCheck.close();
                 if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
                 break;
         }
