@@ -33,7 +33,8 @@ public class RepositoryParserTest {
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), this.osList, true, true, true);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
-        assertThat(downloadableFileList.size(), is(equalTo(8)));
+        //TODO Currently download binaries for multiple versions if a partial release of drivers has occured.  Need to revisit this.
+        assertThat(downloadableFileList.size(), is(equalTo(10)));
         //TODO check all the keys are correct
     }
 
@@ -55,7 +56,8 @@ public class RepositoryParserTest {
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), this.osList, true, true, false);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
-        assertThat(downloadableFileList.size(), is(equalTo(16)));
+        //TODO Currently download binaries for multiple versions if a partial release of drivers has occured.  Need to revisit this.
+        assertThat(downloadableFileList.size(), is(equalTo(18)));
         //TODO check all the keys are correct
     }
 

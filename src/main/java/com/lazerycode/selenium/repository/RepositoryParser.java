@@ -108,19 +108,25 @@ public class RepositoryParser {
      * @param listOfVersions
      * @return
      */
-    private Node getHighestVersion(Nodes listOfVersions) {
-        //TODO work out how to get highest when different os binaries are at different versions
-        Node nodeToAdd = null;
-        String highestVersion = null;
-        for (int i = 0; i < listOfVersions.size(); i++) {
-            String currentVersion = ((Element) listOfVersions.get(i)).getAttribute("id").getValue();
-            if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
-                highestVersion = currentVersion;
-                nodeToAdd = listOfVersions.get(i);
+    private Nodes getHighestVersion(Nodes listOfVersions) {
+        Nodes highestVersionsList = new Nodes();
+        for (int j = 0; j < operatingSystemList.size(); j++) {
+            Node nodeToAdd = null;
+            String highestVersion = null;
+            OS operatingSystem = operatingSystemList.get(j);
+            for (int i = 0; i < listOfVersions.size(); i++) {
+                if (listOfVersions.get(i).query("./" + operatingSystem.toString().toLowerCase()).size() > 0) {
+                    String currentVersion = ((Element) listOfVersions.get(i)).getAttribute("id").getValue();
+                    if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
+                        highestVersion = currentVersion;
+                        nodeToAdd = listOfVersions.get(i);
+                    }
+                }
             }
+            if(nodeToAdd != null) highestVersionsList.append(nodeToAdd);
         }
 
-        return nodeToAdd;
+        return highestVersionsList;
     }
 
     /**
@@ -169,7 +175,13 @@ public class RepositoryParser {
                     filteredVersions.append(node);
                 }
             } else if (this.onlyGetLatestVersions) {
-                if (availableVersions.size() > 0) filteredVersions.append(getHighestVersion(availableVersions));
+                if (availableVersions.size() > 0) {
+                    Nodes highestVersions = getHighestVersion(availableVersions);
+                    for (int highestVersion = 0; highestVersion < highestVersions.size(); highestVersion++) {
+                        Node node = highestVersions.get(highestVersion);
+                        filteredVersions.append(node);
+                    }
+                }
             } else {
                 for (int currentVersion = 0; currentVersion < availableVersions.size(); currentVersion++) {
                     filteredVersions.append(availableVersions.get(currentVersion));

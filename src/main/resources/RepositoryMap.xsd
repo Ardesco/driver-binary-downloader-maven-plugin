@@ -17,12 +17,10 @@
     </xs:element>
     <xs:element name="version">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="windows"/>
-                <xs:sequence minOccurs="0">
-                    <xs:element maxOccurs="unbounded" ref="linux"/>
-                    <xs:element ref="osx"/>
-                </xs:sequence>
+            <xs:sequence minOccurs="0">
+                <xs:element maxOccurs="1" ref="windows"/>
+                <xs:element maxOccurs="1" ref="linux"/>
+                <xs:element maxOccurs="1" ref="osx"/>
             </xs:sequence>
             <xs:attribute name="id" use="required"/>
         </xs:complexType>

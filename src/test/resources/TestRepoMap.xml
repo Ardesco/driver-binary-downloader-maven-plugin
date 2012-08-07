@@ -27,6 +27,13 @@
         </version>
     </driver>
     <driver id="googlechrome">
+        <version id="22">
+            <windows thirtytwobit="true" sixtyfourbit="true">
+                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_22_0_1203_0b.zip</filelocation>
+                <hash>3b31a552575a02bd8106f87f78264ecaafd956d4</hash>
+                <hashtype>sha1</hashtype>
+            </windows>
+        </version>
         <version id="19">
             <windows thirtytwobit="true" sixtyfourbit="true">
                 <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_19.0.1068.0.zip</filelocation>
