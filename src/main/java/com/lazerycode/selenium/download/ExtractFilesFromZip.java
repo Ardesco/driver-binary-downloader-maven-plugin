@@ -32,7 +32,7 @@ public class ExtractFilesFromZip {
                 continue;
             }
             File extractedFile = new File(extractedToFilePath, zipFileEntry.getName());
-            LOG.debug(extractedFile.getName() + " exists: " + extractedFile.exists());
+            LOG.info("File '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
             LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
             if (extractedFile.exists() && !overwriteFilesThatExist) {
                 LOG.debug("Skipping file: " + extractedFile.getName());

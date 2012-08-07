@@ -30,10 +30,10 @@ public class DownloadHandler {
     }
 
     public void getStandaloneExecutableFiles() throws Exception {
-        LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
-        LOG.info(" ");
         LOG.info("Zip files will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
         LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
+        LOG.info(" ");
+        LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
         LOG.info(" ");
         File fileToUnzip = null;
         FileDownloader downloader = new FileDownloader(this.downloadedZipFileDirectory, this.fileDownloadRetryAttempts, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);

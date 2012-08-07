@@ -24,7 +24,7 @@ public class CheckFileHash {
      */
     public void fileToCheck(File fileToCheck) throws FileNotFoundException {
         boolean doesFileExist = fileToCheck.exists();
-        LOG.info("File Exists: " + doesFileExist);
+        LOG.info("Zip File Exists: " + doesFileExist);
         if (!doesFileExist) throw new FileNotFoundException(fileToCheck + " does not exist!");
         this.fileToCheck = fileToCheck;
     }

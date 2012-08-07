@@ -37,8 +37,12 @@ public class RepositoryParser {
         }
         this.operatingSystemList = operatingSystems;
         if (thirtyTwoBit) this.bitRates.put("32bit", "[@thirtytwobit='true']");
+        LOG.info("Download 32bit binaries: " + thirtyTwoBit);
         if (sixtyFourBit) this.bitRates.put("64bit", "[@sixtyfourbit='true']");
+        LOG.info("Download 64bit binaries: " + sixtyFourBit);
         this.onlyGetLatestVersions = onlyGetLatestVersions;
+        LOG.info("Download Latest Versions Only: " + onlyGetLatestVersions);
+        LOG.info(" ");
     }
 
     /**
@@ -171,7 +175,7 @@ public class RepositoryParser {
                 }
             }
         }
-        LOG.info(" ");
+        if (this.selectivelyParseDriverExecutableList) LOG.info(" ");
 
         return filteredVersions;
     }
