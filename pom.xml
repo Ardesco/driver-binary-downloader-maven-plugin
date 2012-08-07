@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>com.lazerycode.selenium</groupId>
-    <artifactId>selenium-standalone-downloader-maven-plugin</artifactId>
+    <artifactId>driver-binary-downloader-maven-plugin</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
-    <name>Selenium Standalone Downloader Maven Plugin</name>
-    <description>A plugin to automatically download selenium standalone binaries for your mavenised selenium project.</description>
+    <name>Selenium Binary Downloader Maven Plugin</name>
+    <description>A plugin to automatically download individual selenium standalone binaries (e.g. chrromedriver.exe) for your mavenised selenium project.</description>
     <url>http://selenium.lazerycode.com</url>
 
     <licenses>
