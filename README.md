@@ -8,7 +8,7 @@ Default Usage:
 <plugins>
     <plugin>
         <groupId>com.lazerycode.selenium</groupId>
-        <artifactId>selenium-standalone-downloader-maven-plugin</artifactId>
+        <artifactId>driver-binary-downloader-maven-plugin</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <executions>
             <execution>

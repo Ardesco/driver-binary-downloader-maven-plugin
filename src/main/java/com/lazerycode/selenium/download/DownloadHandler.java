@@ -1,7 +1,9 @@
 package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.repository.FileDetails;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.Iterator;
@@ -42,15 +44,17 @@ public class DownloadHandler {
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
             LOG.info(" ");
-            LOG.info("Checking to see if zip file '" + fileToDownload.getValue().getFileLocation().getFile() + "' already exists and is valid.");
-            boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(this.downloadedZipFileDirectory + File.separator + fileToDownload.getValue().getFileLocation().getFile()));
+            String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
+            LOG.info("Checking to see if zip file '" + currentFileAbsolutePath + "' already exists and is valid.");
+            boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(currentFileAbsolutePath));
             if (!existsAndIsValid) {
                 extractFilesFromZip = true;
                 fileToUnzip = downloader.downloadFile();
             }
             if (extractFilesFromZip) {
-                ExtractFilesFromZip.unzipFile(fileToUnzip, this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey(), extractFilesFromZip);
-                LOG.info("File(s) copied to " + fileToDownload.getKey());
+                String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
+                ExtractFilesFromZip.unzipFile(fileToUnzip, extractionDirectory, extractFilesFromZip);
+                LOG.info("File(s) copied to " + extractionDirectory);
             }
 
         }

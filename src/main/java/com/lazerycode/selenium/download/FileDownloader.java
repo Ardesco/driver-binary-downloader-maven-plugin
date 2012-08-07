@@ -1,8 +1,10 @@
 package com.lazerycode.selenium.download;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +82,7 @@ public class FileDownloader {
      */
     public void remoteURL(URL value) throws MojoExecutionException {
         this.remoteFile = value;
-        this.filename = value.getFile();
+        this.filename = FilenameUtils.getName(value.getFile());
     }
 
     /**

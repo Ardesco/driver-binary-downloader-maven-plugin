@@ -1,6 +1,5 @@
 package com.lazerycode.selenium.download;
 
-import com.lazerycode.selenium.download.CheckFileHash;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import static org.junit.Assert.assertThat;
 
 public class CheckFileHashTest {
 
-    private final URL testFile = this.getClass().getResource("/jetty/download.zip");
+    private final URL testFile = this.getClass().getResource("/jetty/files/download.zip");
 
     @Test
     public void checkValidMD5Hash() throws Exception {

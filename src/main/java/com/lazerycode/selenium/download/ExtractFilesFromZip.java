@@ -40,6 +40,7 @@ public class ExtractFilesFromZip {
             }
             extractedFile.getParentFile().mkdirs();
             extractedFile.createNewFile();
+            LOG.info("Extracting '" + extractedFile.getName() + "'...");
             InputStream is = zip.getInputStream(zipFileEntry);
             OutputStream os = new FileOutputStream(extractedFile);
             while (is.available() > 0) {
@@ -47,7 +48,6 @@ public class ExtractFilesFromZip {
             }
             os.close();
             is.close();
-            LOG.info("Extracted: " + extractedFile.getAbsolutePath() + File.separator + extractedFile.getName());
         }
         zip.close();
     }

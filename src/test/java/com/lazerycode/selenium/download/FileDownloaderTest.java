@@ -46,7 +46,7 @@ public class FileDownloaderTest {
     public void downloadAFile() throws Exception {
         LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
-        downloadTestFile.remoteURL(new URL(webServerURL + "/download.zip"));
+        downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.downloadFile();
     }
 
@@ -54,7 +54,7 @@ public class FileDownloaderTest {
     public void invalidHashCheck() throws Exception {
         LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
-        downloadTestFile.remoteURL(new URL(webServerURL + "/download.zip"));
+        downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.setHash("invalidHash", HashType.SHA1);
         downloadTestFile.downloadFile();
     }
@@ -63,7 +63,7 @@ public class FileDownloaderTest {
     public void hashCheck() throws Exception {
         LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
-        downloadTestFile.remoteURL(new URL(webServerURL + "/download.zip"));
+        downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.setHash("638213e8a5290cd4d227d57459d92655e8fb1f17", HashType.SHA1);
         downloadTestFile.downloadFile();
 
