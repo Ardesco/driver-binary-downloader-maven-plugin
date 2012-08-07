@@ -108,8 +108,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      * &lt;internetexplorer&gt;2.21.0&lt;/internetexplorer&gt;
      * &lt;/getSpecificExecutableVersions&gt;
      * <p/>
-     * <p>Unrecognised browser names/versions will cause an exception to be thrown</p>
-     * <p>If this is not specified </p>
+     * <p>Unrecognised browser names/versions will be ignored</p>
      *
      * @parameter
      */
