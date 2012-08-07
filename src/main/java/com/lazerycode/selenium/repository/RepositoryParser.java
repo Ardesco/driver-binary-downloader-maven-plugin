@@ -109,6 +109,7 @@ public class RepositoryParser {
      * @return
      */
     private Node getHighestVersion(Nodes listOfVersions) {
+        //TODO work out how to get highest when different os binaries are at different versions
         Node nodeToAdd = null;
         String highestVersion = null;
         for (int i = 0; i < listOfVersions.size(); i++) {

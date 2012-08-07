@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 
 public class RepositoryParserTest {
 
-    private final URL repositoryMap = this.getClass().getResource("/RepositoryMap.xml");
+    private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
     private static ArrayList<OS> osList = new ArrayList<OS>();
 
     @BeforeClass
