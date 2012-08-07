@@ -105,6 +105,7 @@ public class FileDownloader {
         File fileToDownload = new File(this.fileDownloadDirectory + File.separator + this.filename);
         for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
             try {
+                LOG.info("Downloading '" + this.filename + "'...");
                 copyURLToFile(this.remoteFile, fileToDownload, this.connectTimeout, this.readTimeout);
                 LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
                 if (fileExistsAndIsValid(fileToDownload)) return fileToDownload;

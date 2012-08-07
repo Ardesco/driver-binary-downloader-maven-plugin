@@ -39,15 +39,16 @@ public class DownloadHandler {
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
             LOG.info(" ");
             LOG.info("Checking to see if zip file '" + fileToDownload.getValue().getFileLocation().getFile() + "' already exists and is valid.");
-            boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(fileToDownload.getValue().getFileLocation().toURI()));
+            boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(this.downloadedZipFileDirectory + File.separator + fileToDownload.getValue().getFileLocation().getFile()));
             if (!existsAndIsValid) {
                 extractFilesFromZip = true;
                 fileToUnzip = downloader.downloadFile();
             }
             if (extractFilesFromZip) {
                 ExtractFilesFromZip.unzipFile(fileToUnzip, this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey(), extractFilesFromZip);
+                LOG.info("File(s) copied to " + fileToDownload.getKey());
             }
-            LOG.info("File(s) copied to " + fileToDownload.getKey());
+
         }
     }
 

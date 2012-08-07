@@ -23,8 +23,9 @@ public class CheckFileHash {
      * @throws java.io.FileNotFoundException
      */
     public void fileToCheck(File fileToCheck) throws FileNotFoundException {
-        if (!fileToCheck.exists()) throw new FileNotFoundException(fileToCheck + " does not exist!");
-
+        boolean doesFileExist = fileToCheck.exists();
+        LOG.info("Filename '" + fileToCheck.getName() + "' exists: " + doesFileExist);
+        if (!doesFileExist) throw new FileNotFoundException(fileToCheck + " does not exist!");
         this.fileToCheck = fileToCheck;
     }
 
@@ -48,10 +49,10 @@ public class CheckFileHash {
     public boolean hasAValidHash() throws IOException, MojoExecutionException {
         if (this.fileToCheck == null) throw new MojoExecutionException("File to check has not been set!");
         if (this.expectedFileHash == null || this.typeOfHash == null) throw new MojoExecutionException("Hash details have not been set!");
-
+        if (!this.fileToCheck.exists()) return false;
         String actualFileHash = "";
         boolean isHashValid = false;
-
+        LOG.info("Expected Hash: '" + this.expectedFileHash + "'");
         switch (this.typeOfHash) {
             case MD5:
                 actualFileHash = DigestUtils.md5Hex(new FileInputStream(this.fileToCheck));
@@ -62,10 +63,8 @@ public class CheckFileHash {
                 if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
                 break;
         }
-
-        LOG.info("Filename = '" + this.fileToCheck.getName() + "'");
-        LOG.info("Expected Hash = '" + this.expectedFileHash + "'");
-        LOG.info("Actual Hash = '" + actualFileHash + "'");
+        LOG.info("Actual Hash: '" + actualFileHash + "'");
+        LOG.info("Hashes Match: " + isHashValid);
 
         return isHashValid;
     }
