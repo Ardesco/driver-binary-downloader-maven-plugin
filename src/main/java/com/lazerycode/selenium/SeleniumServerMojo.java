@@ -72,7 +72,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @parameter default-value=null
      */
-    protected Map<String, Boolean> operatingSystems;
+    protected Map<String, String> operatingSystems;
 
     /**
      * <h3>Download 32 bit standalone executable</h3>.
@@ -201,7 +201,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      * @param operatingSystems
      * @return
      */
-    private ArrayList<OS> buildOSArrayList(Map<String, Boolean> operatingSystems) throws MojoExecutionException {
+    private ArrayList<OS> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
         ArrayList<OS> operatingSystemsSelected = new ArrayList<OS>();
         if (operatingSystems == null || operatingSystems.size() < 1) {
             //Default to all Operating Systems
@@ -210,12 +210,12 @@ public class SeleniumServerMojo extends AbstractMojo {
             }
         } else {
             for (Iterator iterator = operatingSystems.entrySet().iterator(); iterator.hasNext(); ) {
-                Map.Entry<String, Boolean> os = (Map.Entry<String, Boolean>) iterator.next();
-                if (os.getValue()) {
+                Map.Entry<String, String> os = (Map.Entry<String, String>) iterator.next();
+                if (os.getValue().toLowerCase().equals("true")) {
                     try {
-                        operatingSystemsSelected.add(OS.valueOf(os.getKey()));
+                        operatingSystemsSelected.add(OS.valueOf(os.getKey().toUpperCase()));
                     } catch (IllegalArgumentException iae) {
-                        throw new MojoExecutionException("'" + os.getKey() + "' is not a known operating system.");
+                        throw new MojoExecutionException("'" + os.getKey().toUpperCase() + "' is not a known operating system.");
                     }
                 }
             }
