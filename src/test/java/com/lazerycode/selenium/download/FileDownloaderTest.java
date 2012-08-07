@@ -23,7 +23,7 @@ public class FileDownloaderTest {
     private static String webServerAddress = "http://localhost";
     private static int webServerPort = 9081;
     private static String webServerURL = webServerAddress + ":" + webServerPort;
-    private static String downloadDirectory = System.getProperty("project.build.directory") + "/downloaded/";
+    private static String downloadDirectory = System.getProperty("java.io.tmpdir");
 
     @BeforeClass
     public static void start() throws Exception {
