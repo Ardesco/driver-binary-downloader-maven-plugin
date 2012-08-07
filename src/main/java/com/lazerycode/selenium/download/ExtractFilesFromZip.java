@@ -19,8 +19,8 @@ public class ExtractFilesFromZip {
      * @return
      * @throws IOException
      */
-    public static void unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist) throws IOException {
-
+    public static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist) throws IOException {
+        Boolean filesExtracted = false;
         ZipFile zip = new ZipFile(downloadedZip);
         Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
         while (entries.hasMoreElements()) {
@@ -48,7 +48,10 @@ public class ExtractFilesFromZip {
             }
             os.close();
             is.close();
+            filesExtracted = true;
         }
         zip.close();
+
+        return filesExtracted;
     }
 }

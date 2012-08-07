@@ -3,7 +3,6 @@ package com.lazerycode.selenium.download;
 import com.lazerycode.selenium.repository.FileDetails;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.Iterator;
@@ -39,7 +38,6 @@ public class DownloadHandler {
         File fileToUnzip = null;
         FileDownloader downloader = new FileDownloader(this.downloadedZipFileDirectory, this.fileDownloadRetryAttempts, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
         for (Iterator iterator = this.filesToDownload.entrySet().iterator(); iterator.hasNext(); ) {
-            boolean extractFilesFromZip = this.overwriteFilesThatExist;
             Map.Entry<String, FileDetails> fileToDownload = (Map.Entry<String, FileDetails>) iterator.next();
             downloader.remoteURL(fileToDownload.getValue().getFileLocation());
             downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
@@ -48,15 +46,14 @@ public class DownloadHandler {
             LOG.info("Checking to see if zip file '" + currentFileAbsolutePath + "' already exists and is valid.");
             boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(currentFileAbsolutePath));
             if (!existsAndIsValid) {
-                extractFilesFromZip = true;
                 fileToUnzip = downloader.downloadFile();
+            } else {
+                fileToUnzip = new File(currentFileAbsolutePath);
             }
-            if (extractFilesFromZip) {
-                String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
-                ExtractFilesFromZip.unzipFile(fileToUnzip, extractionDirectory, extractFilesFromZip);
+            String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
+            if (ExtractFilesFromZip.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist)) {
                 LOG.info("File(s) copied to " + extractionDirectory);
             }
-
         }
     }
 
