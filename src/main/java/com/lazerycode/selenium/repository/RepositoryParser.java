@@ -2,6 +2,7 @@ package com.lazerycode.selenium.repository;
 
 import com.lazerycode.selenium.OS;
 import nu.xom.*;
+import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public class RepositoryParser {
 
+    private static final Logger LOG = Logger.getLogger(RepositoryParser.class);
     private Document repositoryMap;
     private ArrayList<OS> operatingSystemList;
     private Map<String, String> bitRates = new HashMap<String, String>();
@@ -126,7 +128,6 @@ public class RepositoryParser {
      */
     private Nodes getSpecificVersions(Nodes listOfVersions, String driverID) {
         Nodes filteredVersions = new Nodes();
-
         for (Iterator iterator = this.getSpecificExecutableVersions.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) iterator.next();
             if (driverDetail.getKey().equalsIgnoreCase(driverID)) {
@@ -136,6 +137,7 @@ public class RepositoryParser {
                     for (int current = 0; current < wantedVersions.size(); current++) {
                         if (wantedVersions.get(current).equalsIgnoreCase(currentVersion)) {
                             filteredVersions.append(listOfVersions.get(j));
+                            LOG.info("Found " + driverID + " version " + wantedVersions.get(current) + " in the repository map.");
                             break;
                         }
                     }
@@ -148,7 +150,10 @@ public class RepositoryParser {
 
     private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers) {
         Nodes filteredVersions = new Nodes();
-
+        if (this.selectivelyParseDriverExecutableList) {
+            LOG.info("Parsing Specific Executable Versions Supplied...");
+            LOG.info(" ");
+        }
         for (int i = 0; i < usedDrivers.size(); i++) {
             String driverID = ((Element) usedDrivers.get(i)).getAttribute("id").getValue();
             Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "']");
@@ -166,6 +171,7 @@ public class RepositoryParser {
                 }
             }
         }
+        LOG.info(" ");
 
         return filteredVersions;
     }

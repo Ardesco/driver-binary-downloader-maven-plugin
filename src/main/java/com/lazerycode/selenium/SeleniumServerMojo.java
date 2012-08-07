@@ -231,7 +231,10 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     private void SetRepositoryMapFile() throws MojoExecutionException {
         if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
-            LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...");
+            if (this.customRepositoryMap != null) {
+                LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...");
+                LOG.info(" ");
+            }
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         } else {
             try {
