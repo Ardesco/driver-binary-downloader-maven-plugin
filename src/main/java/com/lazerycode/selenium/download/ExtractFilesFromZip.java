@@ -49,6 +49,7 @@ public class ExtractFilesFromZip {
             os.close();
             is.close();
             extractedFile.setExecutable(true);
+            if(!extractedFile.canExecute()) LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
             filesExtracted = true;
         }
         zip.close();
