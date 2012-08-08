@@ -48,6 +48,7 @@ public class ExtractFilesFromZip {
             }
             os.close();
             is.close();
+            extractedFile.setExecutable(true);
             filesExtracted = true;
         }
         zip.close();
