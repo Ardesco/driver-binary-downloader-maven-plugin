@@ -1,86 +1,93 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <root>
-    <driver id="internetexplorer">
-        <version id="2.21.0">
-            <windows sixtyfourbit="true">
-                <filelocation>http://selenium.googlecode.com/files/IEDriverServer_x64_2.21.0.zip</filelocation>
-                <hash>87c0e71ebc542f72133400e18ed149daa02f3481</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-            <windows thirtytwobit="true">
-                <filelocation>http://selenium.googlecode.com/files/IEDriverServer_Win32_2.21.0.zip</filelocation>
-                <hash>aece5ddf5548a4328d5e11206faab87ae931017b</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-        </version>
-        <version id="2.20.1">
-            <windows sixtyfourbit="true">
-                <filelocation>http://selenium.googlecode.com/files/InternetExplorerDriver_x64_2.20.1.zip</filelocation>
-                <hash>9d407ad82d9d0782616b79aa5bb6822daf9985a4</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-            <windows thirtytwobit="true">
-                <filelocation>http://selenium.googlecode.com/files/InternetExplorerDriver_Win32_2.20.1.zip</filelocation>
-                <hash>24aef0da3e7436dc55845e6cf77d92a22322a87b</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-        </version>
-    </driver>
-    <driver id="googlechrome">
-        <version id="22">
-            <windows thirtytwobit="true" sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_22_0_1203_0b.zip</filelocation>
-                <hash>3b31a552575a02bd8106f87f78264ecaafd956d4</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-        </version>
-        <version id="19">
-            <windows thirtytwobit="true" sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_19.0.1068.0.zip</filelocation>
-                <hash>7213b9dd6a9885de5db518254bc34bb8d3fced1a</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-            <linux sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_19.0.1068.0.zip
-                </filelocation>
-                <hash>d32cbc3713eaa959c4f46b7ace864a23941f949d</hash>
-                <hashtype>sha1</hashtype>
-            </linux>
-            <linux thirtytwobit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_19.0.1068.0.zip
-                </filelocation>
-                <hash>8f024737aee435151caf7186b4cccda4b3154526</hash>
-                <hashtype>sha1</hashtype>
-            </linux>
-            <osx thirtytwobit="true" sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_19.0.1068.0.zip</filelocation>
-                <hash>4a7448555dc61f900c5144d26afbfe99749433de</hash>
-                <hashtype>sha1</hashtype>
-            </osx>
-        </version>
-        <version id="18">
-            <windows thirtytwobit="true" sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_18.0.1022.0.zip</filelocation>
-                <hash>3e9fef67d09ed64006eda2cf0c54220108a3c452</hash>
-                <hashtype>sha1</hashtype>
-            </windows>
-            <linux sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_18.0.1022.0.zip
-                </filelocation>
-                <hash>7f940c688474cf5a7406a1ea092bdab403c1c9f2</hash>
-                <hashtype>sha1</hashtype>
-            </linux>
-            <linux thirtytwobit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_18.0.1022.0.zip
-                </filelocation>
-                <hash>99db222e9b220e569623b140efc9bd0a033426a7</hash>
-                <hashtype>sha1</hashtype>
-            </linux>
-            <osx thirtytwobit="true" sixtyfourbit="true">
-                <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_18.0.1022.0.zip</filelocation>
-                <hash>2e880446608eaf22c0364e55b1bfc17aa3b78425</hash>
-                <hashtype>sha1</hashtype>
-            </osx>
-        </version>
-    </driver>
+    <windows>
+        <driver id="internetexplorer">
+            <version id="2.25.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_x64_2.25.2.zip</filelocation>
+                    <hash>baf195731faa2750c18758633f68388d72bbcce6</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_Win32_2.25.2.zip</filelocation>
+                    <hash>5e90b1cc88a44a9e9c8f53d9f0317077c6bf982a</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="2.24.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_x64_2.24.2.zip</filelocation>
+                    <hash>ea10bf6c0921c88ef07c9bb6b1983dbe3ca2a2be</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_Win32_2.24.2.zip</filelocation>
+                    <hash>ecdc72e4b73de0ad82f1e32fc0d6d6b6d08bddfe</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="googlechrome">
+            <version id="22">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_22_0_1203_0b.zip</filelocation>
+                    <hash>3b31a552575a02bd8106f87f78264ecaafd956d4</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="21">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_21.0.1180.4.zip</filelocation>
+                    <hash>f2c25d144dc9d71473700706179b8aa989baec32</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </windows>
+    <linux>
+        <driver id="googlechrome">
+            <version id="21">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate64_21.0.1180.4.zip</filelocation>
+                    <hash>4f8f043f3893ca0969176c8cf4868117b47e3781</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_21.0.1180.4.zip</filelocation>
+                    <hash>384a3d0033a688db7f41d0037889367b078cd969</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="20">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate64_20.0.1133.0.zip</filelocation>
+                    <hash>1a559a110751e40a2719d277436d1a039596026b</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_20.0.1133.0.zip</filelocation>
+                    <hash>2d7c775ce163576cfe595d55820d0f3a562ab373</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </linux>
+    <osx>
+        <driver id="googlechrome">
+            <version id="21">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_21.0.1180.4.zip</filelocation>
+                    <hash>ea6f2f45c835d3413fde3a7b08e5e3e4db6dc3f9</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="20">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_20.0.1133.0.zip</filelocation>
+                    <hash>00013555f4383dee3308d180eb868ca27e865179</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </osx>
 </root>

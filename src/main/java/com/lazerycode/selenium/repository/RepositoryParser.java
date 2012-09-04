@@ -79,8 +79,8 @@ public class RepositoryParser {
      *
      * @return
      */
-    private Nodes getAllRelevantDriverNodes() {
-        Nodes availableDrivers = getAllChildren("/root");
+    private Nodes getAllRelevantDriverNodes(String operatingSystem) {
+        Nodes availableDrivers = getAllChildren("/root/" + operatingSystem);
         Nodes usedDrivers = new Nodes();
 
         for (int currentDriver = 0; currentDriver < availableDrivers.size(); currentDriver++) {
@@ -110,20 +110,15 @@ public class RepositoryParser {
      */
     private Nodes getHighestVersion(Nodes listOfVersions) {
         Nodes highestVersionsList = new Nodes();
-        for (int j = 0; j < operatingSystemList.size(); j++) {
-            Node nodeToAdd = null;
-            String highestVersion = null;
-            OS operatingSystem = operatingSystemList.get(j);
-            for (int i = 0; i < listOfVersions.size(); i++) {
-                if (listOfVersions.get(i).query("./" + operatingSystem.toString().toLowerCase()).size() > 0) {
-                    String currentVersion = ((Element) listOfVersions.get(i)).getAttribute("id").getValue();
-                    if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
-                        highestVersion = currentVersion;
-                        nodeToAdd = listOfVersions.get(i);
-                    }
-                }
+        Node nodeToAdd = null;
+        String highestVersion = null;
+        for (int i = 0; i < listOfVersions.size(); i++) {
+            String currentVersion = ((Element) listOfVersions.get(i)).getAttribute("id").getValue();
+            if (highestVersion == null || currentVersion.compareTo(highestVersion) > 0) {
+                highestVersion = currentVersion;
+                nodeToAdd = listOfVersions.get(i);
             }
-            if(nodeToAdd != null) highestVersionsList.append(nodeToAdd);
+            if (nodeToAdd != null) highestVersionsList.append(nodeToAdd);
         }
 
         return highestVersionsList;
@@ -159,7 +154,7 @@ public class RepositoryParser {
         return filteredVersions;
     }
 
-    private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers) {
+    private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers, String operatingSystem) {
         Nodes filteredVersions = new Nodes();
         if (this.selectivelyParseDriverExecutableList) {
             LOG.info("Parsing Specific Executable Versions Supplied...");
@@ -167,7 +162,7 @@ public class RepositoryParser {
         }
         for (int i = 0; i < usedDrivers.size(); i++) {
             String driverID = ((Element) usedDrivers.get(i)).getAttribute("id").getValue();
-            Nodes availableVersions = getAllChildren("/root/driver[@id='" + driverID + "']");
+            Nodes availableVersions = getAllChildren("/root/" + operatingSystem + "/driver[@id='" + driverID + "']");
             if (this.selectivelyParseDriverExecutableList) {
                 Nodes specificVersions = getSpecificVersions(availableVersions, driverID);
                 for (int specificVersion = 0; specificVersion < specificVersions.size(); specificVersion++) {
@@ -215,18 +210,15 @@ public class RepositoryParser {
      * This information is then added to the downloadable file list.
      *
      * @param node
-     * @param osString
      * @throws MalformedURLException
      */
-    private void addDownloadableFilesToList(Node node, String osString) throws MalformedURLException {
-        osString = osString.toLowerCase();
-
+    private void addDownloadableFilesToList(Node node, String operatingSystem) throws MalformedURLException {
         for (Iterator iterator = this.bitRates.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, String> bitRate = (Map.Entry<String, String>) iterator.next();
-            Nodes fileDetails = node.query("./" + osString + bitRate.getValue());
+            Nodes fileDetails = node.query("./bitrate" + bitRate.getValue());
             String driverType = ((Element) node.getParent()).getAttribute("id").getValue();
             String driverVersion = ((Element) node).getAttribute("id").getValue();
-            String extractionPath = driverType + File.separator + osString.toLowerCase() + File.separator + bitRate.getKey() + File.separator + driverVersion;
+            String extractionPath = operatingSystem + File.separator + driverType + File.separator + bitRate.getKey() + File.separator + driverVersion;
             if (fileDetails.size() > 0) this.downloadableFileList.put(extractionPath, extractFileInformation(fileDetails.get(0)));
         }
     }
@@ -238,11 +230,10 @@ public class RepositoryParser {
      * @throws MalformedURLException
      */
     public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException {
-        Nodes usedVersions = getFilteredListOfVersionNodes(getAllRelevantDriverNodes());
-
-        for (int selectedVersion = 0; selectedVersion < usedVersions.size(); selectedVersion++) {
-            for (int selectedOperatingSystem = 0; selectedOperatingSystem < operatingSystemList.size(); selectedOperatingSystem++) {
-                addDownloadableFilesToList(usedVersions.get(selectedVersion), operatingSystemList.get(selectedOperatingSystem).toString());
+        for (int selectedOperatingSystem = 0; selectedOperatingSystem < operatingSystemList.size(); selectedOperatingSystem++) {
+            Nodes usedVersions = getFilteredListOfVersionNodes(getAllRelevantDriverNodes(operatingSystemList.get(selectedOperatingSystem).toString().toLowerCase()), operatingSystemList.get(selectedOperatingSystem).toString().toLowerCase());
+            for (int selectedVersion = 0; selectedVersion < usedVersions.size(); selectedVersion++) {
+                addDownloadableFilesToList(usedVersions.get(selectedVersion), operatingSystemList.get(selectedOperatingSystem).toString().toLowerCase());
             }
         }
 

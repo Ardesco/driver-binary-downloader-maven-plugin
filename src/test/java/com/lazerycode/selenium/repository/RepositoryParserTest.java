@@ -33,15 +33,13 @@ public class RepositoryParserTest {
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), this.osList, true, true, true);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
-        //TODO Currently download binaries for multiple versions if a partial release of drivers has occured.  Need to revisit this.
-        assertThat(downloadableFileList.size(), is(equalTo(10)));
-        //TODO check all the keys are correct
+        assertThat(downloadableFileList.size(), is(equalTo(8)));
     }
 
     @Test
     public void getSpecificVersions() throws Exception {
         Map<String, String> versionsToFind = new HashMap<String, String>();
-        versionsToFind.put("googlechrome", "18");
+        versionsToFind.put("googlechrome", "21");
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), this.osList, true, true, true);
         executableBinaryMapping.specifySpecificExecutableVersions(versionsToFind);
@@ -56,9 +54,7 @@ public class RepositoryParserTest {
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), this.osList, true, true, false);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
-        //TODO Currently download binaries for multiple versions if a partial release of drivers has occured.  Need to revisit this.
-        assertThat(downloadableFileList.size(), is(equalTo(18)));
-        //TODO check all the keys are correct
+        assertThat(downloadableFileList.size(), is(equalTo(16)));
     }
 
     //TODO implement error on invalid version

@@ -1,64 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-    <xs:element name="root">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="driver"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="driver">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="version"/>
-            </xs:sequence>
-            <xs:attribute name="id" use="required"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="version">
-        <xs:complexType>
-            <xs:sequence minOccurs="0">
-                <xs:element maxOccurs="1" ref="windows"/>
-                <xs:element maxOccurs="1" ref="linux"/>
-                <xs:element maxOccurs="1" ref="osx"/>
-            </xs:sequence>
-            <xs:attribute name="id" use="required"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="windows">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="filelocation"/>
-                <xs:element ref="hash"/>
-                <xs:element ref="hashtype"/>
-            </xs:sequence>
-            <xs:attribute name="sixtyfourbit"/>
-            <xs:attribute name="thirtytwobit"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="linux">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="filelocation"/>
-                <xs:element ref="hash"/>
-                <xs:element ref="hashtype"/>
-            </xs:sequence>
-            <xs:attribute name="sixtyfourbit"/>
-            <xs:attribute name="thirtytwobit"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="osx">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="filelocation"/>
-                <xs:element ref="hash"/>
-                <xs:element ref="hashtype"/>
-            </xs:sequence>
-            <xs:attribute name="sixtyfourbit"/>
-            <xs:attribute name="thirtytwobit"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="filelocation" type="xs:string"/>
-    <xs:element name="hash" type="xs:string"/>
-    <xs:element name="hashtype" type="xs:string"/>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="root" type="rootType"/>
+    <xs:complexType name="driverType">
+        <xs:sequence>
+            <xs:element type="versionType" name="version" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="osxType">
+        <xs:sequence>
+            <xs:element type="driverType" name="driver"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="linuxType">
+        <xs:sequence>
+            <xs:element type="driverType" name="driver"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="bitrateType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="filelocation"/>
+            <xs:element type="xs:string" name="hash"/>
+            <xs:element type="xs:string" name="hashtype"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="sixtyfourbit" use="optional"/>
+        <xs:attribute type="xs:string" name="thirtytwobit" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="rootType">
+        <xs:sequence>
+            <xs:element type="windowsType" name="windows"/>
+            <xs:element type="linuxType" name="linux"/>
+            <xs:element type="osxType" name="osx"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="versionType">
+        <xs:sequence>
+            <xs:element type="bitrateType" name="bitrate" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="windowsType">
+        <xs:sequence>
+            <xs:element type="driverType" name="driver" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
