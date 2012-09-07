@@ -23,10 +23,11 @@ public class RepositoryParser {
     private Map<String, ArrayList<String>> getSpecificExecutableVersions = new HashMap<String, ArrayList<String>>();
     private boolean onlyGetLatestVersions = true;
     private boolean selectivelyParseDriverExecutableList = false;
+    private boolean throwExceptionIfSpecifiedVersionIsNotFound = false;
 
     private HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
 
-    public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions) throws MojoFailureException {
+    public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions, boolean throwExceptionIfSpecifiedVersionIsNotFound) throws MojoFailureException {
         Builder parser = new Builder();
         try {
             this.repositoryMap = parser.build(repositoryMapLocation);
@@ -42,6 +43,8 @@ public class RepositoryParser {
         LOG.info("Download 64bit binaries: " + sixtyFourBit);
         this.onlyGetLatestVersions = onlyGetLatestVersions;
         LOG.info("Download Latest Versions Only: " + onlyGetLatestVersions);
+        this.throwExceptionIfSpecifiedVersionIsNotFound = throwExceptionIfSpecifiedVersionIsNotFound;
+        LOG.info("Throw Exception If Specified Version Is Not Found: " + throwExceptionIfSpecifiedVersionIsNotFound);
         LOG.info(" ");
     }
 
@@ -132,20 +135,25 @@ public class RepositoryParser {
      * @param driverID
      * @return
      */
-    private Nodes getSpecificVersions(Nodes listOfVersions, String driverID) {
+    private Nodes getSpecificVersions(Nodes listOfVersions, String driverID) throws MojoFailureException{
         Nodes filteredVersions = new Nodes();
         for (Iterator iterator = this.getSpecificExecutableVersions.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, ArrayList<String>> driverDetail = (Map.Entry<String, ArrayList<String>>) iterator.next();
             if (driverDetail.getKey().equalsIgnoreCase(driverID)) {
-                for (int j = 0; j < listOfVersions.size(); j++) {
-                    String currentVersion = ((Element) listOfVersions.get(j)).getAttribute("id").getValue();
-                    ArrayList<String> wantedVersions = driverDetail.getValue();
-                    for (int current = 0; current < wantedVersions.size(); current++) {
+                ArrayList<String> wantedVersions = driverDetail.getValue();
+                for (int current = 0; current < wantedVersions.size(); current++) {
+                    boolean versionFound = false;
+                    for (int j = 0; j < listOfVersions.size(); j++) {
+                        String currentVersion = ((Element) listOfVersions.get(j)).getAttribute("id").getValue();
                         if (wantedVersions.get(current).equalsIgnoreCase(currentVersion)) {
                             filteredVersions.append(listOfVersions.get(j));
                             LOG.info("Found " + driverID + " version " + wantedVersions.get(current) + " in the repository map.");
+                            versionFound = true;
                             break;
                         }
+                    }
+                    if(this.throwExceptionIfSpecifiedVersionIsNotFound && !versionFound){
+                        throw new MojoFailureException("Unable to find" + driverID + " version " + wantedVersions.get(current) + " in the repository map.");
                     }
                 }
             }
@@ -154,7 +162,7 @@ public class RepositoryParser {
         return filteredVersions;
     }
 
-    private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers, String operatingSystem) {
+    private Nodes getFilteredListOfVersionNodes(Nodes usedDrivers, String operatingSystem) throws MojoFailureException {
         Nodes filteredVersions = new Nodes();
         if (this.selectivelyParseDriverExecutableList) {
             LOG.info("Parsing Specific Executable Versions Supplied...");
@@ -229,7 +237,7 @@ public class RepositoryParser {
      * @return
      * @throws MalformedURLException
      */
-    public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException {
+    public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException, MojoFailureException {
         for (int selectedOperatingSystem = 0; selectedOperatingSystem < operatingSystemList.size(); selectedOperatingSystem++) {
             Nodes usedVersions = getFilteredListOfVersionNodes(getAllRelevantDriverNodes(operatingSystemList.get(selectedOperatingSystem).toString().toLowerCase()), operatingSystemList.get(selectedOperatingSystem).toString().toLowerCase());
             for (int selectedVersion = 0; selectedVersion < usedVersions.size(); selectedVersion++) {

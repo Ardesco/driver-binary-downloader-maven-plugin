@@ -102,17 +102,28 @@ public class SeleniumServerMojo extends AbstractMojo {
 
     /**
      * <h3>A map of driver standalone versions to download</h3>
-     * <p/>
+     * <p>
      * &lt;getSpecificExecutableVersions&gt;
      * &lt;googlechrome&gt;19&lt;/googlechrome&gt;
      * &lt;internetexplorer&gt;2.21.0&lt;/internetexplorer&gt;
      * &lt;/getSpecificExecutableVersions&gt;
      * <p/>
-     * <p>Unrecognised browser names/versions will be ignored</p>
+     * <p>Unrecognised browser names/versions will be ignored by default</p>
      *
      * @parameter
      */
     protected Map<String, String> getSpecificExecutableVersions;
+
+    /**
+     * <h3>Throw an exception if any of the specified standalone versions do not exist in the repository map</h3>
+     * <p>
+     * &lt;throwExceptionIfSpecifiedVersionIsNotFound&gt;false&lt;/throwExceptionIfSpecifiedVersionIsNotFound&gt;
+     * </p>
+     * <p>This will cause a MojoFailureException to be thrown if any specific executable versions that have been specified do not exist in the RepositoryMap.xml</p>
+     *
+     * @parameter default-value="false"
+     */
+    protected boolean throwExceptionIfSpecifiedVersionIsNotFound;
 
     /**
      * <h3>Number of times to retry the file download of each executable</h3>
@@ -149,7 +160,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     protected boolean overwriteFilesThatExist;
 
-    private InputStream xmlRepositoryMap = null;
+    protected InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
 
     @Override
@@ -160,15 +171,16 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLE BINARIES...");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
-        CheckRepositoryMapIsValid();
-        SetRepositoryMapFile();
+        checkRepositoryMapIsValid();
+        setRepositoryMapFile();
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
                 buildOSArrayList(this.operatingSystems),
                 this.thirtyTwoBitBinaries,
                 this.sixtyFourBitBinaries,
-                this.onlyGetLatestVersions);
+                this.onlyGetLatestVersions,
+                this.throwExceptionIfSpecifiedVersionIsNotFound);
         if (this.getSpecificExecutableVersions != null && this.getSpecificExecutableVersions.size() > 0) {
             executableBinaryMapping.specifySpecificExecutableVersions(this.getSpecificExecutableVersions);
         }
@@ -229,7 +241,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @throws MojoExecutionException
      */
-    private void SetRepositoryMapFile() throws MojoExecutionException {
+    private void setRepositoryMapFile() throws MojoExecutionException {
         if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
             if (this.customRepositoryMap != null) {
                 LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...");
@@ -252,7 +264,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @throws MojoExecutionException
      */
-    private void CheckRepositoryMapIsValid() throws MojoExecutionException {
+    protected void checkRepositoryMapIsValid() throws MojoExecutionException {
         URL schemaFile = this.getClass().getResource("/RepositoryMap.xsd");
         Source xmlFile = new StreamSource(this.customRepositoryMap);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
