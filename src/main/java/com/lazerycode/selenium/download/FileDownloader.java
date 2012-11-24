@@ -98,11 +98,10 @@ public class FileDownloader {
     /**
      * Perform the file download
      *
-     * @return
-     * @throws IOException
+     * @return File
      * @throws MojoExecutionException
      */
-    public File downloadFile() throws IOException, MojoExecutionException {
+    public File downloadFile() throws MojoExecutionException {
         File fileToDownload = new File(this.fileDownloadDirectory + File.separator + this.filename);
         for (int n = 0; n < this.totalNumberOfRetryAttempts; n++) {
             try {

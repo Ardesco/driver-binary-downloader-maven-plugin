@@ -38,7 +38,7 @@ public class FileDownloaderTest {
     @After
     public void cleanUpFiles() throws IOException {
         LOG.info("Cleaning up test files...");
-        File downloadDirectory = new File(this.downloadDirectory);
+        File downloadDirectory = new File(FileDownloaderTest.downloadDirectory);
         if (downloadDirectory.exists()) FileUtils.deleteDirectory(downloadDirectory);
         LOG.info("Test complete.");
     }
