@@ -88,6 +88,13 @@
             </version>
         </driver>
         <driver id="googlechrome">
+            <version id="23">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_23.0.1240.0.zip</filelocation>
+                    <hash>10c6f3d0c265342b828bee65b500c45161ee323a</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
             <version id="22">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
                     <filelocation>http://chromedriver.googlecode.com/files/chromedriver_win_22_0_1203_0b.zip</filelocation>
@@ -127,6 +134,18 @@
     </windows>
     <linux>
         <driver id="googlechrome">
+            <version id="23">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_23.0.1240.0.zip</filelocation>
+                    <hash>8ff0a2fa3d66963d7b3fab054d37b2c2319fa6d1</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_23.0.1240.0.zip</filelocation>
+                    <hash>988e47718972f650c96dc46f4ea1f5b4ed94f06f</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
             <version id="21">
                 <bitrate sixtyfourbit="true">
                     <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_21.0.1180.4.zip</filelocation>
@@ -179,6 +198,13 @@
     </linux>
     <osx>
         <driver id="googlechrome">
+            <version id="23">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_23.0.1240.0.zip</filelocation>
+                    <hash>20a21cca0a4f0a1e25ee88e1f0bd53acbdba4cc6</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
             <version id="21">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
                     <filelocation>http://chromedriver.googlecode.com/files/chromedriver_mac_21.0.1180.4.zip</filelocation>
