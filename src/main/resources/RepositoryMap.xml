@@ -117,36 +117,36 @@
         <driver id="googlechrome">
             <version id="21">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate64_21.0.1180.4.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_21.0.1180.4.zip</filelocation>
                     <hash>4f8f043f3893ca0969176c8cf4868117b47e3781</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_21.0.1180.4.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_21.0.1180.4.zip</filelocation>
                     <hash>384a3d0033a688db7f41d0037889367b078cd969</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
             <version id="20">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate64_20.0.1133.0.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_20.0.1133.0.zip</filelocation>
                     <hash>1a559a110751e40a2719d277436d1a039596026b</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_20.0.1133.0.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_20.0.1133.0.zip</filelocation>
                     <hash>2d7c775ce163576cfe595d55820d0f3a562ab373</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
             <version id="19">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate64_19.0.1068.0.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux64_19.0.1068.0.zip</filelocation>
                     <hash>d32cbc3713eaa959c4f46b7ace864a23941f949d</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_19.0.1068.0.zip</filelocation>
+                    <filelocation>http://chromedriver.googlecode.com/files/chromedriver_linux32_19.0.1068.0.zip</filelocation>
                     <hash>8f024737aee435151caf7186b4cccda4b3154526</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
