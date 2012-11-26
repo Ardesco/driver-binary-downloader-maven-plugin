@@ -2,15 +2,27 @@
 <root>
     <windows>
         <driver id="internetexplorer">
-            <version id="2.25.2">
+            <version id="2.26.2">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_x64_2.25.2.zip</filelocation>
-                    <hash>baf195731faa2750c18758633f68388d72bbcce6</hash>
+                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.26.2.zip</filelocation>
+                    <hash>2f421b8840d431b38cc2ab2359f4c131b55a3b78</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>http://selenium.googlecode.com/files/IEDriverServer_Win32_2.25.2.zip</filelocation>
-                    <hash>5e90b1cc88a44a9e9c8f53d9f0317077c6bf982a</hash>
+                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.26.2.zip</filelocation>
+                    <hash>99030fee43dac4692ac0d7dbf6f8de79a332cbe0</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+            <version id="2.25.3">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.25.3.zip</filelocation>
+                    <hash>30c1c3b671e75eb6a03a8e3ef711a9858b30f8b5</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.25.3.zip</filelocation>
+                    <hash>416c5fed0935f843ce031ad0954b9f34f548a989</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
