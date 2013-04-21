@@ -14,9 +14,10 @@ public class ExtractFilesFromZip {
     /**
      * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
      *
-     * @param downloadedZip
-     * @param extractedToFilePath
-     * @return
+     * @param downloadedZip           The downloaded zip file
+     * @param extractedToFilePath     Path to extracted file
+     * @param overwriteFilesThatExist Overwrite any existing files
+     * @return boolean
      * @throws IOException
      */
     public static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist) throws IOException {
@@ -43,13 +44,16 @@ public class ExtractFilesFromZip {
             LOG.info("Extracting '" + extractedFile.getName() + "'...");
             InputStream is = zip.getInputStream(zipFileEntry);
             OutputStream os = new FileOutputStream(extractedFile);
-            while (is.available() > 0) {
-                os.write(is.read());
+            byte[] buf = new byte[4096];
+            int r;
+            while ((r = is.read(buf)) != -1) {
+                os.write(buf, 0, r);
             }
             os.close();
             is.close();
             extractedFile.setExecutable(true);
-            if(!extractedFile.canExecute()) LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
+            if (!extractedFile.canExecute())
+                LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
             filesExtracted = true;
         }
         zip.close();
