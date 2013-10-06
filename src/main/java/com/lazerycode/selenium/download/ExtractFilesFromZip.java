@@ -7,6 +7,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static org.apache.commons.io.IOUtils.*;
+
 public class ExtractFilesFromZip {
 
     private static final Logger LOG = Logger.getLogger(ExtractFilesFromZip.class);
@@ -20,6 +22,7 @@ public class ExtractFilesFromZip {
      * @return boolean
      * @throws IOException
      */
+    @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
     public static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist) throws IOException {
         Boolean filesExtracted = false;
         ZipFile zip = new ZipFile(downloadedZip);
@@ -42,15 +45,7 @@ public class ExtractFilesFromZip {
             extractedFile.getParentFile().mkdirs();
             extractedFile.createNewFile();
             LOG.info("Extracting '" + extractedFile.getName() + "'...");
-            InputStream is = zip.getInputStream(zipFileEntry);
-            OutputStream os = new FileOutputStream(extractedFile);
-            byte[] buf = new byte[4096];
-            int r;
-            while ((r = is.read(buf)) != -1) {
-                os.write(buf, 0, r);
-            }
-            os.close();
-            is.close();
+            copy(zip.getInputStream(zipFileEntry), new FileOutputStream(extractedFile));
             extractedFile.setExecutable(true);
             if (!extractedFile.canExecute())
                 LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");

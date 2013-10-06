@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -69,6 +70,7 @@ public class SeleniumServerMojo extends AbstractMojo {
    * <p/>
    * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
    * <p><strong>Default:</strong>All operating systems.</p>
+   * <p><strong>WARNING</strong>if <em>onlyGetDriversForHostOperatingSystem</em> is true, this <strong>will</strong> be ignored!</p>
    *
    * @parameter
    */
@@ -99,6 +101,15 @@ public class SeleniumServerMojo extends AbstractMojo {
    * @parameter default-value="true"
    */
   protected boolean onlyGetLatestVersions;
+
+    /**
+     * <h3>Only get drivers that are compatible with the operating system running the plugin</h3>
+     * <p>&lt;onlyGetDriversForHostOperatingSystem&gt;true&lt;/onlyGetDriversForHostOperatingSystem&gt;</p>
+     * <p>If set to false this will download binary executables for all operating systems</p>
+     *
+     * @parameter default-value="true"
+     */
+    protected boolean onlyGetDriversForHostOperatingSystem;
 
   /**
    * <h3>A map of driver standalone versions to download</h3>
@@ -174,9 +185,28 @@ public class SeleniumServerMojo extends AbstractMojo {
     checkRepositoryMapIsValid();
     setRepositoryMapFile();
 
+    if(this.operatingSystems.size() < 1){
+        this.onlyGetDriversForHostOperatingSystem = true;
+    }
+
+    Map<String, String> selectedOperatingSystems = new HashMap<String, String>();
+
+      if(this.onlyGetDriversForHostOperatingSystem){
+        String currentOS = System.getProperty("os.name").toLowerCase();
+          if(currentOS.startsWith("win")){
+              selectedOperatingSystems.put("windows", "true");
+          } else if (currentOS.startsWith("mac")){
+              selectedOperatingSystems.put("osx", "true");
+          } else {
+              selectedOperatingSystems.put("linux", "true");
+          }
+      } else {
+          selectedOperatingSystems = this.operatingSystems;
+      }
+
     RepositoryParser executableBinaryMapping = new RepositoryParser(
         this.xmlRepositoryMap,
-        buildOSArrayList(this.operatingSystems),
+        buildOSArrayList(selectedOperatingSystems),
         this.thirtyTwoBitBinaries,
         this.sixtyFourBitBinaries,
         this.onlyGetLatestVersions,

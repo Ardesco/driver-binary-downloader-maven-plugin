@@ -19,7 +19,7 @@ public class CheckFileHash {
     /**
      * The File to perform a Hash check upon
      *
-     * @param fileToCheck
+     * @param fileToCheck check to see if file exists
      * @throws java.io.FileNotFoundException
      */
     public void fileToCheck(File fileToCheck) throws FileNotFoundException {
@@ -32,8 +32,8 @@ public class CheckFileHash {
     /**
      * Hash details used to perform the Hash check
      *
-     * @param hash
-     * @param hashType
+     * @param hash set file hash
+     * @param hashType set hash type
      */
     public void hashDetails(String hash, HashType hashType) {
         this.expectedFileHash = hash;
@@ -43,7 +43,7 @@ public class CheckFileHash {
     /**
      * Performs a expectedFileHash check on a File.
      *
-     * @return
+     * @return boolean
      * @throws java.io.IOException
      */
     public boolean hasAValidHash() throws IOException, MojoExecutionException {
@@ -52,7 +52,7 @@ public class CheckFileHash {
         if (!this.fileToCheck.exists()) return false;
         String actualFileHash = "";
         boolean isHashValid = false;
-        LOG.info("Expected Hash: '" + this.expectedFileHash + "'");
+        LOG.debug("Expected Hash: '" + this.expectedFileHash + "'");
         FileInputStream fileToHashCheck;
         switch (this.typeOfHash) {
             case MD5:
@@ -68,7 +68,7 @@ public class CheckFileHash {
                 if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
                 break;
         }
-        LOG.info("Actual Hash: '" + actualFileHash + "'");
+        LOG.debug("Actual Hash: '" + actualFileHash + "'");
         LOG.info("Hashes Match: " + isHashValid);
 
         return isHashValid;
