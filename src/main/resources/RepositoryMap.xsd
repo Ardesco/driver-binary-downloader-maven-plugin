@@ -9,12 +9,12 @@
     </xs:complexType>
     <xs:complexType name="osxType">
         <xs:sequence>
-            <xs:element type="driverType" name="driver"/>
+            <xs:element type="driverType" name="driver" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="linuxType">
         <xs:sequence>
-            <xs:element type="driverType" name="driver"/>
+            <xs:element type="driverType" name="driver" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="bitrateType">
