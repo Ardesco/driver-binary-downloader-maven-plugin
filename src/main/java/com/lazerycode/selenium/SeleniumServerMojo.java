@@ -185,7 +185,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     checkRepositoryMapIsValid();
     setRepositoryMapFile();
 
-    if(this.operatingSystems.size() < 1){
+    if(null == this.operatingSystems || this.operatingSystems.size() < 1){
         this.onlyGetDriversForHostOperatingSystem = true;
     }
 
