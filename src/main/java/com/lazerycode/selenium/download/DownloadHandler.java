@@ -49,7 +49,8 @@ public class DownloadHandler {
         fileToUnzip = new File(currentFileAbsolutePath);
       }
       String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
-      if (ExtractFilesFromArchive.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(fileToDownload.getKey().toUpperCase()))) {
+      String binaryType = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO this is a real hack, do this a better way!
+      if (ExtractFilesFromArchive.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryType))) {
         LOG.info("File(s) copied to " + extractionDirectory);
       }
     }
