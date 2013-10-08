@@ -5,7 +5,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.Map;
 
 public class DownloadHandler {
@@ -30,7 +29,7 @@ public class DownloadHandler {
   }
 
   public void getStandaloneExecutableFiles() throws Exception {
-    LOG.info("Zip files will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
+    LOG.info("Archives will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
     LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
     LOG.info(" ");
     LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
@@ -42,7 +41,7 @@ public class DownloadHandler {
       downloader.setHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
       LOG.info(" ");
       String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
-      LOG.info("Checking to see if zip file '" + currentFileAbsolutePath + "' already exists and is valid.");
+      LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' already exists and is valid.");
       boolean existsAndIsValid = downloader.fileExistsAndIsValid(new File(currentFileAbsolutePath));
       if (!existsAndIsValid) {
         fileToUnzip = downloader.downloadFile();
@@ -50,7 +49,7 @@ public class DownloadHandler {
         fileToUnzip = new File(currentFileAbsolutePath);
       }
       String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
-      if (ExtractFilesFromZip.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist)) {
+      if (ExtractFilesFromArchive.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(fileToDownload.getKey().toUpperCase()))) {
         LOG.info("File(s) copied to " + extractionDirectory);
       }
     }
