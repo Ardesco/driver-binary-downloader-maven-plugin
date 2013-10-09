@@ -20,7 +20,7 @@ public class CheckFileHashTest {
     public void checkValidMD5Hash() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
         fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("77613cd9e5888c5c18b9262f3a67fc54", MD5);
+        fileToCheck.hashDetails("20d654798f9694099cc40254c5e84a01", MD5);
         assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
     }
 
@@ -28,7 +28,7 @@ public class CheckFileHashTest {
     public void checkValidSHA1Hash() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
         fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("04e6e854f351b0d6ca71907235ebad24c0457f56", SHA1);
+        fileToCheck.hashDetails("8604c05969a0eefa0edf0d71ae809310832afdc7", SHA1);
         assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
     }
 

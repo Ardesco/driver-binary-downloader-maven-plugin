@@ -65,7 +65,7 @@ public class FileDownloaderTest {
         LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
         downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
-        downloadTestFile.setHash("04e6e854f351b0d6ca71907235ebad24c0457f56", HashType.SHA1);
+        downloadTestFile.setHash("8604c05969a0eefa0edf0d71ae809310832afdc7", HashType.SHA1);
         downloadTestFile.downloadFile();
 
         assertThat(new File(downloadDirectory + File.separator + "download.zip").exists(), is(equalTo(true)));
