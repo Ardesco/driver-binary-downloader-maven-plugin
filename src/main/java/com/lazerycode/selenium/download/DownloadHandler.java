@@ -50,7 +50,8 @@ public class DownloadHandler {
       }
       String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
       String binaryType = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO this is a real hack, do this a better way!
-      if (ExtractFilesFromArchive.unzipFile(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryType))) {
+      LOG.debug("Detected a binary type of: " + binaryType);
+      if (ExtractFilesFromArchive.extractFileFromArchive(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryType))) {
         LOG.info("File(s) copied to " + extractionDirectory);
       }
     }

@@ -15,6 +15,8 @@ public class ExtractFilesFromArchiveTest {
     private final URL testTarFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final String tempDir = System.getProperty("java.io.tmpdir");
 
+    //TODO check the hashes, these don't seem to fail when they should...
+
     @Test
     public void successfullyExtractFileFromZipArchive() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
@@ -32,6 +34,28 @@ public class ExtractFilesFromArchiveTest {
         File output = File.createTempFile("zip", "");
         output.deleteOnExit();
         ExtractFilesFromArchive.untarFile(new File(testTarFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
+        fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
+        fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
+        assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    }
+
+    @Test
+    public void successfullyWorkOutArchiveTypeAndExtractFileFromZipArchive() throws Exception {
+        CheckFileHash fileToCheck = new CheckFileHash();
+        File output = File.createTempFile("zip", "");
+        output.deleteOnExit();
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
+        fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
+        fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
+        assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    }
+
+    @Test
+    public void successfullyWorkOutArchiveTypeAndExtractFileFromTarGZipArchive() throws Exception {
+        CheckFileHash fileToCheck = new CheckFileHash();
+        File output = File.createTempFile("zip", "");
+        output.deleteOnExit();
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
         assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
