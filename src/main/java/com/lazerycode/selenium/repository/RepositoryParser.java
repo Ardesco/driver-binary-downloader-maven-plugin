@@ -52,7 +52,7 @@ public class RepositoryParser {
      * Supply a specific map of drivers and versions to download.
      * This implicitly disables the ability to only get the latest versions.
      *
-     * @param executableVersions
+     * @param executableVersions a map of executable versions.
      */
     public void specifySpecificExecutableVersions(Map<String, String> executableVersions) {
         this.selectivelyParseDriverExecutableList = true;
@@ -70,7 +70,7 @@ public class RepositoryParser {
     /**
      * Take an existing node, find all the child nodes and return them as a list.
      *
-     * @param xpath
+     * @param xpath base xpath to find children of
      * @return
      */
     private Nodes getAllChildren(String xpath) {
@@ -203,14 +203,12 @@ public class RepositoryParser {
      * @return
      * @throws MalformedURLException
      */
-    private FileDetails extractFileInformation(Node downloadableZipInformation) throws MalformedURLException {
-        FileDetails fileDownloadInformation = new FileDetails();
+    private FileDetails extractFileInformation(Node downloadableZipInformation) throws MalformedURLException, IllegalArgumentException {
+        String fileLocation = downloadableZipInformation.query("./filelocation").get(0).getValue();
+        String hash = downloadableZipInformation.query("./hash").get(0).getValue();
+        String hashType = downloadableZipInformation.query("./hashtype").get(0).getValue();
 
-        fileDownloadInformation.setFileLocation((downloadableZipInformation.query("./filelocation").get(0)).getValue());
-        fileDownloadInformation.setHash((downloadableZipInformation.query("./hash").get(0)).getValue());
-        fileDownloadInformation.setHashType((downloadableZipInformation.query("./hashtype").get(0)).getValue());
-
-        return fileDownloadInformation;
+        return new FileDetails(fileLocation, hashType, hash);
     }
 
     /**
