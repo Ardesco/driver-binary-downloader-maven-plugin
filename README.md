@@ -85,5 +85,94 @@ Advanced Usage
 Custom RepositoryMap.xml
 -----
 
-You can supply a custom RepositoryMap.xml file to use instead of the default one, you can then use customised file locations/customised binaries.
-If you decide to use a custom RepositoryMap.xml it must match the schema available at https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/src/main/resources/RepositoryMap.xsd.
+You should supply your own RepositoryMap.xml file.  If you do not supply one the default one (as shown below) will be used instead.
+Please note that the below file will quickly be rendered obsolete and Selenium has frequent releases.
+Your RepositoryMap.xml must match the schema available at https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/src/main/resources/RepositoryMap.xsd.
+
+    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+    <root>
+        <windows>
+            <driver id="internetexplorer">
+                <version id="2.37.0">
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.37.0.zip</filelocation>
+                        <hash>38acef909ef660953aa189558cf5d7bff2f6d801</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate thirtytwobit="true">
+                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.37.0.zip</filelocation>
+                        <hash>d23aa898f50946f6b1ae5fa933116cff1b83f150</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="googlechrome">
+                <version id="2.6">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_win32.zip</filelocation>
+                        <hash>4196e08c591145fc51828e0a3045f35cb142c51f</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="phantomjs">
+                <version id="1.9.2">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-windows.zip</filelocation>
+                        <hash>5fcfb32d9df9e603a3980139026bc33d516dae01</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+        </windows>
+        <linux>
+            <driver id="googlechrome">
+                <version id="2.4">
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux64.zip</filelocation>
+                        <hash>cab1c61eea5397498f6a095fcbf726772554fb21</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate thirtytwobit="true">
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux32.zip</filelocation>
+                        <hash>50fa5c13e7e5a16704c1ea6a5951ddb9198c503b</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="phantomjs">
+                <version id="1.9.2">
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2</filelocation>
+                        <hash>c78c4037d98fa893e66fc516214499c58228d2f9</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate thirtytwobit="true">
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2</filelocation>
+                        <hash>9ead5dd275f79eaced61ce63dbeca58be4d7f090</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+        </linux>
+        <osx>
+            <driver id="googlechrome">
+                <version id="2.4">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_mac32.zip</filelocation>
+                        <hash>4643652d403961dd9a9a1980eb1a06bf8b6e9bad</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="phantomjs">
+                <version id="1.9.2">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-macosx.zip</filelocation>
+                        <hash>36357dc95c0676fb4972420ad25455f49a8f3331</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+        </osx>
+    </root>
