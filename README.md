@@ -85,9 +85,9 @@ Advanced Usage
 Custom RepositoryMap.xml
 -----
 
-You should supply your own RepositoryMap.xml file.  If you do not supply one the default one (as shown below) will be used instead.
-Please note that the below file will quickly be rendered obsolete and Selenium has frequent releases.
-Your RepositoryMap.xml must match the schema available at https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/src/main/resources/RepositoryMap.xsd.
+You __should__ supply your own RepositoryMap.xml file, if you do not supply one the default one (as shown below) will be used instead.  Your RepositoryMap.xml must match the schema available at [Here](https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/src/main/resources/RepositoryMap.xsd).
+
+___Please note that the below file will quickly be rendered obsolete as Selenium has frequent releases.___
 
     <?xml version="1.0" encoding="utf-8" standalone="yes"?>
     <root>
