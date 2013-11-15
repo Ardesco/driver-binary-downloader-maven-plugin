@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 public class RepositoryParserTest {
 
     private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
+    private final URL invalidRepositoryMap = this.getClass().getResource("/InvalidTestRepoMap.xml");
     private static ArrayList<OS> osList = new ArrayList<OS>();
 
     @BeforeClass
@@ -76,6 +77,11 @@ public class RepositoryParserTest {
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
         assertThat(downloadableFileList.size(), is(equalTo(0)));
+    }
+
+    @Test(expected = MojoFailureException.class)
+    public void throwExceptionIfRepositoryMapIsInvalid() throws Exception {
+        new RepositoryParser(this.invalidRepositoryMap.openStream(), osList, true, true, true, false);
     }
 }
 
