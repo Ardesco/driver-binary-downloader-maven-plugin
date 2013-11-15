@@ -18,7 +18,6 @@ import static org.junit.Assert.assertThat;
 
 public class FileDownloaderTest {
 
-    private static final Logger LOG = Logger.getLogger(FileDownloaderTest.class);
     private static JettyServer localWebServer = new JettyServer();
     private static String webServerAddress = "http://localhost";
     private static int webServerPort = 9081;
@@ -37,15 +36,12 @@ public class FileDownloaderTest {
 
     @After
     public void cleanUpFiles() throws IOException {
-        LOG.info("Cleaning up test files...");
         File downloadDirectory = new File(FileDownloaderTest.downloadDirectory);
         if (downloadDirectory.exists()) FileUtils.deleteDirectory(downloadDirectory);
-        LOG.info("Test complete.");
     }
 
     @Test(expected = MojoExecutionException.class)
     public void downloadAFile() throws Exception {
-        LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
         downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.downloadFile();
@@ -53,7 +49,6 @@ public class FileDownloaderTest {
 
     @Test(expected = MojoExecutionException.class)
     public void invalidHashCheck() throws Exception {
-        LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
         downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.setHash("invalidHash", HashType.SHA1);
@@ -62,13 +57,44 @@ public class FileDownloaderTest {
 
     @Test
     public void hashCheck() throws Exception {
-        LOG.info("Running test: " + this.toString());
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
         downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
         downloadTestFile.setHash("8604c05969a0eefa0edf0d71ae809310832afdc7", HashType.SHA1);
         downloadTestFile.downloadFile();
 
         assertThat(new File(downloadDirectory + File.separator + "download.zip").exists(), is(equalTo(true)));
+    }
+
+    @Test
+    public void invalidNumberOfRetriesResultsInOneRetry() throws Exception {
+        FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), -10, 15000, 15000);
+
+        assertThat(downloadTestFile.totalNumberOfRetryAttempts , is(equalTo(1)));
+    }
+
+    @Test(expected = MojoExecutionException.class)
+    public void tryToDownloadAnInvalidFile() throws Exception {
+        FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 3, 15000, 15000);
+        downloadTestFile.remoteURL(new URL(webServerURL + "/files/null/download.zip"));
+        downloadTestFile.downloadFile();
+    }
+
+    @Test
+    public void checkThatFileIsValidCheckReturnsFalseIfFileIsNotThere() throws Exception {
+        FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), 1, 15000, 15000);
+        downloadTestFile.remoteURL(new URL(webServerURL + "/files/download.zip"));
+        downloadTestFile.setHash("8604c05969a0eefa0edf0d71ae809310832afdc7", HashType.SHA1);
+        downloadTestFile.downloadFile();
+
+        File downloadedFile = new File(downloadDirectory + File.separator + "download.zip");
+
+        assertThat(downloadedFile.exists(), is(equalTo(true)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile), is(equalTo(true)));
+
+        downloadedFile.delete();
+
+        assertThat(downloadedFile.exists(), is(equalTo(false)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile), is(equalTo(false)));
     }
 
     //TODO start with invalid file and check valid one is downloaded

@@ -21,8 +21,6 @@ public class ExtractFilesFromArchiveTest {
     @Test
     public void successfullyExtractFileFromZipArchive() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
-        File output = File.createTempFile("zip", "");
-        output.deleteOnExit();
         ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
@@ -32,8 +30,6 @@ public class ExtractFilesFromArchiveTest {
     @Test
     public void successfullyExtractFileFromTarGZipArchive() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
-        File output = File.createTempFile("zip", "");
-        output.deleteOnExit();
         ExtractFilesFromArchive.untarFile(new File(testTarFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
@@ -43,8 +39,6 @@ public class ExtractFilesFromArchiveTest {
     @Test
     public void successfullyWorkOutArchiveTypeAndExtractFileFromZipArchive() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
-        File output = File.createTempFile("zip", "");
-        output.deleteOnExit();
         ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
@@ -54,8 +48,6 @@ public class ExtractFilesFromArchiveTest {
     @Test
     public void successfullyWorkOutArchiveTypeAndExtractFileFromTarGZipArchive() throws Exception {
         CheckFileHash fileToCheck = new CheckFileHash();
-        File output = File.createTempFile("zip", "");
-        output.deleteOnExit();
         ExtractFilesFromArchive.extractFileFromArchive(new File(testTarFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);

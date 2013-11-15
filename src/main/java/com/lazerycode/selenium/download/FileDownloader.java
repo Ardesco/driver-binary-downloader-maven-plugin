@@ -22,7 +22,7 @@ public class FileDownloader {
     private String fileDownloadDirectory;
     private int readTimeout = 15000;
     private int connectTimeout = 15000;
-    private int totalNumberOfRetryAttempts = 1;
+    protected int totalNumberOfRetryAttempts = 1;
 
     public FileDownloader(File downloadDirectory, int retries, int connectTimeout, int readTimeout) throws MojoFailureException {
         localFilePath(downloadDirectory);
