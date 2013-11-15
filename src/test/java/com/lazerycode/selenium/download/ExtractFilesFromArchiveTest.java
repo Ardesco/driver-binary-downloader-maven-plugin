@@ -11,6 +11,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class ExtractFilesFromArchiveTest {
+    private final URL test7ZipFile = this.getClass().getResource("/jetty/files/download.7z");
     private final URL testZipFile = this.getClass().getResource("/jetty/files/download.zip");
     private final URL testTarFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final String tempDir = System.getProperty("java.io.tmpdir");
@@ -59,5 +60,10 @@ public class ExtractFilesFromArchiveTest {
         fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
         fileToCheck.hashDetails("add36bb347a987b56e533c2034fd37b1", MD5);
         assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void tryAndExtractFromAnUnsupportedArchive() throws Exception{
+        ExtractFilesFromArchive.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
     }
 }
