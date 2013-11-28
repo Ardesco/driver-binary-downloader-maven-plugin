@@ -4,7 +4,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +33,7 @@ public class FileDownloader {
     /**
      * Set the number of retry attempts to use when downloading the file
      *
-     * @param retries
+     * @param retries number of times to retry downloading a file
      */
     private void specifyTotalNumberOfRetryAttempts(int retries) {
         if (retries < 1) {
@@ -51,16 +50,22 @@ public class FileDownloader {
      * @param downloadDirectory The directory that the file will be downloaded to.
      */
     private void localFilePath(File downloadDirectory) throws MojoFailureException {
-        if (!downloadDirectory.exists()) downloadDirectory.mkdirs();
-        if (!downloadDirectory.isDirectory()) throw new MojoFailureException("'" + downloadDirectory.getAbsolutePath() + "' is not a directory!");
+        if (!downloadDirectory.exists()) {
+            if (!downloadDirectory.mkdirs()) {
+                throw new MojoFailureException("Unable to create download directory!");
+            }
+        }
+        if (!downloadDirectory.isDirectory()) {
+            throw new MojoFailureException("'" + downloadDirectory.getAbsolutePath() + "' is not a directory!");
+        }
         this.fileDownloadDirectory = downloadDirectory.getAbsolutePath();
     }
 
     /**
      * Check if the file exists and perform a getHash check on it to see if it is valid
      *
-     * @param fileToCheck
-     * @return
+     * @param fileToCheck the file to perform a hash validation against
+     * @return true if the file exists and is valid
      * @throws IOException
      */
     public boolean fileExistsAndIsValid(File fileToCheck) throws IOException, MojoExecutionException {
@@ -76,7 +81,7 @@ public class FileDownloader {
     /**
      * Set the URL that will be used to download the remote file.
      *
-     * @param value
+     * @param value The URL used to download the file.
      * @throws MojoExecutionException
      */
     public void remoteURL(URL value) throws MojoExecutionException {
@@ -87,8 +92,8 @@ public class FileDownloader {
     /**
      * Set the getHash and getHash type that will be used to check that the file is valid
      *
-     * @param hashValue
-     * @param hashType
+     * @param hashValue The file hash
+     * @param hashType What type of hash this is
      */
     public void setHash(String hashValue, HashType hashType) {
         this.expectedHash = hashValue;
@@ -111,7 +116,8 @@ public class FileDownloader {
                 if (fileExistsAndIsValid(fileToDownload)) return fileToDownload;
             } catch (IOException ex) {
                 LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
-                if (n + 1 < this.totalNumberOfRetryAttempts) LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
+                if (n + 1 < this.totalNumberOfRetryAttempts)
+                    LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
             }
         }
 

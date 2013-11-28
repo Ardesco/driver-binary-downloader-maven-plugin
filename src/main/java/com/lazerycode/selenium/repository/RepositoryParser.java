@@ -71,7 +71,7 @@ public class RepositoryParser {
      * Take an existing node, find all the child nodes and return them as a list.
      *
      * @param xpath base xpath to find children of
-     * @return
+     * @return A list of child nodes
      */
     private Nodes getAllChildren(String xpath) {
         return repositoryMap.query(xpath + "/*");
@@ -80,7 +80,7 @@ public class RepositoryParser {
     /**
      * Read the RepositoryMap.xml and extract a filtered list of drivers that there are download locations for
      *
-     * @return
+     * @return A list of driver nodes
      */
     private Nodes getAllRelevantDriverNodes(String operatingSystem) {
         Nodes availableDrivers = getAllChildren("/root/" + operatingSystem);
@@ -108,8 +108,8 @@ public class RepositoryParser {
     /**
      * Take a list of nodes and work out which has the highest version number by comparing the id attribute of all of them
      *
-     * @param listOfVersions
-     * @return
+     * @param listOfVersions a list of nodes
+     * @return a list of nodes only containing the highest version of each binary
      */
     private Nodes getHighestVersion(Nodes listOfVersions) {
         Nodes highestVersionsList = new Nodes();
@@ -131,9 +131,9 @@ public class RepositoryParser {
      * Scan through a list of nodes and match any that have been specifically requested.
      * Return a list of nodes to use
      *
-     * @param listOfVersions
-     * @param driverID
-     * @return
+     * @param listOfVersions a list of available versions
+     * @param driverID the binary we are interested in
+     * @return a list of binaries that match the search criteria
      */
     private Nodes getSpecificVersions(Nodes listOfVersions, String driverID) throws MojoFailureException{
         Nodes filteredVersions = new Nodes();
@@ -199,8 +199,8 @@ public class RepositoryParser {
     /**
      * Extract all the file information needed to download a specific file from the children of a specific node.
      *
-     * @param downloadableZipInformation
-     * @return
+     * @param downloadableZipInformation A node containing information about the binary we are going to download
+     * @return A FileDetails object containing the location of the file, a hash to confirm it is valid when downloaded and a hash type.
      * @throws MalformedURLException
      */
     private FileDetails extractFileInformation(Node downloadableZipInformation) throws MalformedURLException, IllegalArgumentException {
@@ -215,7 +215,7 @@ public class RepositoryParser {
      * Takes a node from the RepositoryMap.xml and extracts file information and builds a zip extraction path.
      * This information is then added to the downloadable file list.
      *
-     * @param node
+     * @param node the node of a binary we want to download
      * @throws MalformedURLException
      */
     private void addDownloadableFilesToList(Node node, String operatingSystem) throws MalformedURLException {
@@ -231,7 +231,7 @@ public class RepositoryParser {
     /**
      * Parse the RepositoryMap.xml and return a HashMap of downloadable files.
      *
-     * @return
+     * @return A map of file versions/file URL's that will be downloaded
      * @throws MalformedURLException
      */
     public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException, MojoFailureException {
