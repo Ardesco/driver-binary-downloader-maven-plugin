@@ -93,24 +93,24 @@ ___Please note that the below file will quickly be rendered obsolete as Selenium
     <root>
         <windows>
             <driver id="internetexplorer">
-                <version id="2.37.0">
+                <version id="2.39.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.37.0.zip</filelocation>
-                        <hash>38acef909ef660953aa189558cf5d7bff2f6d801</hash>
+                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.39.0.zip</filelocation>
+                        <hash>c7ffa258de34d0934120b269a5af76e14a62d2d4</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.37.0.zip</filelocation>
-                        <hash>d23aa898f50946f6b1ae5fa933116cff1b83f150</hash>
+                        <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.39.0.zip</filelocation>
+                        <hash>71b8fad1dadc72a1b7e45ade3f5c3f72d4f02def</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="googlechrome">
-                <version id="2.6">
+                <version id="2.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_win32.zip</filelocation>
-                        <hash>4196e08c591145fc51828e0a3045f35cb142c51f</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.8/chromedriver_win32.zip</filelocation>
+                        <hash>2e5ec89661e528bf69f717953896d85896ca64db</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -127,15 +127,15 @@ ___Please note that the below file will quickly be rendered obsolete as Selenium
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.4">
+                <version id="2.8">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux64.zip</filelocation>
-                        <hash>cab1c61eea5397498f6a095fcbf726772554fb21</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux64.zip</filelocation>
+                        <hash>33112f4484145bd0bb8100bac7670d8c45793a4b</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux32.zip</filelocation>
-                        <hash>50fa5c13e7e5a16704c1ea6a5951ddb9198c503b</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.8/chromedriver_linux32.zip</filelocation>
+                        <hash>f3743b625e5466a82fb0e433611190588fa07357</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -143,12 +143,14 @@ ___Please note that the below file will quickly be rendered obsolete as Selenium
             <driver id="phantomjs">
                 <version id="1.9.2">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2</filelocation>
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2
+                        </filelocation>
                         <hash>c78c4037d98fa893e66fc516214499c58228d2f9</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2</filelocation>
+                        <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2
+                        </filelocation>
                         <hash>9ead5dd275f79eaced61ce63dbeca58be4d7f090</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
@@ -157,10 +159,10 @@ ___Please note that the below file will quickly be rendered obsolete as Selenium
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.4">
+                <version id="2.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_mac32.zip</filelocation>
-                        <hash>4643652d403961dd9a9a1980eb1a06bf8b6e9bad</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.8/chromedriver_mac32.zip</filelocation>
+                        <hash>b44d4666d00531f9edc5f1e89534a789fb4ec162</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
