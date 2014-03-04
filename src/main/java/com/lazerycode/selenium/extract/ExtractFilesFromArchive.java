@@ -5,9 +5,11 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +34,7 @@ public class ExtractFilesFromArchive {
      * @return boolean
      * @throws IOException
      */
-    public static boolean extractFileFromArchive(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, IllegalArgumentException {
+    public static boolean extractFileFromArchive(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
         String fileType = FilenameUtils.getExtension(downloadedZip.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
         if (fileType.equals("zip")) {
@@ -40,7 +42,10 @@ public class ExtractFilesFromArchive {
             return unzipFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         } else if (fileType.equals("gz")) {
             LOG.debug("Extracting binary from .tar.gz file");
-            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
+            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames, fileType);
+        } else if (fileType.equals("bz2")) {
+            LOG.debug("Extracting binary from .tar.bz2 file");
+            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames, fileType);
         }
         throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
     }
@@ -95,7 +100,7 @@ public class ExtractFilesFromArchive {
     /**
      * Unzip a downloaded tar.gz file (this will implicitly overwrite any existing files)
      *
-     * @param downloadedGZip          The downloaded tar.gz file
+     * @param downloadedZip           The downloaded tar.gz file
      * @param extractedToFilePath     Path to extracted file
      * @param overwriteFilesThatExist Overwrite any existing files
      * @param possibleFilenames       Names of the files we want to extract
@@ -104,10 +109,17 @@ public class ExtractFilesFromArchive {
      */
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected static boolean untarFile(File downloadedGZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
+    protected static boolean untarFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames, String fileType) throws IOException, MojoFailureException {
         Boolean fileExtracted = false;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
-        ArchiveInputStream fileInArchive = new TarArchiveInputStream(new GzipCompressorInputStream((new FileInputStream(downloadedGZip))));
+        ArchiveInputStream fileInArchive;
+        if (fileType.equals("gz")) {
+            fileInArchive = new TarArchiveInputStream(new GzipCompressorInputStream((new FileInputStream(downloadedZip))));
+        } else if (fileType.equals("bz2")) {
+            fileInArchive = new TarArchiveInputStream(new BZip2CompressorInputStream((new FileInputStream(downloadedZip))));
+        } else {
+            throw new MojoFailureException("Unrecognised zip format!");
+        }
         ArchiveEntry currentFile;
         extractionLoop:
         while ((currentFile = fileInArchive.getNextEntry()) != null) {
