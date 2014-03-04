@@ -1,4 +1,4 @@
-package com.lazerycode.selenium.download;
+package com.lazerycode.selenium.extract;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -35,10 +35,10 @@ public class ExtractFilesFromArchive {
     public static boolean extractFileFromArchive(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, IllegalArgumentException {
         String fileType = FilenameUtils.getExtension(downloadedZip.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
-        if(fileType.equals("zip")){
+        if (fileType.equals("zip")) {
             LOG.debug("Extracting binary from .zip file");
             return unzipFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
-        } else if(fileType.equals("gz")){
+        } else if (fileType.equals("gz")) {
             LOG.debug("Extracting binary from .tar.gz file");
             return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         }
@@ -65,7 +65,7 @@ public class ExtractFilesFromArchive {
         Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
         extractionLoop:
         while (zipFile.hasMoreElements()) {
-            ZipArchiveEntry zipFileEntry =  zipFile.nextElement();
+            ZipArchiveEntry zipFileEntry = zipFile.nextElement();
             for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
                 if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
                     LOG.debug("Found: " + zipFileEntry.getName());
@@ -113,7 +113,7 @@ public class ExtractFilesFromArchive {
         while ((currentFile = fileInArchive.getNextEntry()) != null) {
             LOG.debug("Examining " + currentFile.getName());
             for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
-                LOG.debug("Searching for " + aFilenameWeAreSearchingFor +"...");
+                LOG.debug("Searching for " + aFilenameWeAreSearchingFor + "...");
                 if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
                     LOG.debug("Found: " + currentFile.getName());
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);

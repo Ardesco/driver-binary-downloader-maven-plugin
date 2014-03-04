@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.download.HashType;
+import com.lazerycode.selenium.hash.HashType;
 
 import java.net.MalformedURLException;
 import java.net.URL;

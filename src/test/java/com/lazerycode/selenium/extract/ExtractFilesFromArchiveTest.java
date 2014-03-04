@@ -1,11 +1,12 @@
-package com.lazerycode.selenium.download;
+package com.lazerycode.selenium.extract;
 
+import com.lazerycode.selenium.hash.CheckFileHash;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 
-import static com.lazerycode.selenium.download.HashType.MD5;
+import static com.lazerycode.selenium.hash.HashType.MD5;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -55,7 +56,7 @@ public class ExtractFilesFromArchiveTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void tryAndExtractFromAnUnsupportedArchive() throws Exception{
+    public void tryAndExtractFromAnUnsupportedArchive() throws Exception {
         ExtractFilesFromArchive.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
     }
 }

@@ -52,12 +52,14 @@
         <driver id="phantomjs">
             <version id="1.9.2">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2</filelocation>
+                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2
+                    </filelocation>
                     <hash>c78c4037d98fa893e66fc516214499c58228d2f9</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2</filelocation>
+                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2
+                    </filelocation>
                     <hash>9ead5dd275f79eaced61ce63dbeca58be4d7f090</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>

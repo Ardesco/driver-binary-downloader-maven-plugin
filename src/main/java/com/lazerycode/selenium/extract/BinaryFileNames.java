@@ -1,4 +1,4 @@
-package com.lazerycode.selenium.download;
+package com.lazerycode.selenium.extract;
 
 import java.util.ArrayList;
 

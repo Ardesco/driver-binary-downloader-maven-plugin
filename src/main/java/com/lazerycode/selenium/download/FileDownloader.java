@@ -1,5 +1,7 @@
 package com.lazerycode.selenium.download;
 
+import com.lazerycode.selenium.hash.CheckFileHash;
+import com.lazerycode.selenium.hash.HashType;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -93,7 +95,7 @@ public class FileDownloader {
      * Set the getHash and getHash type that will be used to check that the file is valid
      *
      * @param hashValue The file hash
-     * @param hashType What type of hash this is
+     * @param hashType  What type of hash this is
      */
     public void setHash(String hashValue, HashType hashType) {
         this.expectedHash = hashValue;

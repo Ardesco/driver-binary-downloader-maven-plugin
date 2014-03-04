@@ -1,7 +1,7 @@
 package com.lazerycode.selenium.download;
 
+import com.lazerycode.selenium.hash.HashType;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -69,7 +69,7 @@ public class FileDownloaderTest {
     public void invalidNumberOfRetriesResultsInOneRetry() throws Exception {
         FileDownloader downloadTestFile = new FileDownloader(new File(downloadDirectory), -10, 15000, 15000);
 
-        assertThat(downloadTestFile.totalNumberOfRetryAttempts , is(equalTo(1)));
+        assertThat(downloadTestFile.totalNumberOfRetryAttempts, is(equalTo(1)));
     }
 
     @Test(expected = MojoExecutionException.class)
@@ -91,7 +91,7 @@ public class FileDownloaderTest {
         assertThat(downloadedFile.exists(), is(equalTo(true)));
         assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile), is(equalTo(true)));
 
-        downloadedFile.delete();
+        assertThat(downloadedFile.delete(), is(equalTo(true)));
 
         assertThat(downloadedFile.exists(), is(equalTo(false)));
         assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile), is(equalTo(false)));
