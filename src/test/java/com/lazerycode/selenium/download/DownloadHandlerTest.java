@@ -24,12 +24,13 @@ public class DownloadHandlerTest {
     private final String downloadDirectoryPath = System.getProperty("java.io.tmpdir") + File.separator + "download_test_file_dir";
     private final String rootStandaloneServerDirectoryPath = System.getProperty("java.io.tmpdir") + File.separator + "server_test_file_dir";
     private final String expectedDownloadedFilePath = downloadDirectoryPath + File.separator + "download.zip";
-    private final String validHash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
     private final int oneRetryAttempt = 1;
     private final int connectTimeout = 15000;
     private final int readTimeout = 15000;
     private final boolean doNotOverwriteFilesThatExist = false;
 
+    private static final String validHash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
+    private static FileDetails validFileDetails;
     private static JettyServer localWebServer = new JettyServer();
     private static String webServerURL = webServerAddress + ":" + webServerPort;
     private static File downloadDirectory;
@@ -40,6 +41,7 @@ public class DownloadHandlerTest {
     public static void start() throws Exception {
         localWebServer.startJettyServer(webServerPort);
         downloadZipURL = new URL(webServerURL + "/files/download.zip");
+        validFileDetails = new FileDetails(downloadZipURL, SHA1, validHash);
     }
 
     @AfterClass
@@ -62,19 +64,19 @@ public class DownloadHandlerTest {
     @Test(expected = MojoExecutionException.class)
     public void downloadAFile() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(downloadZipURL, null, null);
+        downloadTestFile.downloadFile(new FileDetails(downloadZipURL, SHA1, ""));
     }
 
     @Test(expected = MojoExecutionException.class)
     public void invalidHashCheck() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(downloadZipURL, "invalidHash", SHA1);
+        downloadTestFile.downloadFile(new FileDetails(downloadZipURL, SHA1, "invalidHash"));
     }
 
     @Test
     public void hashCheck() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(downloadZipURL, validHash, SHA1);
+        downloadTestFile.downloadFile(validFileDetails);
 
         assertThat(new File(expectedDownloadedFilePath).exists(), is(equalTo(true)));
     }
@@ -89,19 +91,19 @@ public class DownloadHandlerTest {
     @Test(expected = MojoExecutionException.class)
     public void tryToDownloadAnInvalidFile() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(new URL(webServerURL + "/files/null/download.zip"), validHash, SHA1);
+        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validHash));
     }
 
     @Test(expected = MojoFailureException.class)
     public void specifyAFileInsteadOfADirectory() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(new URL(webServerURL + "/files/null/download.zip"), validHash, SHA1);
+        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validHash));
     }
 
     @Test
     public void checkThatFileIsValidCheckReturnsFalseIfFileIsNotThere() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(downloadZipURL, validHash, SHA1);
+        downloadTestFile.downloadFile(validFileDetails);
 
         File downloadedFile = new File(expectedDownloadedFilePath);
 
@@ -115,7 +117,7 @@ public class DownloadHandlerTest {
     }
 
     @Test
-    public void filesAreExtractedIntoTheCorrectStandaloneServerPathAndCanBeOverwritten() throws Exception{
+    public void filesAreExtractedIntoTheCorrectStandaloneServerPathAndCanBeOverwritten() throws Exception {
         String downloadPath = "os/phantomjs/32bit/1";
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + downloadPath + File.separator + "phantomjs");
         FileDetails testFileDetails = new FileDetails(downloadZipURL, SHA1, validHash);

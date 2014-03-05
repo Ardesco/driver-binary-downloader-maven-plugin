@@ -12,7 +12,6 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 import static org.apache.commons.io.FileUtils.copyURLToFile;
@@ -56,7 +55,7 @@ public class DownloadHandler {
             LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' already exists and is valid.");
             boolean existsAndIsValid = fileExistsAndIsValid(new File(currentFileAbsolutePath), fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
             if (!existsAndIsValid) {
-                fileToUnzip = downloadFile(fileToDownload.getValue().getFileLocation(), fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
+                fileToUnzip = downloadFile(fileToDownload.getValue());
             } else {
                 fileToUnzip = new File(currentFileAbsolutePath);
             }
@@ -75,15 +74,16 @@ public class DownloadHandler {
      * @return File
      * @throws MojoExecutionException
      */
-    protected File downloadFile(URL remoteFile, String expectedHash, HashType expectedHashType) throws Exception {
-        String filename = FilenameUtils.getName(remoteFile.getFile());
+    protected File downloadFile(FileDetails fileDetails) throws Exception {
+        String filename = FilenameUtils.getName(fileDetails.getFileLocation().getFile());
         File fileToDownload = new File(localFilePath(this.downloadedZipFileDirectory) + File.separator + filename);
         for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
             try {
                 LOG.info("Downloading '" + filename + "'...");
-                copyURLToFile(remoteFile, fileToDownload, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
+                copyURLToFile(fileDetails.getFileLocation(), fileToDownload, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
                 LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
-                if (fileExistsAndIsValid(fileToDownload, expectedHash, expectedHashType)) return fileToDownload;
+                if (fileExistsAndIsValid(fileToDownload, fileDetails.getHash(), fileDetails.getHashType()))
+                    return fileToDownload;
             } catch (IOException ex) {
                 LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
                 if (n + 1 < this.fileDownloadRetryAttempts)
