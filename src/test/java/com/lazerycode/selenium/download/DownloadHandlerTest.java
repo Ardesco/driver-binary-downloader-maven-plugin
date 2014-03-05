@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import static com.lazerycode.selenium.hash.HashType.MD5;
 import static com.lazerycode.selenium.hash.HashType.SHA1;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -29,7 +30,8 @@ public class DownloadHandlerTest {
     private final int readTimeout = 15000;
     private final boolean doNotOverwriteFilesThatExist = false;
 
-    private static final String validHash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
+    private static final String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
+    private static final String validMD5Hash = "20d654798f9694099cc40254c5e84a01";
     private static FileDetails validFileDetails;
     private static JettyServer localWebServer = new JettyServer();
     private static String webServerURL = webServerAddress + ":" + webServerPort;
@@ -41,7 +43,7 @@ public class DownloadHandlerTest {
     public static void start() throws Exception {
         localWebServer.startJettyServer(webServerPort);
         downloadZipURL = new URL(webServerURL + "/files/download.zip");
-        validFileDetails = new FileDetails(downloadZipURL, SHA1, validHash);
+        validFileDetails = new FileDetails(downloadZipURL, SHA1, validSHA1Hash);
     }
 
     @AfterClass
@@ -91,13 +93,13 @@ public class DownloadHandlerTest {
     @Test(expected = MojoExecutionException.class)
     public void tryToDownloadAnInvalidFile() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validHash));
+        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validSHA1Hash));
     }
 
     @Test(expected = MojoFailureException.class)
     public void specifyAFileInsteadOfADirectory() throws Exception {
         DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
-        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validHash));
+        downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validSHA1Hash));
     }
 
     @Test
@@ -108,19 +110,21 @@ public class DownloadHandlerTest {
         File downloadedFile = new File(expectedDownloadedFilePath);
 
         assertThat(downloadedFile.exists(), is(equalTo(true)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validHash, SHA1), is(equalTo(true)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validSHA1Hash, SHA1), is(equalTo(true)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validMD5Hash, MD5), is(equalTo(true)));
 
         assertThat(downloadedFile.delete(), is(equalTo(true)));
 
         assertThat(downloadedFile.exists(), is(equalTo(false)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validHash, SHA1), is(equalTo(false)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validSHA1Hash, SHA1), is(equalTo(false)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validMD5Hash, MD5), is(equalTo(false)));
     }
 
     @Test
     public void filesAreExtractedIntoTheCorrectStandaloneServerPathAndCanBeOverwritten() throws Exception {
         String downloadPath = "os/phantomjs/32bit/1";
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + downloadPath + File.separator + "phantomjs");
-        FileDetails testFileDetails = new FileDetails(downloadZipURL, SHA1, validHash);
+        FileDetails testFileDetails = new FileDetails(downloadZipURL, SHA1, validSHA1Hash);
         HashMap<String, FileDetails> fileDownloadList = new HashMap<String, FileDetails>();
         fileDownloadList.put(downloadPath, testFileDetails);
 
