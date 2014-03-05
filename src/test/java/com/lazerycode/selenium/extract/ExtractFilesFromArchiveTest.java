@@ -65,6 +65,15 @@ public class ExtractFilesFromArchiveTest {
         assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
     }
 
+    @Test
+    public void successfullyWorkOutArchiveTypeAndExtractFileFromTarBZip2Archive() throws Exception {
+        CheckFileHash fileToCheck = new CheckFileHash();
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarBZ2File.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
+        fileToCheck.fileToCheck(new File(tempDir + File.separator + "phantomjs"));
+        fileToCheck.hashDetails(validHash, MD5);
+        assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void tryAndExtractFromAnUnsupportedArchive() throws Exception {
         ExtractFilesFromArchive.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, true, BinaryFileNames.PHANTOMJS);
