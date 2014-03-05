@@ -29,6 +29,7 @@ public class DownloadHandlerTest {
     private final int connectTimeout = 15000;
     private final int readTimeout = 15000;
     private final boolean doNotOverwriteFilesThatExist = false;
+    private final boolean doNotCheckFileHashes = false;
 
     private static final String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
     private static final String validMD5Hash = "20d654798f9694099cc40254c5e84a01";
@@ -65,19 +66,19 @@ public class DownloadHandlerTest {
 
     @Test(expected = MojoExecutionException.class)
     public void downloadAFile() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(new FileDetails(downloadZipURL, SHA1, ""));
     }
 
     @Test(expected = MojoExecutionException.class)
     public void invalidHashCheck() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(new FileDetails(downloadZipURL, SHA1, "invalidHash"));
     }
 
     @Test
     public void hashCheck() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(validFileDetails);
 
         assertThat(new File(expectedDownloadedFilePath).exists(), is(equalTo(true)));
@@ -85,26 +86,26 @@ public class DownloadHandlerTest {
 
     @Test
     public void invalidNumberOfRetriesResultsInOneRetry() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, -10, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, -10, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
 
         assertThat(downloadTestFile.fileDownloadRetryAttempts, is(equalTo(1)));
     }
 
     @Test(expected = MojoExecutionException.class)
     public void tryToDownloadAnInvalidFile() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validSHA1Hash));
     }
 
     @Test(expected = MojoFailureException.class)
     public void specifyAFileInsteadOfADirectory() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(new FileDetails(new URL(webServerURL + "/files/null/download.zip"), SHA1, validSHA1Hash));
     }
 
     @Test
     public void checkThatFileIsValidCheckReturnsFalseIfFileIsNotThere() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes);
         downloadTestFile.downloadFile(validFileDetails);
 
         File downloadedFile = new File(expectedDownloadedFilePath);
@@ -121,6 +122,24 @@ public class DownloadHandlerTest {
     }
 
     @Test
+    public void checkThatFileIsValidCheckReturnsTrueIfHashInvalidButNotChecked() throws Exception {
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, true);
+        downloadTestFile.downloadFile(validFileDetails);
+
+        File downloadedFile = new File(expectedDownloadedFilePath);
+
+        assertThat(downloadedFile.exists(), is(equalTo(true)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", SHA1), is(equalTo(true)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", MD5), is(equalTo(true)));
+
+        assertThat(downloadedFile.delete(), is(equalTo(true)));
+
+        assertThat(downloadedFile.exists(), is(equalTo(false)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", SHA1), is(equalTo(false)));
+        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", MD5), is(equalTo(false)));
+    }
+
+    @Test
     public void filesAreExtractedIntoTheCorrectStandaloneServerPathAndCanBeOverwritten() throws Exception {
         String downloadPath = "os/phantomjs/32bit/1";
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + downloadPath + File.separator + "phantomjs");
@@ -130,7 +149,7 @@ public class DownloadHandlerTest {
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
-        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, fileDownloadList, true);
+        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, fileDownloadList, true, doNotCheckFileHashes);
         downloadTestFile.getStandaloneExecutableFiles();
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));

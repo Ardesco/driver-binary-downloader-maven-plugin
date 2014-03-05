@@ -27,8 +27,9 @@ public class DownloadHandler {
     protected int fileDownloadRetryAttempts;
     private Map<String, FileDetails> filesToDownload;
     private boolean overwriteFilesThatExist = false;
+    private boolean doNotCheckFileHash = false;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist) {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean doNotCheckFileHash) {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         if (fileDownloadRetryAttempts < 1) {
@@ -41,6 +42,7 @@ public class DownloadHandler {
         this.fileDownloadReadTimeout = fileDownloadReadTimeout;
         this.filesToDownload = filesToDownload;
         this.overwriteFilesThatExist = overwriteFilesThatExist;
+        this.doNotCheckFileHash = doNotCheckFileHash;
     }
 
     public void getStandaloneExecutableFiles() throws Exception {
@@ -122,6 +124,7 @@ public class DownloadHandler {
      */
     protected boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException, MojoExecutionException {
         if (!fileToCheck.exists()) return false;
+        if (doNotCheckFileHash) return true;
         String actualFileHash;
         FileInputStream fileToHashCheck = new FileInputStream(fileToCheck);
         switch (hashType) {
