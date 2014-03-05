@@ -56,7 +56,6 @@ public class RepositoryParserTest {
         assertThat(downloadableFileList.size(), is(equalTo(16)));
     }
 
-    //TODO implement error on invalid version
     @Test(expected = MojoFailureException.class)
     public void throwErrorOnInvalidVersion() throws Exception {
         Map<String, String> versionsToFind = new HashMap<String, String>();
@@ -64,7 +63,7 @@ public class RepositoryParserTest {
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, true, true);
         executableBinaryMapping.specifySpecificExecutableVersions(versionsToFind);
-        HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
+        executableBinaryMapping.getFilesToDownload();
     }
 
     @Test

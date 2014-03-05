@@ -16,6 +16,23 @@ public class FileDetails {
         setHash(hash, hashType);
     }
 
+    public FileDetails(URL fileLocation, String hashType, String hash) throws MalformedURLException, IllegalArgumentException {
+        this.fileLocation = fileLocation;
+        setHash(hash, hashType);
+    }
+
+    public FileDetails(String fileLocation, HashType hashType, String hash) throws MalformedURLException, IllegalArgumentException {
+        this.fileLocation = new URL(fileLocation);
+        this.hashType = hashType;
+        this.hash = hash;
+    }
+
+    public FileDetails(URL fileLocation, HashType hashType, String hash) throws MalformedURLException, IllegalArgumentException {
+        this.fileLocation = fileLocation;
+        this.hashType = hashType;
+        this.hash = hash;
+    }
+
     private void setHash(String hash, String hashType) {
         this.hashType = HashType.valueOf(hashType.toUpperCase());
         if (this.hashType.matchesStructureOf(hash)) {
