@@ -2,15 +2,16 @@ package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.extract.BinaryFileNames;
 import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
-import com.lazerycode.selenium.hash.CheckFileHash;
 import com.lazerycode.selenium.hash.HashType;
 import com.lazerycode.selenium.repository.FileDetails;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -119,14 +120,21 @@ public class DownloadHandler {
      * @return true if the file exists and is valid
      * @throws IOException
      */
-    protected boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType expectedHashType) throws IOException, MojoExecutionException {
-        if (fileToCheck.exists()) {
-            CheckFileHash hashChecker = new CheckFileHash();
-            hashChecker.hashDetails(expectedHash, expectedHashType);
-            hashChecker.fileToCheck(fileToCheck);
-            return hashChecker.hasAValidHash();
+    protected boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException, MojoExecutionException {
+        if (!fileToCheck.exists()) return false;
+        String actualFileHash;
+        FileInputStream fileToHashCheck = new FileInputStream(fileToCheck);
+        switch (hashType) {
+            case MD5:
+                actualFileHash = DigestUtils.md5Hex(fileToHashCheck);
+                break;
+            case SHA1:
+            default:
+                actualFileHash = DigestUtils.shaHex(fileToHashCheck);
+                break;
         }
-        return false;
+        fileToHashCheck.close();
+        return actualFileHash.equals(expectedHash);
     }
 
 }
