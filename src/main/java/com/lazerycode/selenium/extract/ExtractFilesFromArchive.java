@@ -42,10 +42,10 @@ public class ExtractFilesFromArchive {
             return unzipFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         } else if (fileType.equals("gz")) {
             LOG.debug("Extracting binary from .tar.gz file");
-            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames, fileType);
+            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         } else if (fileType.equals("bz2")) {
             LOG.debug("Extracting binary from .tar.bz2 file");
-            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames, fileType);
+            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         }
         throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
     }
@@ -61,7 +61,6 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
         Boolean fileExtracted = false;
         ZipFile zip = new ZipFile(downloadedZip);
@@ -75,18 +74,19 @@ public class ExtractFilesFromArchive {
                 if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
                     LOG.debug("Found: " + zipFileEntry.getName());
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
+                    boolean doesfileAlreadyExist = extractedFile.exists();
                     LOG.info("File '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
-                    if (extractedFile.exists() && !overwriteFilesThatExist) {
-                        LOG.debug("Skipping file: " + extractedFile.getName());
+                    if (doesfileAlreadyExist && !overwriteFilesThatExist) {
+                        LOG.debug("File already exists: " + extractedFile.getName());
                         continue;
                     }
-                    extractedFile.getParentFile().mkdirs();
-                    extractedFile.createNewFile();
+                    if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
+                        throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
+                    }
                     LOG.info("Extracting '" + extractedFile.getName() + "'...");
                     copy(zip.getInputStream(zipFileEntry), new FileOutputStream(extractedFile));
-                    extractedFile.setExecutable(true);
-                    if (!extractedFile.canExecute())
+                    if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
                     fileExtracted = true;
                     break extractionLoop;
@@ -108,11 +108,11 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    static boolean untarFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames, String fileType) throws IOException, MojoFailureException {
+    static boolean untarFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, MojoFailureException {
         Boolean fileExtracted = false;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream fileInArchive;
+        String fileType = FilenameUtils.getExtension(downloadedZip.getAbsolutePath());
         if (fileType.equals("gz")) {
             fileInArchive = new TarArchiveInputStream(new GzipCompressorInputStream((new FileInputStream(downloadedZip))));
         } else if (fileType.equals("bz2")) {
@@ -129,18 +129,19 @@ public class ExtractFilesFromArchive {
                 if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
                     LOG.debug("Found: " + currentFile.getName());
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
+                    boolean doesfileAlreadyExist = extractedFile.exists();
                     LOG.info("File '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
-                    if (extractedFile.exists() && !overwriteFilesThatExist) {
-                        LOG.debug("Skipping file: " + extractedFile.getName());
+                    if (doesfileAlreadyExist && !overwriteFilesThatExist) {
+                        LOG.debug("File already exists: " + extractedFile.getName());
                         continue;
                     }
-                    extractedFile.getParentFile().mkdirs();
-                    extractedFile.createNewFile();
+                    if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
+                        throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
+                    }
                     LOG.info("Extracting '" + extractedFile.getName() + "'...");
                     copy(fileInArchive, new FileOutputStream(extractedFile));
-                    extractedFile.setExecutable(true);
-                    if (!extractedFile.canExecute())
+                    if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
                     fileExtracted = true;
                     break extractionLoop;
