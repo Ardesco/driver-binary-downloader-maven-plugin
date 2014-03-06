@@ -38,13 +38,8 @@ public class ExtractFilesFromArchive {
         String fileType = FilenameUtils.getExtension(downloadedZip.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
         if (fileType.equals("zip")) {
-            LOG.debug("Extracting binary from .zip file");
             return unzipFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
-        } else if (fileType.equals("gz")) {
-            LOG.debug("Extracting binary from .tar.gz file");
-            return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
-        } else if (fileType.equals("bz2")) {
-            LOG.debug("Extracting binary from .tar.bz2 file");
+        } else if (fileType.equals("gz") || fileType.equals("bz2")) {
             return untarFile(downloadedZip, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
         }
         throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
@@ -63,8 +58,8 @@ public class ExtractFilesFromArchive {
 
     static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
         Boolean fileExtracted = false;
+        LOG.debug("Extracting binary from .zip file");
         ZipFile zip = new ZipFile(downloadedZip);
-
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
         extractionLoop:
@@ -98,9 +93,9 @@ public class ExtractFilesFromArchive {
     }
 
     /**
-     * Unzip a downloaded tar.gz file (this will implicitly overwrite any existing files)
+     * Unzip a downloaded tar.gz/tar.bz2 file (this will implicitly overwrite any existing files)
      *
-     * @param downloadedZip           The downloaded tar.gz file
+     * @param downloadedZip           The downloaded tar.gz/tar.bz2 file
      * @param extractedToFilePath     Path to extracted file
      * @param overwriteFilesThatExist Overwrite any existing files
      * @param possibleFilenames       Names of the files we want to extract
@@ -114,8 +109,10 @@ public class ExtractFilesFromArchive {
         ArchiveInputStream fileInArchive;
         String fileType = FilenameUtils.getExtension(downloadedZip.getAbsolutePath());
         if (fileType.equals("gz")) {
+            LOG.debug("Extracting binary from .tar.gz file");
             fileInArchive = new TarArchiveInputStream(new GzipCompressorInputStream((new FileInputStream(downloadedZip))));
         } else if (fileType.equals("bz2")) {
+            LOG.debug("Extracting binary from .tar.bz2 file");
             fileInArchive = new TarArchiveInputStream(new BZip2CompressorInputStream((new FileInputStream(downloadedZip))));
         } else {
             throw new MojoFailureException("Unrecognised zip format!");
