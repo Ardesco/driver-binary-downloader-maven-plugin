@@ -7,6 +7,10 @@ import org.apache.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -28,35 +32,31 @@ import java.util.Map;
  * Selenium Standalone Server Maven Plugin
  *
  * @author Mark Collin
- * @goal selenium
- * @phase test-compile
- * @execute phase="test-compile"
- * @requiresProject true
  */
 
+@Mojo(name = "selenium", defaultPhase = LifecyclePhase.TEST_COMPILE)
+@Execute(phase = LifecyclePhase.TEST_COMPILE)
+@SuppressWarnings({"UnusedDeclaration"})
 public class SeleniumServerMojo extends AbstractMojo {
     /**
      * <h3>Root directory where the standalone server file structure will be created and files will be saved</h3>
      * <p>&lt;rootStandaloneServerDirectory&gt;${project.basedir}/src/main/resources/standalone_executable_root&lt;/rootStandaloneServerDirectory&gt;</p>
-     *
-     * @parameter default-value="${project.basedir}/selenium_standalone"
      */
+    @Parameter(defaultValue = "${project.basedir}/selenium_standalone")
     protected File rootStandaloneServerDirectory;
 
     /**
      * <h3>Directory where downloaded standalone executable zip files will be saved</h3>
      * <p>&lt;downloadedZipFileDirectory&gt;${project.basedir}/src/main/resources/downloaded_zip_files&lt;/downloadedZipFileDirectory&gt;</p>
-     *
-     * @parameter default-value="${project.basedir}/selenium_standalone_zips"
      */
+    @Parameter(defaultValue = "${project.basedir}/selenium_standalone_zips")
     protected File downloadedZipFileDirectory;
 
     /**
      * <h3>Absolute path to the XML RepositoryMap</h3>
      * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/main/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
-     *
-     * @parameter default-value=null
      */
+    @Parameter
     protected File customRepositoryMap;
 
     /**
@@ -71,25 +71,22 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
      * <p><strong>Default:</strong>All operating systems.</p>
      * <p><strong>WARNING</strong>if <em>onlyGetDriversForHostOperatingSystem</em> is true, this <strong>will</strong> be ignored!</p>
-     *
-     * @parameter
      */
+    @Parameter
     protected Map<String, String> operatingSystems;
 
     /**
      * <h3>Download 32 bit standalone executable</h3>.
      * <p>&lt;thirtyTwoBitBinaries&gt;true&lt;/thirtyTwoBitBinaries&gt;</p>
-     *
-     * @parameter default-value="true"
      */
+    @Parameter(defaultValue = "true")
     protected boolean thirtyTwoBitBinaries;
 
     /**
      * <h3>Download 64 bit standalone executable</h3>
      * <p>&lt;sixtyFourBitBinaries&gt;true&lt;/sixtyFourBitBinaries&gt;</p>
-     *
-     * @parameter default-value="true"
      */
+    @Parameter(defaultValue = "true")
     protected boolean sixtyFourBitBinaries;
 
     /**
@@ -97,18 +94,16 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <p>&lt;onlyGetLatestVersions&gt;true&lt;/onlyGetLatestVersions&gt;</p>
      * <p>If set to false this will download all versions specified in the RepositoryMap.xml</p>
      * <p><strong>This will be ignored if specific executable versions have been specified</strong></p>
-     *
-     * @parameter default-value="true"
      */
+    @Parameter(defaultValue = "true")
     protected boolean onlyGetLatestVersions;
 
     /**
      * <h3>Only get drivers that are compatible with the operating system running the plugin</h3>
      * <p>&lt;onlyGetDriversForHostOperatingSystem&gt;true&lt;/onlyGetDriversForHostOperatingSystem&gt;</p>
      * <p>If set to false this will download binary executables for all operating systems</p>
-     *
-     * @parameter default-value="true"
      */
+    @Parameter(defaultValue = "true")
     protected boolean onlyGetDriversForHostOperatingSystem;
 
     /**
@@ -120,9 +115,8 @@ public class SeleniumServerMojo extends AbstractMojo {
      * &lt;/getSpecificExecutableVersions&gt;
      * <p/>
      * <p>Unrecognised browser names/versions will be ignored by default</p>
-     *
-     * @parameter
      */
+    @Parameter
     protected Map<String, String> getSpecificExecutableVersions;
 
     /**
@@ -131,33 +125,29 @@ public class SeleniumServerMojo extends AbstractMojo {
      * &lt;throwExceptionIfSpecifiedVersionIsNotFound&gt;false&lt;/throwExceptionIfSpecifiedVersionIsNotFound&gt;
      * </p>
      * <p>This will cause a MojoFailureException to be thrown if any specific executable versions that have been specified do not exist in the RepositoryMap.xml</p>
-     *
-     * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean throwExceptionIfSpecifiedVersionIsNotFound;
 
     /**
      * <h3>Number of times to retry the file download of each executable</h3>
      * <p>&lt;fileDownloadRetryAttempts&gt;1&lt;/fileDownloadRetryAttempts&gt;</p>
-     *
-     * @parameter default-value="1"
      */
+    @Parameter(defaultValue = "1")
     protected int fileDownloadRetryAttempts;
 
     /**
      * <h3>the number of milliseconds until this method will timeout if no connection could be established to remote file location</h3>
      * <p>&lt;fileDownloadConnectTimeout&gt;15000&lt;/fileDownloadConnectTimeout&gt;</p>
-     *
-     * @parameter default-value="15000"
      */
+    @Parameter(defaultValue = "15000")
     protected int fileDownloadConnectTimeout;
 
     /**
      * <h3>the number of milliseconds until this method will timeout if if no data could be read from remote file location</h3>
      * <p>&lt;fileDownloadReadTimeout&gt;15000&lt;/fileDownloadReadTimeout&gt;</p>
-     *
-     * @parameter default-value="15000"
      */
+    @Parameter(defaultValue = "15000")
     protected int fileDownloadReadTimeout;
 
     /**
@@ -166,9 +156,8 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <p>crc checks are not performed on files that have been extracted from valid zips, they are assumed to be valid.
      * This will force the plugin to extract everything from valid zips again and overwrite any existing files.</p>
      * <p>This does not clean out old files, it only writes new files over the top of existing ones.</p>
-     *
-     * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean overwriteFilesThatExist;
 
     /**
@@ -176,9 +165,8 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <p>&lt;doNotCheckFileHashes&gt;false&lt;/doNotCheckFileHashes&gt;</p>
      * <p>Setting this to true will skip all hash checks on downloaded files, <strong>this is not recommended</strong>.</p>
      * <p>If you do not check the file hash there is no guarantee that the downloaded file is the correct file</p>
-     *
-     * @parameter default-value="false"
      */
+    @Parameter(defaultValue = "false")
     protected boolean doNotCheckFileHashes;
 
     protected InputStream xmlRepositoryMap = null;
