@@ -33,9 +33,9 @@ public class DownloadHandlerTest {
 
     private static final String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
     private static final String validMD5Hash = "20d654798f9694099cc40254c5e84a01";
+    private static final JettyServer localWebServer = new JettyServer();
+    private static final String webServerURL = webServerAddress + ":" + webServerPort;
     private static FileDetails validFileDetails;
-    private static JettyServer localWebServer = new JettyServer();
-    private static String webServerURL = webServerAddress + ":" + webServerPort;
     private static File downloadDirectory;
     private static File rootStandaloneServerDirectory;
     private static URL downloadZipURL;

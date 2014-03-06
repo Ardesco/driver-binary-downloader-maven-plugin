@@ -12,9 +12,8 @@ import static org.junit.Assert.assertThat;
 
 public class FileDetailsTest {
 
-    private static String validFileLocation = "http://localhost:8080/files/download.zip";
-    private static String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
-    private static String validMD5Hash = "20d654798f9694099cc40254c5e84a01";
+    private static final String validFileLocation = "http://localhost:8080/files/download.zip";
+    private static final String validMD5Hash = "20d654798f9694099cc40254c5e84a01";
 
     @Test
     public void isValidMD5Hash() throws Exception {
@@ -27,6 +26,8 @@ public class FileDetailsTest {
 
     @Test
     public void isValidSHA1Hash() throws Exception {
+        String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
+
         FileDetails fileDetails = new FileDetails(validFileLocation, "sha1", validSHA1Hash);
 
         assertThat(fileDetails.getFileLocation(), is(equalTo(new URL(validFileLocation))));

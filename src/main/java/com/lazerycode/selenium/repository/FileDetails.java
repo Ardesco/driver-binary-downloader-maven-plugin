@@ -16,7 +16,7 @@ public class FileDetails {
         setHash(hash, hashType);
     }
 
-    public FileDetails(URL fileLocation, HashType hashType, String hash) throws MalformedURLException, IllegalArgumentException {
+    public FileDetails(URL fileLocation, HashType hashType, String hash) throws IllegalArgumentException {
         this.fileLocation = fileLocation;
         this.hashType = hashType;
         this.hash = hash;

@@ -18,7 +18,7 @@ public class RepositoryParserTest {
 
     private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
     private final URL invalidRepositoryMap = this.getClass().getResource("/InvalidTestRepoMap.xml");
-    private static ArrayList<OS> osList = new ArrayList<OS>();
+    private static final ArrayList<OS> osList = new ArrayList<OS>();
 
     @BeforeClass
     public static void populateOSList() {

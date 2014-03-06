@@ -20,12 +20,12 @@ import static org.apache.commons.io.FileUtils.copyURLToFile;
 public class DownloadHandler {
 
     private static final Logger LOG = Logger.getLogger(DownloadHandler.class);
-    private File rootStandaloneServerDirectory;
-    private File downloadedZipFileDirectory;
-    private int fileDownloadReadTimeout;
-    private int fileDownloadConnectTimeout;
-    protected int fileDownloadRetryAttempts;
-    private Map<String, FileDetails> filesToDownload;
+    private final File rootStandaloneServerDirectory;
+    private final File downloadedZipFileDirectory;
+    private final int fileDownloadReadTimeout;
+    private final int fileDownloadConnectTimeout;
+    private final Map<String, FileDetails> filesToDownload;
+    final int fileDownloadRetryAttempts;
     private boolean overwriteFilesThatExist = false;
     private boolean doNotCheckFileHash = false;
 
@@ -77,7 +77,7 @@ public class DownloadHandler {
      * @return File
      * @throws MojoExecutionException
      */
-    protected File downloadFile(FileDetails fileDetails) throws Exception {
+    File downloadFile(FileDetails fileDetails) throws Exception {
         String filename = FilenameUtils.getName(fileDetails.getFileLocation().getFile());
         File fileToDownload = new File(localFilePath(this.downloadedZipFileDirectory) + File.separator + filename);
         for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
@@ -122,7 +122,7 @@ public class DownloadHandler {
      * @return true if the file exists and is valid
      * @throws IOException
      */
-    protected boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException, MojoExecutionException {
+    boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException {
         if (!fileToCheck.exists()) return false;
         if (doNotCheckFileHash) return true;
         String actualFileHash;

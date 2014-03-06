@@ -62,7 +62,7 @@ public class ExtractFilesFromArchive {
      */
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
+    static boolean unzipFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
         Boolean fileExtracted = false;
         ZipFile zip = new ZipFile(downloadedZip);
 
@@ -109,7 +109,7 @@ public class ExtractFilesFromArchive {
      */
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected static boolean untarFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames, String fileType) throws IOException, MojoFailureException {
+    static boolean untarFile(File downloadedZip, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames, String fileType) throws IOException, MojoFailureException {
         Boolean fileExtracted = false;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream fileInArchive;

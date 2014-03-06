@@ -16,15 +16,14 @@ import java.util.Map;
 public class RepositoryParser {
 
     private static final Logger LOG = Logger.getLogger(RepositoryParser.class);
+    private final Map<String, ArrayList<String>> getSpecificExecutableVersions = new HashMap<String, ArrayList<String>>();
+    private final Map<String, String> bitRates = new HashMap<String, String>();
+    private final HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
     private Document repositoryMap;
     private ArrayList<OS> operatingSystemList;
-    private Map<String, String> bitRates = new HashMap<String, String>();
-    private Map<String, ArrayList<String>> getSpecificExecutableVersions = new HashMap<String, ArrayList<String>>();
     private boolean onlyGetLatestVersions = true;
     private boolean selectivelyParseDriverExecutableList = false;
     private boolean throwExceptionIfSpecifiedVersionIsNotFound = false;
-
-    private HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
 
     public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions, boolean throwExceptionIfSpecifiedVersionIsNotFound) throws MojoFailureException {
         Builder parser = new Builder();

@@ -5,8 +5,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.maven.plugin.logging.Log;
 
-public class MavenLoggerLog4jBridge extends AppenderSkeleton {
-    private Log LOG;
+class MavenLoggerLog4jBridge extends AppenderSkeleton {
+    private final Log LOG;
 
     public MavenLoggerLog4jBridge(Log logger) {
         this.LOG = logger;
