@@ -27,9 +27,9 @@ public class DownloadHandler {
     private final Map<String, FileDetails> filesToDownload;
     final int fileDownloadRetryAttempts;
     private boolean overwriteFilesThatExist = false;
-    private boolean doNotCheckFileHash = false;
+    private boolean checkFileHash = true;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean doNotCheckFileHash) {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash) {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         if (fileDownloadRetryAttempts < 1) {
@@ -42,7 +42,7 @@ public class DownloadHandler {
         this.fileDownloadReadTimeout = fileDownloadReadTimeout;
         this.filesToDownload = filesToDownload;
         this.overwriteFilesThatExist = overwriteFilesThatExist;
-        this.doNotCheckFileHash = doNotCheckFileHash;
+        this.checkFileHash = checkFileHash;
     }
 
     public void getStandaloneExecutableFiles() throws Exception {
@@ -122,9 +122,14 @@ public class DownloadHandler {
      * @return true if the file exists and is valid
      * @throws IOException
      */
-    boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException {
+    boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException, MojoExecutionException {
         if (!fileToCheck.exists()) return false;
-        if (doNotCheckFileHash) return true;
+        if (!checkFileHash) return true;
+        if (null == expectedHash) {
+            throw new MojoExecutionException("The hash for " + fileToCheck.getName() + " is missing from your RepositoryMap.xml");
+        } else if (null == hashType) {
+            throw new MojoExecutionException("The hashtype for " + fileToCheck.getName() + " is missing from your RepositoryMap.xml");
+        }
         String actualFileHash;
         FileInputStream fileToHashCheck = new FileInputStream(fileToCheck);
         switch (hashType) {

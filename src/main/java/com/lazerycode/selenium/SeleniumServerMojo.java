@@ -161,13 +161,13 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected boolean overwriteFilesThatExist;
 
     /**
-     * <h3>Disable the file hash check for downloaded files</h3>
-     * <p>&lt;doNotCheckFileHashes&gt;false&lt;/doNotCheckFileHashes&gt;</p>
-     * <p>Setting this to true will skip all hash checks on downloaded files, <strong>this is not recommended</strong>.</p>
+     * <h3>Enable the file hash check for downloaded files</h3>
+     * <p>&lt;checkFileHashes&gt;false&lt;/checkFileHashes&gt;</p>
+     * <p>Setting this to false will skip all hash checks on downloaded files, <strong>this is not recommended</strong>.</p>
      * <p>If you do not check the file hash there is no guarantee that the downloaded file is the correct file</p>
      */
-    @Parameter(defaultValue = "false")
-    protected boolean doNotCheckFileHashes;
+    @Parameter(defaultValue = "true")
+    protected boolean checkFileHashes;
 
     protected InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
@@ -222,7 +222,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadReadTimeout,
                     executableBinaryMapping.getFilesToDownload(),
                     this.overwriteFilesThatExist,
-                    this.doNotCheckFileHashes);
+                    this.checkFileHashes);
             standaloneExecutableDownloader.getStandaloneExecutableFiles();
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());

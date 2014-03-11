@@ -17,6 +17,7 @@ import static org.junit.Assert.assertThat;
 public class RepositoryParserTest {
 
     private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
+    private final URL repositoryMapWithNoHashs = this.getClass().getResource("/noHash.xml");
     private final URL invalidRepositoryMap = this.getClass().getResource("/InvalidTestRepoMap.xml");
     private static final ArrayList<OS> osList = new ArrayList<OS>();
 
@@ -36,6 +37,14 @@ public class RepositoryParserTest {
     }
 
     @Test
+    public void getLatestVersionsWithNoHash() throws Exception {
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMapWithNoHashs.openStream(), osList, true, true, true, false);
+        HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
+
+        assertThat(downloadableFileList.size(), is(equalTo(6)));
+    }
+
+    @Test
     public void getSpecificVersions() throws Exception {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "21");
@@ -45,7 +54,12 @@ public class RepositoryParserTest {
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
         assertThat(downloadableFileList.size(), is(equalTo(6)));
-        //TODO check all the keys are correct
+        assertThat(downloadableFileList.get("windows/googlechrome/32bit/21").getHash(), is(equalTo("f2c25d144dc9d71473700706179b8aa989baec32")));
+        assertThat(downloadableFileList.get("windows/googlechrome/64bit/21").getHash(), is(equalTo("f2c25d144dc9d71473700706179b8aa989baec32")));
+        assertThat(downloadableFileList.get("linux/googlechrome/32bit/21").getHash(), is(equalTo("384a3d0033a688db7f41d0037889367b078cd969")));
+        assertThat(downloadableFileList.get("linux/googlechrome/64bit/21").getHash(), is(equalTo("4f8f043f3893ca0969176c8cf4868117b47e3781")));
+        assertThat(downloadableFileList.get("osx/googlechrome/32bit/21").getHash(), is(equalTo("ea6f2f45c835d3413fde3a7b08e5e3e4db6dc3f9")));
+        assertThat(downloadableFileList.get("osx/googlechrome/64bit/21").getHash(), is(equalTo("ea6f2f45c835d3413fde3a7b08e5e3e4db6dc3f9")));
     }
 
     @Test

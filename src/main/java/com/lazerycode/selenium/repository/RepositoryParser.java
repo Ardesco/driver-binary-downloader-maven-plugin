@@ -200,8 +200,12 @@ public class RepositoryParser {
      */
     private FileDetails extractFileInformation(Node downloadableZipInformation) throws MalformedURLException, IllegalArgumentException {
         String fileLocation = downloadableZipInformation.query("./filelocation").get(0).getValue();
-        String hash = downloadableZipInformation.query("./hash").get(0).getValue();
-        String hashType = downloadableZipInformation.query("./hashtype").get(0).getValue();
+        String hash = null;
+        String hashType = null;
+        if (downloadableZipInformation.query("./hash").size() != 0 && downloadableZipInformation.query("./hashtype").size() != 0) {
+            hash = downloadableZipInformation.query("./hash").get(0).getValue();
+            hashType = downloadableZipInformation.query("./hashtype").get(0).getValue();
+        }
 
         return new FileDetails(fileLocation, hashType, hash);
     }
