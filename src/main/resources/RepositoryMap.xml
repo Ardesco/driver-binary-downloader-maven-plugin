@@ -2,33 +2,33 @@
 <root>
     <windows>
         <driver id="internetexplorer">
-            <version id="2.37.0">
+            <version id="2.40.0">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_x64_2.37.0.zip</filelocation>
-                    <hash>38acef909ef660953aa189558cf5d7bff2f6d801</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://selenium-release.storage.googleapis.com/2.40/IEDriverServer_x64_2.40.0.zip</filelocation>
+                    <hash>7769f840dc566657efe0a1268ec24904</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>https://selenium.googlecode.com/files/IEDriverServer_Win32_2.37.0.zip</filelocation>
-                    <hash>d23aa898f50946f6b1ae5fa933116cff1b83f150</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://selenium-release.storage.googleapis.com/2.40/IEDriverServer_Win32_2.40.0.zip</filelocation>
+                    <hash>90c495b4bcd5e86c0a2e5c5c4ac16369</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
             </version>
         </driver>
         <driver id="googlechrome">
-            <version id="2.6">
+            <version id="2.9">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
-                    <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_win32.zip</filelocation>
-                    <hash>4196e08c591145fc51828e0a3045f35cb142c51f</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://chromedriver.storage.googleapis.com/2.9/chromedriver_win32.zip</filelocation>
+                    <hash>ef6a4819563ef993c3aac8f229c0ca91</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
             </version>
         </driver>
         <driver id="phantomjs">
-            <version id="1.9.2">
+            <version id="1.9.7">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-windows.zip</filelocation>
-                    <hash>5fcfb32d9df9e603a3980139026bc33d516dae01</hash>
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-windows.zip</filelocation>
+                    <hash>3c70fdfba7766aa88357f387af222166c48854eb</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
@@ -36,31 +36,29 @@
     </windows>
     <linux>
         <driver id="googlechrome">
-            <version id="2.4">
+            <version id="2.9">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux64.zip</filelocation>
-                    <hash>cab1c61eea5397498f6a095fcbf726772554fb21</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://chromedriver.storage.googleapis.com/2.9/chromedriver_linux64.zip</filelocation>
+                    <hash>e2e44f064ecb69ec5b6f1b80f3d13c93</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_linux32.zip</filelocation>
-                    <hash>50fa5c13e7e5a16704c1ea6a5951ddb9198c503b</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://chromedriver.storage.googleapis.com/2.9/chromedriver_linux32.zip</filelocation>
+                    <hash>780c12bf34d4f4029b7586b927b1fa69</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
             </version>
         </driver>
         <driver id="phantomjs">
-            <version id="1.9.2">
+            <version id="1.9.7">
                 <bitrate sixtyfourbit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2
-                    </filelocation>
-                    <hash>c78c4037d98fa893e66fc516214499c58228d2f9</hash>
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2</filelocation>
+                    <hash>ca3581dfdfc22ceab2050cf55ea7200c535a7368</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2
-                    </filelocation>
-                    <hash>9ead5dd275f79eaced61ce63dbeca58be4d7f090</hash>
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-i686.tar.bz2</filelocation>
+                    <hash>98005ed0b964502b6dea2ed4fdf9b593eb6fbead</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
@@ -68,19 +66,19 @@
     </linux>
     <osx>
         <driver id="googlechrome">
-            <version id="2.4">
+            <version id="2.9">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
-                    <filelocation>http://chromedriver.storage.googleapis.com/2.6/chromedriver_mac32.zip</filelocation>
-                    <hash>4643652d403961dd9a9a1980eb1a06bf8b6e9bad</hash>
-                    <hashtype>sha1</hashtype>
+                    <filelocation>http://chromedriver.storage.googleapis.com/2.9/chromedriver_mac32.zip</filelocation>
+                    <hash>d33f5bbea74968610b5face51a533419</hash>
+                    <hashtype>md5</hashtype>
                 </bitrate>
             </version>
         </driver>
         <driver id="phantomjs">
-            <version id="1.9.2">
+            <version id="1.9.7">
                 <bitrate thirtytwobit="true" sixtyfourbit="true">
-                    <filelocation>https://phantomjs.googlecode.com/files/phantomjs-1.9.2-macosx.zip</filelocation>
-                    <hash>36357dc95c0676fb4972420ad25455f49a8f3331</hash>
+                    <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-macosx.zip</filelocation>
+                    <hash>519e53cc612a57cb1c82a0cbf028e7e4bb4ceeec</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>
