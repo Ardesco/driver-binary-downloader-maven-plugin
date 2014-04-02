@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -11,7 +10,7 @@
 
     <groupId>com.lazerycode.selenium</groupId>
     <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>maven-plugin</packaging>
     <name>Selenium Binary Downloader Maven Plugin</name>
     <description>A plugin to automatically download individual selenium standalone binaries (e.g. chrromedriver.exe) for
@@ -50,9 +49,9 @@
 
     <mailingLists>
         <mailingList>
-            <name/>
-            <post/>
-            <archive/>
+            <name />
+            <post />
+            <archive />
         </mailingList>
     </mailingLists>
 
@@ -60,7 +59,7 @@
         <connection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</developerConnection>
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin</url>
-        <tag>HEAD</tag>
+        <tag>driver-binary-downloader-maven-plugin-1.0.1</tag>
     </scm>
 
     <distributionManagement>
