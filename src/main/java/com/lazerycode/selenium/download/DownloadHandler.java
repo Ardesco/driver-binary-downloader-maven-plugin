@@ -6,6 +6,13 @@ import com.lazerycode.selenium.hash.HashType;
 import com.lazerycode.selenium.repository.FileDetails;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -15,7 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.apache.commons.io.FileUtils.copyURLToFile;
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 public class DownloadHandler {
 
@@ -83,10 +90,21 @@ public class DownloadHandler {
         for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
             try {
                 LOG.info("Downloading '" + filename + "'...");
-                copyURLToFile(fileDetails.getFileLocation(), fileToDownload, this.fileDownloadConnectTimeout, this.fileDownloadReadTimeout);
+                SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(this.fileDownloadReadTimeout).build();
+                RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(fileDownloadConnectTimeout).build();
+                CloseableHttpClient httpClient = HttpClients.custom()
+                        .setDefaultSocketConfig(socketConfig)
+                        .setDefaultRequestConfig(requestConfig)
+                        .build();
+                CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileDetails.getFileLocation().toURI()));
+                try {
+                    HttpEntity remoteFileStream = fileDownloadResponse.getEntity();
+                    copyInputStreamToFile(remoteFileStream.getContent(), fileToDownload);
+                } finally {
+                    fileDownloadResponse.close();
+                }
                 LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
-                if (fileExistsAndIsValid(fileToDownload, fileDetails.getHash(), fileDetails.getHashType()))
-                    return fileToDownload;
+                if (fileExistsAndIsValid(fileToDownload, fileDetails.getHash(), fileDetails.getHashType())) return fileToDownload;
             } catch (IOException ex) {
                 LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
                 if (n + 1 < this.fileDownloadRetryAttempts)
