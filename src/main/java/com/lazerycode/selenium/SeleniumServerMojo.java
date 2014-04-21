@@ -188,7 +188,7 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
 
         Map<String, String> selectedOperatingSystems = new HashMap<String, String>();
-
+        LOG.info(" Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
         if (this.onlyGetDriversForHostOperatingSystem) {
             String currentOS = System.getProperty("os.name").toLowerCase();
             if (currentOS.startsWith("win")) {
@@ -202,9 +202,22 @@ public class SeleniumServerMojo extends AbstractMojo {
             selectedOperatingSystems = this.operatingSystems;
         }
 
+        ArrayList<OS> osList = buildOSArrayList(selectedOperatingSystems);
+
+        if (null == osList || osList.size() == 0) {
+            LOG.info(" ");
+            LOG.info(" All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
+            LOG.info(" ");
+            LOG.info("--------------------------------------------------------");
+            LOG.info(" SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
+            LOG.info("--------------------------------------------------------");
+            LOG.info(" ");
+            return;
+        }
+
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
-                buildOSArrayList(selectedOperatingSystems),
+                osList,
                 this.thirtyTwoBitBinaries,
                 this.sixtyFourBitBinaries,
                 this.onlyGetLatestVersions,
@@ -298,7 +311,8 @@ public class SeleniumServerMojo extends AbstractMojo {
             Schema schema = schemaFactory.newSchema(schemaFile);
             Validator validator = schema.newValidator();
             validator.validate(xmlFile);
-            LOG.info(xmlFile.getSystemId() + " is valid");
+            LOG.info(" " + xmlFile.getSystemId() + " is valid");
+            LOG.info(" ");
         } catch (SAXException saxe) {
             throw new MojoExecutionException(this.customRepositoryMap.getName() + " is not valid: " + saxe.getLocalizedMessage());
         } catch (IOException ioe) {
