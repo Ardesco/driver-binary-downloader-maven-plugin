@@ -46,6 +46,8 @@ Advanced Usage
                     <downloadedZipFileDirectory>/tmp/zips</downloadedZipFileDirectory>
                     <!-- Location of a custom repository map -->
                     <customRepositoryMap>/tmp/repo.xml</customRepositoryMap>
+                    <!-- This will ensure that the plugin only downloads binaries for the current OS, this will override anything specified in the <operatingSystems> configuration -->
+                    <onlyGetDriversForHostOperatingSystem>false</onlyGetDriversForHostOperatingSystem>
                     <!-- Operating systems you want to download binaries for (Only valid options are: windows, linux, osx) -->
                     <operatingSystems>
                         <windows>true</windows>
@@ -62,6 +64,8 @@ Advanced Usage
                     <getSpecificExecutableVersions>
                         <googlechrome>18</googlechrome>
                     </getSpecificExecutableVersions>
+                    <!-- Throw an exception if any specified binary versions that the plugin tries to download do not exist -->
+                    <throwExceptionIfSpecifiedVersionIsNotFound>false</throwExceptionIfSpecifiedVersionIsNotFound>
                     <!-- Number of times to attempt to download each file -->
                     <fileDownloadRetryAttempts>2</fileDownloadRetryAttempts>
                     <!-- Number of ms to wait before timing out when trying to connect to remote server to download file -->
@@ -70,6 +74,8 @@ Advanced Usage
                     <fileDownloadReadTimeout>10000</fileDownloadReadTimeout>
                     <!-- Overwrite any existing binaries that have been downloaded and extracted -->
                     <overwriteFilesThatExist>true</overwriteFilesThatExist>
+                    <!-- Check file hashes of downloaded files.  Default: true -->
+                    <checkFileHashes>true</checkFileHashes>
                 </configuration>
                 <executions>
                     <execution>

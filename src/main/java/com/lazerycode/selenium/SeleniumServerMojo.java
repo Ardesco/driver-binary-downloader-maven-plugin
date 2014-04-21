@@ -60,6 +60,14 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected File customRepositoryMap;
 
     /**
+     * <h3>Only get drivers that are compatible with the operating system running the plugin</h3>
+     * <p>&lt;onlyGetDriversForHostOperatingSystem&gt;true&lt;/onlyGetDriversForHostOperatingSystem&gt;</p>
+     * <p>If set to false this will download binary executables for all operating systems</p>
+     */
+    @Parameter(defaultValue = "true")
+    protected boolean onlyGetDriversForHostOperatingSystem;
+
+    /**
      * <h3>The Operating systems you would like to download a standalone executable for</h3>
      * <p/>
      * &lt;operatingSystems&gt;
@@ -97,14 +105,6 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "true")
     protected boolean onlyGetLatestVersions;
-
-    /**
-     * <h3>Only get drivers that are compatible with the operating system running the plugin</h3>
-     * <p>&lt;onlyGetDriversForHostOperatingSystem&gt;true&lt;/onlyGetDriversForHostOperatingSystem&gt;</p>
-     * <p>If set to false this will download binary executables for all operating systems</p>
-     */
-    @Parameter(defaultValue = "true")
-    protected boolean onlyGetDriversForHostOperatingSystem;
 
     /**
      * <h3>A map of driver standalone versions to download</h3>
