@@ -180,7 +180,6 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info(" DOWNLOADING SELENIUM STAND-ALONE EXECUTABLE BINARIES...");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
-        checkRepositoryMapIsValid();
         setRepositoryMapFile();
 
         if (null == this.operatingSystems || this.operatingSystems.size() < 1) {
@@ -288,6 +287,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             }
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         } else {
+            checkRepositoryMapIsValid();
             try {
                 this.xmlRepositoryMap = this.customRepositoryMap.toURI().toURL().openStream();
             } catch (IOException ioe) {
