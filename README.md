@@ -38,7 +38,7 @@ Advanced Usage
             <plugin>
                 <groupId>com.lazerycode.selenium</groupId>
                 <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-                <version>1.0.1</version>
+                <version>1.0.2</version>
                 <configuration>
                     <!-- root directory that downloaded driver binaries will be stored in -->
                     <rootStandaloneServerDirectory>/tmp/binaries</rootStandaloneServerDirectory>
