@@ -95,6 +95,7 @@ public class DownloadHandler {
                 CloseableHttpClient httpClient = HttpClients.custom()
                         .setDefaultSocketConfig(socketConfig)
                         .setDefaultRequestConfig(requestConfig)
+                        .disableContentCompression()
                         .build();
                 CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileDetails.getFileLocation().toURI()));
                 try {
