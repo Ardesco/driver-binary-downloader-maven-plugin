@@ -187,7 +187,7 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
 
         Map<String, String> selectedOperatingSystems = new HashMap<String, String>();
-        LOG.info(" Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
+        LOG.info("Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
         if (this.onlyGetDriversForHostOperatingSystem) {
             String currentOS = System.getProperty("os.name").toLowerCase();
             if (currentOS.startsWith("win")) {
@@ -205,10 +205,10 @@ public class SeleniumServerMojo extends AbstractMojo {
 
         if (null == osList || osList.size() == 0) {
             LOG.info(" ");
-            LOG.info(" All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
+            LOG.info("All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
             LOG.info(" ");
             LOG.info("--------------------------------------------------------");
-            LOG.info(" SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
+            LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
             LOG.info("--------------------------------------------------------");
             LOG.info(" ");
             return;
@@ -242,7 +242,7 @@ public class SeleniumServerMojo extends AbstractMojo {
 
         LOG.info(" ");
         LOG.info("--------------------------------------------------------");
-        LOG.info(" SELENIUM STAND-ALONE EXECUTABLE DOWNLOADS COMPLETE");
+        LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOADS COMPLETE");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
     }
