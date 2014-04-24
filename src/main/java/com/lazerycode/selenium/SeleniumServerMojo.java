@@ -77,7 +77,6 @@ public class SeleniumServerMojo extends AbstractMojo {
      * &lt;/operatingSystems&gt;
      * <p/>
      * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
-     * <p><strong>Default:</strong>All operating systems.</p>
      * <p><strong>WARNING</strong>if <em>onlyGetDriversForHostOperatingSystem</em> is true, this <strong>will</strong> be ignored!</p>
      */
     @Parameter
@@ -183,6 +182,7 @@ public class SeleniumServerMojo extends AbstractMojo {
         setRepositoryMapFile();
 
         if (null == this.operatingSystems || this.operatingSystems.size() < 1) {
+            LOG.info("No <operatingSystems> configuration detected.  Defaulting to getting drivers for current operating system only.");
             this.onlyGetDriversForHostOperatingSystem = true;
         }
 
