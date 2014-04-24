@@ -106,7 +106,7 @@ public class DownloadHandler {
                 LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
                 if (fileExistsAndIsValid(fileToDownload, fileDetails.getHash(), fileDetails.getHashType())) return fileToDownload;
             } catch (IOException ex) {
-                LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getLocalizedMessage());
+                LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getCause().getLocalizedMessage());
                 if (n + 1 < this.fileDownloadRetryAttempts)
                     LOG.info("Trying to download'" + fileToDownload.getName() + "' again...");
             }
