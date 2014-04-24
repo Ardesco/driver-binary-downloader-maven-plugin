@@ -160,7 +160,12 @@ public class DownloadHandler {
                 break;
         }
         fileToHashCheck.close();
-        return actualFileHash.equals(expectedHash);
+        boolean result = actualFileHash.equals(expectedHash);
+        if (!result) {
+            LOG.info("Expected file hash to be '" + expectedHash + "'.");
+            LOG.info("Actual file hash was '" + actualFileHash + "'.");
+        }
+        return result;
     }
 
 }
