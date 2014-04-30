@@ -1,16 +1,9 @@
 package com.lazerycode.selenium.download;
 
-import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Map;
-
+import com.lazerycode.selenium.extract.BinaryFileNames;
+import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
+import com.lazerycode.selenium.hash.HashType;
+import com.lazerycode.selenium.repository.FileDetails;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
@@ -25,14 +18,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.classworlds.UrlUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.omg.CosNaming.NamingContextExtPackage.URLStringHelper;
 
-import com.lazerycode.selenium.extract.BinaryFileNames;
-import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
-import com.lazerycode.selenium.hash.HashType;
-import com.lazerycode.selenium.repository.FileDetails;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
+
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 public class DownloadHandler {
 
@@ -103,14 +97,14 @@ public class DownloadHandler {
                 SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(this.fileDownloadReadTimeout).build();
                 RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(fileDownloadConnectTimeout).build();
                 HttpClientBuilder httpClientBuilder = HttpClients.custom()
-				                .setDefaultSocketConfig(socketConfig)
-				                .setDefaultRequestConfig(requestConfig)
-				                .disableContentCompression();
+                        .setDefaultSocketConfig(socketConfig)
+                        .setDefaultRequestConfig(requestConfig)
+                        .disableContentCompression();
                 String httpProxy = System.getenv("http_proxy");
                 if (StringUtils.isNotEmpty(httpProxy)) {
-                	LOG.info("Setting http proxy to: " + httpProxy);
-                	URL url = new URL(httpProxy);
-                	httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort(), url.getProtocol()));
+                    LOG.info("Setting http proxy to: " + httpProxy);
+                    URL url = new URL(httpProxy);
+                    httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort()));
                 }
                 CloseableHttpClient httpClient = httpClientBuilder.build();
                 CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileDetails.getFileLocation().toURI()));
