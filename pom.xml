@@ -50,7 +50,7 @@
 
     <ciManagement>
         <system>TeamCity</system>
-        <url>http://ci.lazerycode.com</url>
+        <url>http://build.lazerycode.com</url>
     </ciManagement>
 
     <mailingLists>
