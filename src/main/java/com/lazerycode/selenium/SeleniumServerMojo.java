@@ -150,6 +150,13 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected int fileDownloadReadTimeout;
 
     /**
+     * <h3>If the environmental variables http_proxy, or https_proxy are set they will be used for http/https calls</h3>
+     * <p>&lt;useSystemProxy&gt;true&lt;/useSystemProxy&gt;</p>
+     */
+    @Parameter(defaultValue = "true")
+    protected boolean useSystemProxy;
+
+    /**
      * <h3>Force the plugin to overwrite any files that have already been extracted from a valid zip file</h3>
      * <p>&lt;overwriteFilesThatExist&gt;false&lt;/overwriteFilesThatExist&gt;</p>
      * <p>crc checks are not performed on files that have been extracted from valid zips, they are assumed to be valid.
@@ -234,7 +241,8 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadReadTimeout,
                     executableBinaryMapping.getFilesToDownload(),
                     this.overwriteFilesThatExist,
-                    this.checkFileHashes);
+                    this.checkFileHashes,
+                    this.useSystemProxy);
             standaloneExecutableDownloader.getStandaloneExecutableFiles();
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());

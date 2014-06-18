@@ -39,8 +39,9 @@ public class DownloadHandler {
     final int fileDownloadRetryAttempts;
     private boolean overwriteFilesThatExist = false;
     private boolean checkFileHash = true;
+    private boolean useSystemProxy = true;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash) {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         if (fileDownloadRetryAttempts < 1) {
@@ -54,6 +55,7 @@ public class DownloadHandler {
         this.filesToDownload = filesToDownload;
         this.overwriteFilesThatExist = overwriteFilesThatExist;
         this.checkFileHash = checkFileHash;
+        this.useSystemProxy = useSystemProxy;
     }
 
     public void getStandaloneExecutableFiles() throws Exception {
@@ -100,11 +102,13 @@ public class DownloadHandler {
                         .setDefaultSocketConfig(socketConfig)
                         .setDefaultRequestConfig(requestConfig)
                         .disableContentCompression();
-                String httpProxy = System.getenv("http_proxy");
-                if (StringUtils.isNotEmpty(httpProxy)) {
-                    LOG.info("Setting http proxy to: " + httpProxy);
-                    URL url = new URL(httpProxy);
-                    httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort()));
+                if (this.useSystemProxy) {
+                    String httpProxy = System.getenv("http_proxy");
+                    if (StringUtils.isNotEmpty(httpProxy)) {
+                        LOG.info("Setting http proxy to: " + httpProxy);
+                        URL url = new URL(httpProxy);
+                        httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort()));
+                    }
                 }
                 CloseableHttpClient httpClient = httpClientBuilder.build();
                 CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileDetails.getFileLocation().toURI()));
