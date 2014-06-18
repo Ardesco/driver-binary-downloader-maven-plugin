@@ -37,6 +37,12 @@
         </developer>
     </developers>
 
+    <contributors>
+        <contributor>
+            <name>Nassos A. Michas</name>
+        </contributor>
+    </contributors>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin/issues</url>
