@@ -1,28 +1,38 @@
 package com.lazerycode.selenium.download;
 
-import com.lazerycode.selenium.extract.BinaryFileNames;
-import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
-import com.lazerycode.selenium.hash.HashType;
-import com.lazerycode.selenium.repository.FileDetails;
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Map;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.classworlds.UrlUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.omg.CosNaming.NamingContextExtPackage.URLStringHelper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Map;
-
-import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
+import com.lazerycode.selenium.extract.BinaryFileNames;
+import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
+import com.lazerycode.selenium.hash.HashType;
+import com.lazerycode.selenium.repository.FileDetails;
 
 public class DownloadHandler {
 
@@ -89,14 +99,20 @@ public class DownloadHandler {
         File fileToDownload = new File(localFilePath(this.downloadedZipFileDirectory) + File.separator + filename);
         for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
             try {
-                LOG.info("Downloading '" + filename + "'...");
+                LOG.debug("Downloading '" + filename + "'...");
                 SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(this.fileDownloadReadTimeout).build();
                 RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(fileDownloadConnectTimeout).build();
-                CloseableHttpClient httpClient = HttpClients.custom()
-                        .setDefaultSocketConfig(socketConfig)
-                        .setDefaultRequestConfig(requestConfig)
-                        .disableContentCompression()
-                        .build();
+                HttpClientBuilder httpClientBuilder = HttpClients.custom()
+				                .setDefaultSocketConfig(socketConfig)
+				                .setDefaultRequestConfig(requestConfig)
+				                .disableContentCompression();
+                String httpProxy = System.getenv("http_proxy");
+                if (StringUtils.isNotEmpty(httpProxy)) {
+                	LOG.info("Setting http proxy to: " + httpProxy);
+                	URL url = new URL(httpProxy);
+                	httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort(), url.getProtocol()));
+                }
+                CloseableHttpClient httpClient = httpClientBuilder.build();
                 CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileDetails.getFileLocation().toURI()));
                 try {
                     HttpEntity remoteFileStream = fileDownloadResponse.getEntity();
