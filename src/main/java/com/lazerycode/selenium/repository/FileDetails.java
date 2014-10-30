@@ -25,11 +25,12 @@ public class FileDetails {
     }
 
     private void setHash(String hash, String hashType) {
-        this.hashType = HashType.valueOf(hashType.toUpperCase());
-        if (this.hashType.matchesStructureOf(hash)) {
+        HashType calculatedHashType = HashType.valueOf(hashType.toUpperCase());
+        if (calculatedHashType.matchesStructureOf(hash)) {
+            this.hashType = calculatedHashType;
             this.hash = hash;
         } else {
-            throw new IllegalArgumentException(hash + " is not a valid " + this.hashType.toString() + " hash!");
+            throw new IllegalArgumentException(hash + " is not a valid " + calculatedHashType.toString() + " hash!");
         }
     }
 

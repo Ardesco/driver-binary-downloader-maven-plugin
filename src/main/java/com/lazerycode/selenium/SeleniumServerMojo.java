@@ -208,9 +208,9 @@ public class SeleniumServerMojo extends AbstractMojo {
             selectedOperatingSystems = this.operatingSystems;
         }
 
-        ArrayList<OS> osList = buildOSArrayList(selectedOperatingSystems);
+        ArrayList<OSType> osTypeList = buildOSArrayList(selectedOperatingSystems);
 
-        if (null == osList || osList.size() == 0) {
+        if (null == osTypeList || osTypeList.size() == 0) {
             LOG.info(" ");
             LOG.info("All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
             LOG.info(" ");
@@ -223,7 +223,7 @@ public class SeleniumServerMojo extends AbstractMojo {
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
-                osList,
+                osTypeList,
                 this.thirtyTwoBitBinaries,
                 this.sixtyFourBitBinaries,
                 this.onlyGetLatestVersions,
@@ -259,18 +259,18 @@ public class SeleniumServerMojo extends AbstractMojo {
      * Build a valid list of operating systems based upon the values parsed from the POM
      *
      * @param operatingSystems Operating systems to download Driver Binaries for
-     * @return ArrayList<OS>
+     * @return ArrayList<OSType>
      */
-    private ArrayList<OS> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
-        ArrayList<OS> operatingSystemsSelected = new ArrayList<OS>();
+    private ArrayList<OSType> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
+        ArrayList<OSType> operatingSystemsSelected = new ArrayList<OSType>();
         if (operatingSystems == null || operatingSystems.size() < 1) {
             //Default to all Operating Systems
-            Collections.addAll(operatingSystemsSelected, OS.values());
+            Collections.addAll(operatingSystemsSelected, OSType.values());
         } else {
             for (Map.Entry<String, String> os : operatingSystems.entrySet()) {
                 if (os.getValue().toLowerCase().equals("true")) {
                     try {
-                        operatingSystemsSelected.add(OS.valueOf(os.getKey().toUpperCase()));
+                        operatingSystemsSelected.add(OSType.valueOf(os.getKey().toUpperCase()));
                     } catch (IllegalArgumentException iae) {
                         throw new MojoExecutionException("'" + os.getKey().toUpperCase() + "' is not a known operating system.");
                     }

@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OS;
+import com.lazerycode.selenium.OSType;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,18 +19,18 @@ public class RepositoryParserTest {
     private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
     private final URL repositoryMapWithNoHashs = this.getClass().getResource("/noHash.xml");
     private final URL invalidRepositoryMap = this.getClass().getResource("/InvalidTestRepoMap.xml");
-    private static final ArrayList<OS> osList = new ArrayList<OS>();
+    private static final ArrayList<OSType> OS_TYPE_LIST = new ArrayList<OSType>();
 
     @BeforeClass
     public static void populateOSList() {
-        osList.add(OS.LINUX);
-        osList.add(OS.WINDOWS);
-        osList.add(OS.OSX);
+        OS_TYPE_LIST.add(OSType.LINUX);
+        OS_TYPE_LIST.add(OSType.WINDOWS);
+        OS_TYPE_LIST.add(OSType.OSX);
     }
 
     @Test
     public void getLatestVersions() throws Exception {
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, true, false);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), OS_TYPE_LIST, true, true, true, false);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
         assertThat(downloadableFileList.size(), is(equalTo(8)));
@@ -38,7 +38,7 @@ public class RepositoryParserTest {
 
     @Test
     public void getLatestVersionsWithNoHash() throws Exception {
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMapWithNoHashs.openStream(), osList, true, true, true, false);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMapWithNoHashs.openStream(), OS_TYPE_LIST, true, true, true, false);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
         assertThat(downloadableFileList.size(), is(equalTo(6)));
@@ -49,7 +49,7 @@ public class RepositoryParserTest {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "21");
 
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, true, false);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), OS_TYPE_LIST, true, true, true, false);
         executableBinaryMapping.specifySpecificExecutableVersions(versionsToFind);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
@@ -64,7 +64,7 @@ public class RepositoryParserTest {
 
     @Test
     public void getAllVersions() throws Exception {
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, false, false);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), OS_TYPE_LIST, true, true, false, false);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
         assertThat(downloadableFileList.size(), is(equalTo(16)));
@@ -75,7 +75,7 @@ public class RepositoryParserTest {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "one");
 
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, true, true);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), OS_TYPE_LIST, true, true, true, true);
         executableBinaryMapping.specifySpecificExecutableVersions(versionsToFind);
         executableBinaryMapping.getFilesToDownload();
     }
@@ -85,7 +85,7 @@ public class RepositoryParserTest {
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "one");
 
-        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), osList, true, true, true, false);
+        RepositoryParser executableBinaryMapping = new RepositoryParser(this.repositoryMap.openStream(), OS_TYPE_LIST, true, true, true, false);
         executableBinaryMapping.specifySpecificExecutableVersions(versionsToFind);
         HashMap<String, FileDetails> downloadableFileList = executableBinaryMapping.getFilesToDownload();
 
@@ -94,7 +94,7 @@ public class RepositoryParserTest {
 
     @Test(expected = MojoFailureException.class)
     public void throwExceptionIfRepositoryMapIsInvalid() throws Exception {
-        new RepositoryParser(this.invalidRepositoryMap.openStream(), osList, true, true, true, false);
+        new RepositoryParser(this.invalidRepositoryMap.openStream(), OS_TYPE_LIST, true, true, true, false);
     }
 }
 

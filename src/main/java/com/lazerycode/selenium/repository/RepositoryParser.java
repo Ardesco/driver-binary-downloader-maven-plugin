@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OS;
+import com.lazerycode.selenium.OSType;
 import nu.xom.*;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,12 +20,12 @@ public class RepositoryParser {
     private final Map<String, String> bitRates = new HashMap<String, String>();
     private final HashMap<String, FileDetails> downloadableFileList = new HashMap<String, FileDetails>();
     private Document repositoryMap;
-    private ArrayList<OS> operatingSystemList;
+    private ArrayList<OSType> operatingSystemList;
     private boolean onlyGetLatestVersions = true;
     private boolean selectivelyParseDriverExecutableList = false;
     private boolean throwExceptionIfSpecifiedVersionIsNotFound = false;
 
-    public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OS> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions, boolean throwExceptionIfSpecifiedVersionIsNotFound) throws MojoFailureException {
+    public RepositoryParser(InputStream repositoryMapLocation, ArrayList<OSType> operatingSystems, boolean thirtyTwoBit, boolean sixtyFourBit, boolean onlyGetLatestVersions, boolean throwExceptionIfSpecifiedVersionIsNotFound) throws MojoFailureException {
         Builder parser = new Builder();
         try {
             this.repositoryMap = parser.build(repositoryMapLocation);
@@ -235,7 +235,7 @@ public class RepositoryParser {
      * @throws MalformedURLException
      */
     public HashMap<String, FileDetails> getFilesToDownload() throws MalformedURLException, MojoFailureException {
-        for (OS anOperatingSystemList : operatingSystemList) {
+        for (OSType anOperatingSystemList : operatingSystemList) {
             Nodes usedVersions = getFilteredListOfVersionNodes(getAllRelevantDriverNodes(anOperatingSystemList.toString().toLowerCase()), anOperatingSystemList.toString().toLowerCase());
             for (int selectedVersion = 0; selectedVersion < usedVersions.size(); selectedVersion++) {
                 addDownloadableFilesToList(usedVersions.get(selectedVersion), anOperatingSystemList.toString().toLowerCase());
