@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import static com.lazerycode.selenium.hash.HashType.MD5;
 import static com.lazerycode.selenium.hash.HashType.SHA1;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -105,42 +104,6 @@ public class DownloadHandlerTest {
     }
 
     @Test
-    public void checkThatFileIsValidCheckReturnsFalseIfFileIsNotThere() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, false);
-        downloadTestFile.downloadFile(validFileDetails);
-
-        File downloadedFile = new File(expectedDownloadedFilePath);
-
-        assertThat(downloadedFile.exists(), is(equalTo(true)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validSHA1Hash, SHA1), is(equalTo(true)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validMD5Hash, MD5), is(equalTo(true)));
-
-        assertThat(downloadedFile.delete(), is(equalTo(true)));
-
-        assertThat(downloadedFile.exists(), is(equalTo(false)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validSHA1Hash, SHA1), is(equalTo(false)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, validMD5Hash, MD5), is(equalTo(false)));
-    }
-
-    @Test
-    public void checkThatFileIsValidCheckReturnsTrueIfHashInvalidButNotChecked() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, doNotCheckFileHashes, false);
-        downloadTestFile.downloadFile(validFileDetails);
-
-        File downloadedFile = new File(expectedDownloadedFilePath);
-
-        assertThat(downloadedFile.exists(), is(equalTo(true)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", SHA1), is(equalTo(true)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", MD5), is(equalTo(true)));
-
-        assertThat(downloadedFile.delete(), is(equalTo(true)));
-
-        assertThat(downloadedFile.exists(), is(equalTo(false)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", SHA1), is(equalTo(false)));
-        assertThat(downloadTestFile.fileExistsAndIsValid(downloadedFile, "Invalid_hash", MD5), is(equalTo(false)));
-    }
-
-    @Test
     public void filesAreExtractedIntoTheCorrectStandaloneServerPathAndCanBeOverwritten() throws Exception {
         String downloadPath = "os/phantomjs/32bit/1";
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + downloadPath + File.separator + "phantomjs");
@@ -195,7 +158,7 @@ public class DownloadHandlerTest {
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
     }
 
-    @Test(expected = MojoExecutionException.class)
+    @Test(expected = NullPointerException.class)
     public void errorThrownIfThereIsNoHashTypeInFileDownloadListFileDetailsAndHashShouldBeChecked() throws Exception {
         String downloadPath = "os/phantomjs/32bit/1";
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + downloadPath + File.separator + "phantomjs");

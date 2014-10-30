@@ -18,12 +18,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -69,11 +67,12 @@ public class DownloadHandler {
             LOG.info(" ");
             String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
             LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' already exists and is valid.");
-            boolean existsAndIsValid = fileExistsAndIsValid(new File(currentFileAbsolutePath), fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
-            if (!existsAndIsValid) {
-                fileToUnzip = downloadFile(fileToDownload.getValue());
-            } else {
+            FileHashChecker fileHashChecker = new FileHashChecker(new File(currentFileAbsolutePath));
+            fileHashChecker.setExpectedHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
+            if (checkFileHash && fileHashChecker.fileIsValid()) {
                 fileToUnzip = new File(currentFileAbsolutePath);
+            } else {
+                fileToUnzip = downloadFile(fileToDownload.getValue());
             }
             String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
             String binaryForOperatingSystem = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO should really store the OSType we have extracted somewhere rather than doing this hack!
@@ -103,11 +102,10 @@ public class DownloadHandler {
                         .setDefaultRequestConfig(requestConfig)
                         .disableContentCompression();
                 if (this.useSystemProxy) {
-                    String httpProxy = System.getenv("http_proxy");
-                    if (StringUtils.isNotEmpty(httpProxy)) {
-                        LOG.info("Setting http proxy to: " + httpProxy);
-                        URL url = new URL(httpProxy);
-                        httpClientBuilder.setProxy(new HttpHost(url.getHost(), url.getPort()));
+                    DetectProxyConfig proxyConfig = new DetectProxyConfig();
+                    if (proxyConfig.isProxyAvailable()) {
+                        LOG.info("Setting http proxy to: " + proxyConfig.getHost() + ":" + proxyConfig.getPort());
+                        httpClientBuilder.setProxy(new HttpHost(proxyConfig.getHost(), proxyConfig.getPort()));
                     }
                 }
                 CloseableHttpClient httpClient = httpClientBuilder.build();
@@ -119,7 +117,16 @@ public class DownloadHandler {
                     fileDownloadResponse.close();
                 }
                 LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
-                if (fileExistsAndIsValid(fileToDownload, fileDetails.getHash(), fileDetails.getHashType())) return fileToDownload;
+
+                if (!checkFileHash) {
+                    return fileToDownload;
+                }
+
+                FileHashChecker fileHashChecker = new FileHashChecker(fileToDownload);
+                fileHashChecker.setExpectedHash(fileDetails.getHash(), fileDetails.getHashType());
+                if (fileHashChecker.fileIsValid()) {
+                    return fileToDownload;
+                }
             } catch (IOException ex) {
                 LOG.info("Problem downloading '" + fileToDownload.getName() + "'... " + ex.getCause().getLocalizedMessage());
                 if (n + 1 < this.fileDownloadRetryAttempts)
@@ -147,40 +154,4 @@ public class DownloadHandler {
         }
         return downloadDirectory.getAbsolutePath();
     }
-
-    /**
-     * Check if the file exists and perform a Hash check on it to see if it is valid
-     *
-     * @param fileToCheck the file to perform a hash validation against
-     * @return true if the file exists and is valid
-     * @throws IOException
-     */
-    boolean fileExistsAndIsValid(File fileToCheck, String expectedHash, HashType hashType) throws IOException, MojoExecutionException {
-        if (!fileToCheck.exists()) return false;
-        if (!checkFileHash) return true;
-        if (null == expectedHash) {
-            throw new MojoExecutionException("The hash for " + fileToCheck.getName() + " is missing from your RepositoryMap.xml");
-        } else if (null == hashType) {
-            throw new MojoExecutionException("The hashtype for " + fileToCheck.getName() + " is missing from your RepositoryMap.xml");
-        }
-        String actualFileHash;
-        FileInputStream fileToHashCheck = new FileInputStream(fileToCheck);
-        switch (hashType) {
-            case MD5:
-                actualFileHash = DigestUtils.md5Hex(fileToHashCheck);
-                break;
-            case SHA1:
-            default:
-                actualFileHash = DigestUtils.shaHex(fileToHashCheck);
-                break;
-        }
-        fileToHashCheck.close();
-        boolean result = actualFileHash.equals(expectedHash);
-        if (!result) {
-            LOG.info("Expected file hash to be '" + expectedHash + "'.");
-            LOG.info("Actual file hash was '" + actualFileHash + "'.");
-        }
-        return result;
-    }
-
 }

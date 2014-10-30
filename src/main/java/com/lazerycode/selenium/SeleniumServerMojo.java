@@ -150,7 +150,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected int fileDownloadReadTimeout;
 
     /**
-     * <h3>If the environmental variables http_proxy, or https_proxy are set they will be used for http/https calls</h3>
+     * <h3>If the environmental variables http.proxyHost, and http.proxyPort are set they will be used for http/https calls</h3>
      * <p>&lt;useSystemProxy&gt;true&lt;/useSystemProxy&gt;</p>
      */
     @Parameter(defaultValue = "true")
