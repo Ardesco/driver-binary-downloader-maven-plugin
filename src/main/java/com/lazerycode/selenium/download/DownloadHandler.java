@@ -2,9 +2,7 @@ package com.lazerycode.selenium.download;
 
 import com.lazerycode.selenium.extract.BinaryFileNames;
 import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
-import com.lazerycode.selenium.hash.HashType;
 import com.lazerycode.selenium.repository.FileDetails;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -20,7 +18,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -61,18 +58,24 @@ public class DownloadHandler {
         LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
         LOG.info(" ");
         LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
-        LOG.info(" ");
-        File fileToUnzip;
         for (Map.Entry<String, FileDetails> fileToDownload : this.filesToDownload.entrySet()) {
             LOG.info(" ");
             String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
-            LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' already exists and is valid.");
-            FileHashChecker fileHashChecker = new FileHashChecker(new File(currentFileAbsolutePath));
-            fileHashChecker.setExpectedHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
-            if (checkFileHash && fileHashChecker.fileIsValid()) {
-                fileToUnzip = new File(currentFileAbsolutePath);
-            } else {
-                fileToUnzip = downloadFile(fileToDownload.getValue());
+            File desiredFile = new File(currentFileAbsolutePath);
+            File fileToUnzip = downloadFile(fileToDownload.getValue());
+            LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' exists  : " + desiredFile.exists());
+            if (desiredFile.exists()) {
+                if (checkFileHash) {
+                    FileHashChecker fileHashChecker = new FileHashChecker(desiredFile);
+                    fileHashChecker.setExpectedHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
+                    boolean fileIsValid = fileHashChecker.fileIsValid();
+                    LOG.info("Checking to see if archive file '" + currentFileAbsolutePath + "' is valid: " + fileIsValid);
+                    if (fileIsValid) {
+                        fileToUnzip = new File(currentFileAbsolutePath);
+                    }
+                } else {
+                    fileToUnzip = new File(currentFileAbsolutePath);
+                }
             }
             String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
             String binaryForOperatingSystem = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO should really store the OSType we have extracted somewhere rather than doing this hack!
@@ -116,12 +119,12 @@ public class DownloadHandler {
                 } finally {
                     fileDownloadResponse.close();
                 }
-                LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
 
                 if (!checkFileHash) {
                     return fileToDownload;
                 }
 
+                LOG.info("Checking to see if downloaded copy of '" + fileToDownload.getName() + "' is valid.");
                 FileHashChecker fileHashChecker = new FileHashChecker(fileToDownload);
                 fileHashChecker.setExpectedHash(fileDetails.getHash(), fileDetails.getHashType());
                 if (fileHashChecker.fileIsValid()) {
@@ -144,14 +147,18 @@ public class DownloadHandler {
      * @param downloadDirectory The directory that the file will be downloaded to.
      */
     private String localFilePath(File downloadDirectory) throws MojoFailureException {
-        if (!downloadDirectory.exists()) {
-            if (!downloadDirectory.mkdirs()) {
-                throw new MojoFailureException("Unable to create download directory!");
+        if (downloadDirectory.exists()) {
+            if (downloadDirectory.isDirectory()) {
+                return downloadDirectory.getAbsolutePath();
+            } else {
+                throw new MojoFailureException("'" + downloadDirectory.getAbsolutePath() + "' is not a directory!");
             }
         }
-        if (!downloadDirectory.isDirectory()) {
-            throw new MojoFailureException("'" + downloadDirectory.getAbsolutePath() + "' is not a directory!");
+
+        if (downloadDirectory.mkdirs()) {
+            return downloadDirectory.getAbsolutePath();
+        } else {
+            throw new MojoFailureException("Unable to create download directory!");
         }
-        return downloadDirectory.getAbsolutePath();
     }
 }
