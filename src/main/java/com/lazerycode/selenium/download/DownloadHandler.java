@@ -16,33 +16,28 @@ import java.util.Map;
 public class DownloadHandler {
 
     private static final Logger LOG = Logger.getLogger(DownloadHandler.class);
+    private final Map<String, FileDetails> filesToDownload;
     private final File rootStandaloneServerDirectory;
     private final File downloadedZipFileDirectory;
-    private final Map<String, FileDetails> filesToDownload;
-    final int fileDownloadRetryAttempts;
+    protected final int fileDownloadRetryAttempts;
     private boolean overwriteFilesThatExist = false;
     private boolean checkFileHash = true;
     private FileDownloader fileDownloader;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) throws MojoFailureException{
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) throws MojoFailureException {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
-        if (fileDownloadRetryAttempts < 1) {
-            LOG.warn("Invalid number of retry attempts specified, defaulting to '1'...");
-            this.fileDownloadRetryAttempts = 1;
-        } else {
-            this.fileDownloadRetryAttempts = fileDownloadRetryAttempts;
-        }
         this.filesToDownload = filesToDownload;
+        this.fileDownloadRetryAttempts = fileDownloadRetryAttempts;
         this.overwriteFilesThatExist = overwriteFilesThatExist;
         this.checkFileHash = checkFileHash;
 
-        this.fileDownloader = new FileDownloader(downloadedZipFileDirectory, useSystemProxy);
-        this.fileDownloader.setReadTimeout(fileDownloadReadTimeout);
-        this.fileDownloader.setConnectTimeout(fileDownloadConnectTimeout);
+        fileDownloader = new FileDownloader(downloadedZipFileDirectory, useSystemProxy);
+        fileDownloader.setReadTimeout(fileDownloadReadTimeout);
+        fileDownloader.setConnectTimeout(fileDownloadConnectTimeout);
     }
 
-    public void getStandaloneExecutableFiles() throws MojoFailureException, MojoExecutionException, IOException, URISyntaxException{
+    public void ensureStandaloneExecutableFilesExist() throws MojoFailureException, MojoExecutionException, IOException, URISyntaxException {
         LOG.info("Archives will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
         LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
         LOG.info(" ");
@@ -67,13 +62,13 @@ public class DownloadHandler {
                 }
             }
             if (fileToUnzip == null) {
-                fileToUnzip = downloadFile(fileToDownload.getValue());
+                fileToUnzip = downloadValidFile(fileToDownload.getValue());
             }
-            String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
+            String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
             String binaryForOperatingSystem = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO should really store the OSType we have extracted somewhere rather than doing this hack!
             LOG.debug("Detected a binary for OSType: " + binaryForOperatingSystem);
-            if (ExtractFilesFromArchive.extractFileFromArchive(fileToUnzip, extractionDirectory, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryForOperatingSystem))) {
-                LOG.info("File(s) copied to " + extractionDirectory);
+            if (ExtractFilesFromArchive.extractFileFromArchive(fileToUnzip, extractedFileLocation, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryForOperatingSystem))) {
+                LOG.info("File(s) copied to " + extractedFileLocation);
             }
         }
     }
@@ -84,9 +79,9 @@ public class DownloadHandler {
      * @return File
      * @throws MojoExecutionException
      */
-    File downloadFile(FileDetails fileDetails) throws MojoExecutionException, IOException, URISyntaxException{
+    File downloadValidFile(FileDetails fileDetails) throws MojoExecutionException, IOException, URISyntaxException {
         final String filename = FilenameUtils.getName(fileDetails.getFileLocation().getFile());
-        for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
+        for (int retryAttempts = 1; retryAttempts <= this.fileDownloadRetryAttempts; retryAttempts++) {
 
             File downloadedFile = fileDownloader.attemptToDownload(fileDetails.getFileLocation());
 
@@ -106,11 +101,11 @@ public class DownloadHandler {
 
             LOG.info("Problem downloading '" + filename + "'... ");
 
-            if (n + 1 < this.fileDownloadRetryAttempts) {
-                LOG.info("Trying to download'" + filename + "' again...");
+            if (retryAttempts < this.fileDownloadRetryAttempts) {
+                LOG.info("Retry attempt " + (retryAttempts) + " for '" + filename + "'");
             }
         }
 
-        throw new MojoExecutionException("Unable to successfully downloaded '" + filename + "'!");
+        throw new MojoExecutionException("Unable to successfully download '" + filename + "'!");
     }
 }

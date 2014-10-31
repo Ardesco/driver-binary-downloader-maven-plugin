@@ -194,6 +194,11 @@ public class SeleniumServerMojo extends AbstractMojo {
             this.onlyGetDriversForHostOperatingSystem = true;
         }
 
+        if (fileDownloadRetryAttempts < 1) {
+            LOG.warn("Invalid number of retry attempts specified, defaulting to '1'...");
+            fileDownloadRetryAttempts = 1;
+        }
+
         Map<String, String> selectedOperatingSystems = new HashMap<String, String>();
         LOG.info("Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
         if (this.onlyGetDriversForHostOperatingSystem) {
@@ -210,17 +215,6 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
 
         ArrayList<OSType> osTypeList = buildOSArrayList(selectedOperatingSystems);
-
-        if (null == osTypeList || osTypeList.size() == 0) {
-            LOG.info(" ");
-            LOG.info("All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
-            LOG.info(" ");
-            LOG.info("--------------------------------------------------------");
-            LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
-            LOG.info("--------------------------------------------------------");
-            LOG.info(" ");
-            return;
-        }
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
@@ -244,7 +238,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.overwriteFilesThatExist,
                     this.checkFileHashes,
                     this.useSystemProxy);
-            standaloneExecutableDownloader.getStandaloneExecutableFiles();
+            standaloneExecutableDownloader.ensureStandaloneExecutableFilesExist();
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
         } catch (URISyntaxException e) {
@@ -279,6 +273,18 @@ public class SeleniumServerMojo extends AbstractMojo {
                     }
                 }
             }
+        }
+
+        if (operatingSystemsSelected.size() == 0) {
+            LOG.info(" ");
+            LOG.info("All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
+            LOG.info(" ");
+            LOG.info("--------------------------------------------------------");
+            LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
+            LOG.info("--------------------------------------------------------");
+            LOG.info(" ");
+
+            throw new MojoExecutionException("All operating systems excluded");
         }
 
         return operatingSystemsSelected;
