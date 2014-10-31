@@ -50,13 +50,13 @@ public class DownloadHandler {
             String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
             File desiredFile = new File(currentFileAbsolutePath);
             File fileToUnzip = downloadFile(fileToDownload.getValue());
-            LOG.info("Checking to see if archive file '" + desiredFile.getName() + "' exists   : " + desiredFile.exists());
+            LOG.info("Archive file '" + desiredFile.getName() + "' exists   : " + desiredFile.exists());
             if (desiredFile.exists()) {
                 if (checkFileHash) {
                     FileHashChecker fileHashChecker = new FileHashChecker(desiredFile);
                     fileHashChecker.setExpectedHash(fileToDownload.getValue().getHash(), fileToDownload.getValue().getHashType());
                     boolean fileIsValid = fileHashChecker.fileIsValid();
-                    LOG.info("Checking to see if archive file '" + desiredFile.getName() + "' is valid : " + fileIsValid);
+                    LOG.info("Archive file '" + desiredFile.getName() + "' is valid : " + fileIsValid);
                     if (fileIsValid) {
                         fileToUnzip = new File(currentFileAbsolutePath);
                     }

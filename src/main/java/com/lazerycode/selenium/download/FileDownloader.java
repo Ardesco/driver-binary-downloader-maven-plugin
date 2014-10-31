@@ -69,7 +69,7 @@ public class FileDownloader {
 
         CloseableHttpClient httpClient = httpClientBuilder.build();
 
-        LOG.debug("Downloading '" + filename + "'...");
+        LOG.info("Downloading '" + filename + "'...");
         CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileLocation.toURI()));
 
         HttpEntity remoteFileStream = fileDownloadResponse.getEntity();
@@ -77,7 +77,7 @@ public class FileDownloader {
         try {
             copyInputStreamToFile(remoteFileStream.getContent(), fileToDownload);
         } catch (IOException ex) {
-            LOG.info("Problem downloading '" + filename + "'... " + ex.getCause().getLocalizedMessage());
+            LOG.error("Problem downloading '" + filename + "'... " + ex.getCause().getLocalizedMessage());
             fileToDownload = null;
         } finally {
             fileDownloadResponse.close();
