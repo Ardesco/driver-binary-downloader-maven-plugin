@@ -33,6 +33,7 @@ public class DetectProxyConfig {
 
         if (Strings.isNullOrEmpty(proxyHost) || null == proxyPort) {
 
+            String useSystemProxy = System.getProperty("java.net.useSystemProxies");
             System.setProperty("java.net.useSystemProxies", "true");
             Proxy proxy = getProxy();
 
@@ -48,7 +49,11 @@ public class DetectProxyConfig {
                 }
             }
 
-            System.setProperty("java.net.useSystemProxies", "false");
+            if (Strings.isNullOrEmpty(useSystemProxy)) {
+                System.clearProperty("java.net.useSystemProxies");
+            } else {
+                System.setProperty("java.net.useSystemProxies", useSystemProxy);
+            }
 
         } else {
             host = proxyHost;

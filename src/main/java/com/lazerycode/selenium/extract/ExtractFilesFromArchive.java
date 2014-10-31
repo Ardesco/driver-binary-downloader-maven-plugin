@@ -73,7 +73,6 @@ public class ExtractFilesFromArchive {
                     LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
                     if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        LOG.debug("Binary already exists: " + extractedFile.getName());
                         continue;
                     }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
@@ -132,7 +131,6 @@ public class ExtractFilesFromArchive {
                     LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
                     if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        LOG.debug("Binary already exists: " + extractedFile.getName());
                         continue;
                     }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
