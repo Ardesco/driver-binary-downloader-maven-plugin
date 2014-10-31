@@ -15,6 +15,7 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -51,7 +52,7 @@ public class FileDownloader {
      * @return File
      * @throws java.lang.Exception
      */
-    public File attemptToDownload(URL fileLocation) throws Exception {
+    public File attemptToDownload(URL fileLocation) throws URISyntaxException, IOException {
         String filename = FilenameUtils.getName(fileLocation.getFile());
         SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(fileDownloadReadTimeout).build();
 
@@ -69,7 +70,7 @@ public class FileDownloader {
 
         CloseableHttpClient httpClient = httpClientBuilder.build();
 
-        LOG.info("Downloading '" + filename + "'...");
+        LOG.info("Downloading  '" + filename + "'...");
         CloseableHttpResponse fileDownloadResponse = httpClient.execute(new HttpGet(fileLocation.toURI()));
 
         HttpEntity remoteFileStream = fileDownloadResponse.getEntity();

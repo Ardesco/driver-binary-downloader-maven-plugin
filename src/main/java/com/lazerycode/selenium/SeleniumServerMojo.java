@@ -22,6 +22,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,8 +245,10 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.checkFileHashes,
                     this.useSystemProxy);
             standaloneExecutableDownloader.getStandaloneExecutableFiles();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
+        } catch (URISyntaxException e) {
+            throw new MojoExecutionException("Invalid URI detected: " + e.getLocalizedMessage());
         }
 
         LOG.info(" ");

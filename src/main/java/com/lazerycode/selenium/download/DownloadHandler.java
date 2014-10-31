@@ -9,6 +9,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class DownloadHandler {
@@ -22,7 +24,7 @@ public class DownloadHandler {
     private boolean checkFileHash = true;
     private FileDownloader fileDownloader;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) throws MojoFailureException {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, Map<String, FileDetails> filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) throws MojoFailureException{
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         if (fileDownloadRetryAttempts < 1) {
@@ -40,7 +42,7 @@ public class DownloadHandler {
         this.fileDownloader.setConnectTimeout(fileDownloadConnectTimeout);
     }
 
-    public void getStandaloneExecutableFiles() throws Exception {
+    public void getStandaloneExecutableFiles() throws MojoFailureException, MojoExecutionException, IOException, URISyntaxException{
         LOG.info("Archives will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
         LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
         LOG.info(" ");
@@ -82,7 +84,7 @@ public class DownloadHandler {
      * @return File
      * @throws MojoExecutionException
      */
-    File downloadFile(FileDetails fileDetails) throws Exception {
+    File downloadFile(FileDetails fileDetails) throws MojoExecutionException, IOException, URISyntaxException{
         final String filename = FilenameUtils.getName(fileDetails.getFileLocation().getFile());
         for (int n = 0; n < this.fileDownloadRetryAttempts; n++) {
 
