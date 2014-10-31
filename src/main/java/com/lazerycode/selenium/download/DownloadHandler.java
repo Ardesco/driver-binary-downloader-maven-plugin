@@ -49,7 +49,7 @@ public class DownloadHandler {
             LOG.info(" ");
             String currentFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileToDownload.getValue().getFileLocation().getFile());
             File desiredFile = new File(currentFileAbsolutePath);
-            File fileToUnzip = downloadFile(fileToDownload.getValue());
+            File fileToUnzip = null;
             LOG.info("Archive file '" + desiredFile.getName() + "' exists   : " + desiredFile.exists());
             if (desiredFile.exists()) {
                 if (checkFileHash) {
@@ -58,11 +58,14 @@ public class DownloadHandler {
                     boolean fileIsValid = fileHashChecker.fileIsValid();
                     LOG.info("Archive file '" + desiredFile.getName() + "' is valid : " + fileIsValid);
                     if (fileIsValid) {
-                        fileToUnzip = new File(currentFileAbsolutePath);
+                        fileToUnzip = desiredFile;
                     }
                 } else {
-                    fileToUnzip = new File(currentFileAbsolutePath);
+                    fileToUnzip = desiredFile;
                 }
+            }
+            if (fileToUnzip == null) {
+                fileToUnzip = downloadFile(fileToDownload.getValue());
             }
             String extractionDirectory = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
             String binaryForOperatingSystem = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO should really store the OSType we have extracted somewhere rather than doing this hack!
@@ -90,10 +93,11 @@ public class DownloadHandler {
                     return downloadedFile;
                 }
 
-                LOG.info("Checking to see if downloaded copy of '" + downloadedFile.getName() + "' is valid.");
                 FileHashChecker fileHashChecker = new FileHashChecker(downloadedFile);
                 fileHashChecker.setExpectedHash(fileDetails.getHash(), fileDetails.getHashType());
-                if (fileHashChecker.fileIsValid()) {
+                boolean isFileValid = fileHashChecker.fileIsValid();
+                LOG.info("Archive file '" + downloadedFile.getName() + "' is valid : " + isFileValid);
+                if (isFileValid) {
                     return downloadedFile;
                 }
             }

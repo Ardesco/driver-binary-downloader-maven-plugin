@@ -70,16 +70,16 @@ public class ExtractFilesFromArchive {
                     LOG.debug("Found: " + zipFileEntry.getName());
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
                     boolean doesfileAlreadyExist = extractedFile.exists();
-                    LOG.info("File '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
+                    LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
                     if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        LOG.debug("File already exists: " + extractedFile.getName());
+                        LOG.debug("Binary already exists: " + extractedFile.getName());
                         continue;
                     }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
                         throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
                     }
-                    LOG.info("Extracting '" + extractedFile.getName() + "'...");
+                    LOG.info("Extracting binary '" + extractedFile.getName() + "'...");
                     copy(zip.getInputStream(zipFileEntry), new FileOutputStream(extractedFile));
                     if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
@@ -129,16 +129,16 @@ public class ExtractFilesFromArchive {
                     LOG.debug("Found: " + currentFile.getName());
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
                     boolean doesfileAlreadyExist = extractedFile.exists();
-                    LOG.info("File '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
+                    LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
                     LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
                     if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        LOG.debug("File already exists: " + extractedFile.getName());
+                        LOG.debug("Binary already exists: " + extractedFile.getName());
                         continue;
                     }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
                         throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
                     }
-                    LOG.info("Extracting '" + extractedFile.getName() + "'...");
+                    LOG.info("Extracting binary '" + extractedFile.getName() + "'...");
                     copy(fileInArchive, new FileOutputStream(extractedFile));
                     if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
