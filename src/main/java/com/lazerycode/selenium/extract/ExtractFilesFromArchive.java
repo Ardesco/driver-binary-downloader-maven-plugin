@@ -89,6 +89,8 @@ public class ExtractFilesFromArchive {
             }
         }
 
+        zip.close();
+
         return fileExtracted;
     }
 
@@ -145,6 +147,9 @@ public class ExtractFilesFromArchive {
                 }
             }
         }
+
+        fileInArchive.close();
+
         return fileExtracted;
     }
 }
