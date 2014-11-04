@@ -10,7 +10,7 @@ Default Usage
         <plugin>
             <groupId>com.lazerycode.selenium</groupId>
             <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <configuration>
                 <!-- root directory that downloaded driver binaries will be stored in -->
                 <rootStandaloneServerDirectory>/my/location/binaries</rootStandaloneServerDirectory>
@@ -38,7 +38,7 @@ Advanced Usage
             <plugin>
                 <groupId>com.lazerycode.selenium</groupId>
                 <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-                <version>1.0.3</version>
+                <version>1.0.4</version>
                 <configuration>
                     <!-- root directory that downloaded driver binaries will be stored in -->
                     <rootStandaloneServerDirectory>/tmp/binaries</rootStandaloneServerDirectory>
@@ -76,6 +76,9 @@ Advanced Usage
                     <overwriteFilesThatExist>true</overwriteFilesThatExist>
                     <!-- Check file hashes of downloaded files.  Default: true -->
                     <checkFileHashes>true</checkFileHashes>
+                    <!-- auto detect system proxy to use when downloading files -->
+                    <!-- To specify an explicit proxy set the environment variables http.proxyHost and http.proxyPort -->
+                    <useSystemProxy>true</useSystemProxy>
                 </configuration>
                 <executions>
                     <execution>
@@ -99,33 +102,33 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
     <root>
         <windows>
             <driver id="internetexplorer">
-                <version id="2.42.0">
+                <version id="2.44.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.42/IEDriverServer_x64_2.42.0.zip</filelocation>
-                        <hash>3401f66ad84a58f1210c485c41bf3e92</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.44/IEDriverServer_x64_2.44.0.zip</filelocation>
+                        <hash>90c9870ce7ad6168d3456ebbde7479aebad4301a</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.42/IEDriverServer_Win32_2.42.0.zip</filelocation>
-                        <hash>c1698989012a8f87b61905445fb7a07f</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.44/IEDriverServer_Win32_2.44.0.zip</filelocation>
+                        <hash>ed0117c94e78593318a145c51341eacdc9df6cc8</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="googlechrome">
-                <version id="2.10">
+                <version id="2.12">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.10/chromedriver_win32.zip</filelocation>
-                        <hash>082e91e5c8994a7879710caeed62e334</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_win32.zip</filelocation>
+                        <hash>7a2763345f2d06635e0879d73bd18b56bef612d5</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="phantomjs">
-                <version id="1.9.7">
+                <version id="1.9.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-windows.zip</filelocation>
-                        <hash>3c70fdfba7766aa88357f387af222166c48854eb</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-windows.zip</filelocation>
+                        <hash>4531bd64df101a689ac7ac7f3e11bb7e77af8eff</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -133,29 +136,29 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.10">
+                <version id="2.12">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip</filelocation>
-                        <hash>058cd8b7b4b9688507701b5e648fd821</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_linux64.zip</filelocation>
+                        <hash>f366e35011637d6d613bfbb6abcfdffcd2f6c517</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux32.zip</filelocation>
-                        <hash>4fecc99b066cb1a346035bf022607104</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_linux32.zip</filelocation>
+                        <hash>5642ed56694beb03a1ccde86599421681b75f6fd</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="phantomjs">
-                <version id="1.9.7">
+                <version id="1.9.8">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2</filelocation>
-                        <hash>ca3581dfdfc22ceab2050cf55ea7200c535a7368</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2</filelocation>
+                        <hash>d29487b2701bcbe3c0a52bc176247ceda4d09d2d</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-i686.tar.bz2</filelocation>
-                        <hash>98005ed0b964502b6dea2ed4fdf9b593eb6fbead</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-i686.tar.bz2</filelocation>
+                        <hash>efac5ae5b84a4b2b3fa845e8390fca39e6e637f2</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -163,19 +166,19 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.10">
+                <version id="2.11">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.10/chromedriver_mac32.zip</filelocation>
-                        <hash>fd0dafc3ada3619edda2961f2beadc5c</hash>
-                        <hashtype>md5</hashtype>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.11/chromedriver_mac32.zip</filelocation>
+                        <hash>31e9aa8ed1db2793215b94c1262c61aca98b524e</hash>
+                        <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="phantomjs">
-                <version id="1.9.7">
+                <version id="1.9.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-macosx.zip</filelocation>
-                        <hash>519e53cc612a57cb1c82a0cbf028e7e4bb4ceeec</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip</filelocation>
+                        <hash>d70bbefd857f21104c5961b9dd081781cb4d999a</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
