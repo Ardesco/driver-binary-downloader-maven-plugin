@@ -13,6 +13,10 @@ public enum BinaryFileNames {
     PHANTOMJS(new ArrayList<String>() {{
         add("phantomjs.exe");
         add("phantomjs");
+    }}),
+    OPERACHROMIUM(new ArrayList<String>() {{
+        add("operadriver.exe");
+        add("operadriver");
     }});
 
     private final ArrayList<String> binaryFilenames;
