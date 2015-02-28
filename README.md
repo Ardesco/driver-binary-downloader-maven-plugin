@@ -102,29 +102,45 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
     <root>
         <windows>
             <driver id="internetexplorer">
-                <version id="2.44.0">
+                <version id="2.45.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.44/IEDriverServer_x64_2.44.0.zip</filelocation>
-                        <hash>90c9870ce7ad6168d3456ebbde7479aebad4301a</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.45/IEDriverServer_x64_2.45.0.zip</filelocation>
+                        <hash>b3cdacc846d7b9c3f8fb8b70af0a9cfc5839bd83</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.44/IEDriverServer_Win32_2.44.0.zip</filelocation>
-                        <hash>ed0117c94e78593318a145c51341eacdc9df6cc8</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.45/IEDriverServer_Win32_2.45.0.zip</filelocation>
+                        <hash>cc822d30efe3119b76af9265c47d42fca208f85a</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="googlechrome">
-                <version id="2.12">
+                <version id="2.14">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_win32.zip</filelocation>
-                        <hash>7a2763345f2d06635e0879d73bd18b56bef612d5</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.14/chromedriver_win32.zip</filelocation>
+                        <hash>4fe4aaf625073c39c29da994d815ffcc2c314c40</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="operachromium">
+                <version id="2.14">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.1.0/operadriver_win32.zip</filelocation>
+                        <hash>4a4ad051c315e4141048f0ae587c05f4c8720c24</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="phantomjs">
+                <version id="2.0.0">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-windows.zip</filelocation>
+                        <hash>ca0c753e5d8820a271dd7c2d6a9fad6ff86fb09f</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
                 <version id="1.9.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
                         <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-windows.zip</filelocation>
@@ -136,15 +152,29 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.12">
+                <version id="2.14">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_linux64.zip</filelocation>
-                        <hash>f366e35011637d6d613bfbb6abcfdffcd2f6c517</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.14/chromedriver_linux64.zip</filelocation>
+                        <hash>acb76a3eb2bc94ee96b6a17121980e2662c88650</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.12/chromedriver_linux32.zip</filelocation>
-                        <hash>5642ed56694beb03a1ccde86599421681b75f6fd</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.14/chromedriver_linux32.zip</filelocation>
+                        <hash>237a5ed160bb23118a9ea5b84700e8799e897bd4</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="operachromium">
+                <version id="2.14">
+                    <bitrate thirtytwobit="true">
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.1.0/operadriver_linux32.zip</filelocation>
+                        <hash>feda76d61190161bd9923f8f1613447f722f12fc</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.1.0/operadriver_linux64.zip</filelocation>
+                        <hash>c36234222efccc1f874682b2ce2add639d544e9d</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -166,15 +196,36 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.11">
+                <version id="2.14">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.11/chromedriver_mac32.zip</filelocation>
-                        <hash>31e9aa8ed1db2793215b94c1262c61aca98b524e</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.14/chromedriver_mac32.zip</filelocation>
+                        <hash>64ef44893a87a0e470b60ff8f5fc83a588b78023</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
+            <driver id="operachromium">
+                <version id="2.14">
+                    <bitrate thirtytwobit="true">
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.1.0/operadriver_mac32.zip</filelocation>
+                        <hash>7ab79a1c70bb0f5998b9c5c8d08160ef86b618e9</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v0.1.0/operadriver_mac64.zip</filelocation>
+                        <hash>32e5e0fc63bed0f61bb4e8695fd7a8faaebd7b37</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="phantomjs">
+                <version id="2.0.0">
+                    <bitrate thirtytwobit="true" sixtyfourbit="true">
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-macosx.zip</filelocation>
+                        <hash>97f87188bb2fc81e0c57ec3a376b722e3bcc30c9</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
                 <version id="1.9.8">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
                         <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip</filelocation>
