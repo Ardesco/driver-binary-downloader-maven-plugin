@@ -18,12 +18,42 @@ import static org.junit.Assert.assertThat;
 public class FileRepositoryTest {
 
     @Test
-    public void listOfStuffReturnedWhenPassingInARepositoryMap() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
+    public void listOfStuffReturnedWhenPassingInARepositoryMapWithout32Or64() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
         XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
-        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope());
+        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), false, false);
 
         assertThat(driverMap.repository.size(),
-                is(equalTo(8)));
+                is(equalTo(0)));
+    }
+
+    @Test
+    public void listOfStuffReturnedWhenPassingInARepositoryMapWith32And64() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
+        InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
+        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
+        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), true, true);
+
+        assertThat(driverMap.repository.size(),
+                is(equalTo(7)));
+    }
+
+    @Test
+    public void listOfStuffReturnedWhenPassingInARepositoryMapWith32ButNot64() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
+        InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
+        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
+        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), true, false);
+
+        assertThat(driverMap.repository.size(),
+                is(equalTo(4)));
+    }
+
+    @Test
+    public void listOfStuffReturnedWhenPassingInARepositoryMapWith64ButNot32() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
+        InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
+        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
+        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), false, true);
+
+        assertThat(driverMap.repository.size(),
+                is(equalTo(3)));
     }
 }

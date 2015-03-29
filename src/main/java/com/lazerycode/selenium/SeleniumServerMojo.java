@@ -231,7 +231,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadRetryAttempts,
                     this.fileDownloadConnectTimeout,
                     this.fileDownloadReadTimeout,
-                    buildDownloadableFileRepository(parser.getAllNodesInScope()),
+                    buildDownloadableFileRepository(parser.getAllNodesInScope(), thirtyTwoBitBinaries, sixtyFourBitBinaries),
                     this.overwriteFilesThatExist,
                     this.checkFileHashes,
                     this.useSystemProxy,

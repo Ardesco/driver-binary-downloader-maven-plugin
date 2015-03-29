@@ -12,7 +12,7 @@ import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE
 
 public class FileRepository {
 
-    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound) throws JAXBException {
+    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound, boolean useThirtyTwoBitBinaries, boolean useSixtyFourBitBinaries) throws JAXBException {
         DriverMap driverMap = new DriverMap();
         Unmarshaller unmarshaller = JAXBContext.newInstance(DriverDetails.class).createUnmarshaller();
         unmarshaller.setEventHandler(new unmarshallingEventHandler());
@@ -23,12 +23,12 @@ public class FileRepository {
             String version = node.getParentNode().getAttributes().getNamedItem("id").getNodeValue();
             boolean thisIs64Bit = false;
             boolean thisIs32Bit = false;
-            if (node.getAttributes().getNamedItem("thirtytwobit") != null) {
+            if (useThirtyTwoBitBinaries && node.getAttributes().getNamedItem("thirtytwobit") != null) {
                 if (Boolean.valueOf(node.getAttributes().getNamedItem("thirtytwobit").getNodeValue())) {
                     thisIs32Bit = true;
                 }
             }
-            if (node.getAttributes().getNamedItem("sixtyfourbit") != null) {
+            if (useSixtyFourBitBinaries && node.getAttributes().getNamedItem("sixtyfourbit") != null) {
                 if (Boolean.valueOf(node.getAttributes().getNamedItem("sixtyfourbit").getNodeValue())) {
                     thisIs64Bit = true;
                 }
