@@ -7,6 +7,14 @@ public class DriverContext {
     private final SystemArchitecture systemArchitecture;
     private final OperatingSystem operatingSystem;
 
+    public SystemArchitecture getSystemArchitecture() {
+        return systemArchitecture;
+    }
+
+    public OperatingSystem getOperatingSystem() {
+        return operatingSystem;
+    }
+
     private DriverContext(BinaryType driverType, OperatingSystem operatingSystem, SystemArchitecture systemArchitecture) {
         this.operatingSystem = operatingSystem;
         this.driverType = driverType;

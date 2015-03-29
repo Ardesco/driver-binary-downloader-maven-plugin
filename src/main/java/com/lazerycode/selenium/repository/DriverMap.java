@@ -1,9 +1,11 @@
 package com.lazerycode.selenium.repository;
 
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeMap;
+import sun.awt.OSInfo;
+
+import java.util.*;
+
+import static com.lazerycode.selenium.repository.OperatingSystem.getCurrentOperatingSystem;
+import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
 
 public class DriverMap {
 
@@ -49,4 +51,21 @@ public class DriverMap {
         return repository.get(driverContext).keySet();
     }
 
+    public ArrayList<DriverContext> getDriverContextsForOperatingSystem(OperatingSystem operatingSystem, SystemArchitecture systemArchitecture){
+        ArrayList<DriverContext> matchingContexts = new ArrayList<DriverContext>();
+        for(DriverContext driverContext: repository.keySet()){
+            if(driverContext.getOperatingSystem().equals(operatingSystem) && driverContext.getSystemArchitecture().equals(systemArchitecture)){
+                matchingContexts.add(driverContext);
+            }
+        }
+
+        return matchingContexts;
+    }
+
+    public ArrayList<DriverContext> getDriverContextsForCurrentOperatingSystem(){
+        OperatingSystem operatingSystem = getCurrentOperatingSystem();
+        SystemArchitecture systemArchitecture = getCurrentSystemArcitecture();
+
+        return getDriverContextsForOperatingSystem(operatingSystem, systemArchitecture);
+    }
 }

@@ -5,15 +5,14 @@ import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import static com.lazerycode.selenium.repository.BinaryType.GOOGLECHROME;
 import static com.lazerycode.selenium.repository.BinaryType.OPERACHROMIUM;
 import static com.lazerycode.selenium.repository.DriverContext.binaryDataFor;
 import static com.lazerycode.selenium.repository.OperatingSystem.OSX;
+import static com.lazerycode.selenium.repository.OperatingSystem.WINDOWS;
+import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_32_BIT;
 import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_64_BIT;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -121,6 +120,19 @@ public class DriverMapTest {
         Set<DriverContext> allDriverContexts = driverMap.getKeys();
 
         assertThat(allDriverContexts.size(),
+                is(equalTo(2)));
+    }
+
+    @Test
+    public void willReturnAListOfContextsForOperatingSystemAndArchitecture() {
+        DriverMap driverMap = new DriverMap();
+        driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT));
+        driverMap.getMapForDriverContext(binaryDataFor(OSX, OPERACHROMIUM, ARCHITECTURE_64_BIT));
+        driverMap.getMapForDriverContext(binaryDataFor(OSX, OPERACHROMIUM, ARCHITECTURE_32_BIT));
+        driverMap.getMapForDriverContext(binaryDataFor(WINDOWS, OPERACHROMIUM, ARCHITECTURE_32_BIT));
+        ArrayList<DriverContext> driverContexts = driverMap.getDriverContextsForOperatingSystem(OSX, ARCHITECTURE_64_BIT);
+
+        assertThat(driverContexts.size(),
                 is(equalTo(2)));
     }
 }

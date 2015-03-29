@@ -79,7 +79,7 @@ public class DownloadHandler {
         throw new MojoExecutionException("Unable to successfully download '" + filename + "'!");
     }
 
-    public void ensureStandaloneExecutableFilesExist() throws MojoFailureException, MojoExecutionException, IOException, URISyntaxException {
+    public DriverMap ensureStandaloneExecutableFilesExist() throws MojoFailureException, MojoExecutionException, IOException, URISyntaxException {
         LOG.info("Archives will be downloaded to '" + this.downloadedZipFileDirectory.getAbsolutePath() + "'");
         LOG.info("Standalone executable files will be extracted to '" + this.rootStandaloneServerDirectory + "'");
         LOG.info(" ");
@@ -96,6 +96,8 @@ public class DownloadHandler {
                 }
             }
         }
+
+        return filesToDownload;
     }
 
     private void downloadAndExtractExecutableFiles(DriverContext driverContext, DriverDetails driverDetails) throws IOException, MojoExecutionException, URISyntaxException, MojoFailureException {

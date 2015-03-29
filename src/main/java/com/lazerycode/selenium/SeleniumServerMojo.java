@@ -223,6 +223,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             }
         }
 
+        DriverMap driverRepository;
         XMLParser parser = new XMLParser(xmlRepositoryMap, osTypeList, getSpecificExecutableVersions, thirtyTwoBitBinaries, sixtyFourBitBinaries);
         try {
             DownloadHandler standaloneExecutableDownloader = new DownloadHandler(
@@ -236,7 +237,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.checkFileHashes,
                     this.useSystemProxy,
                     this.onlyGetLatestVersions);
-            standaloneExecutableDownloader.ensureStandaloneExecutableFilesExist();
+            driverRepository = standaloneExecutableDownloader.ensureStandaloneExecutableFilesExist();
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
         } catch (URISyntaxException e) {
@@ -245,6 +246,12 @@ public class SeleniumServerMojo extends AbstractMojo {
             throw new MojoExecutionException(rethrow.getMessage());
         } catch (JAXBException rethrow) {
             throw new MojoExecutionException(rethrow.getMessage());
+        }
+
+        ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();
+        for (DriverContext driverContext : driverContextsForCurrentOperatingSystem) {
+            DriverDetails driverDetails = driverRepository.getDetailsForLatestVersionOfDriverContext(driverContext);
+            System.setProperty(driverContext.getBinaryTypeForContext().getDriverSystemProperty(), driverDetails.extractedLocation);
         }
 
         LOG.info(" ");

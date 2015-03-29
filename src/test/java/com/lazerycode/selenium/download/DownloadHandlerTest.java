@@ -163,7 +163,7 @@ public class DownloadHandlerTest {
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
         DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, doNotCheckFileHashes, doNotUseSystemProxy, getAllVersions);
-        downloadTestFile.ensureStandaloneExecutableFilesExist();
+        DriverMap driverMap2 = downloadTestFile.ensureStandaloneExecutableFilesExist();
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
     }

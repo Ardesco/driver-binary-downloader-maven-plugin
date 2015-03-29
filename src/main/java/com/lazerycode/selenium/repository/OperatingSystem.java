@@ -36,4 +36,10 @@ public enum OperatingSystem {
 
         return listOfOperatingSystems;
     }
+
+    public static OperatingSystem getCurrentOperatingSystem() {
+        String currentOperatingSystemName = System.getProperties().getProperty("os.name");
+
+        return getOperatingSystem(currentOperatingSystemName);
+    }
 }

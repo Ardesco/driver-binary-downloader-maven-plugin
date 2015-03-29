@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;
 
 
@@ -30,5 +31,11 @@ public class OperatingSystemTest {
 
         assertThat(currentOperatingSystem.size(),
                 is(equalTo(1)));
+    }
+
+    @Test
+    public void willReturnAValidOperatingSystemBasedOnCurrentOperatingSystemType() {
+        assertThat(OperatingSystem.getCurrentOperatingSystem(),
+                instanceOf(OperatingSystem.class));
     }
 }
