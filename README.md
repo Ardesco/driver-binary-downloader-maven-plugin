@@ -3,6 +3,8 @@ Selenium driver-binary-downloader-maven-plugin
 
 A Maven plugin that will download the WebDriver stand alone server binaries for use in your mavenised Selenium project.
 
+What's changed?  See the [Changelog](https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/CHANGELOG.md).
+
 Default Usage
 -----
 
@@ -10,7 +12,7 @@ Default Usage
         <plugin>
             <groupId>com.lazerycode.selenium</groupId>
             <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <configuration>
                 <!-- root directory that downloaded driver binaries will be stored in -->
                 <rootStandaloneServerDirectory>/my/location/binaries</rootStandaloneServerDirectory>
@@ -38,7 +40,7 @@ Advanced Usage
             <plugin>
                 <groupId>com.lazerycode.selenium</groupId>
                 <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-                <version>1.0.5</version>
+                <version>1.0.6</version>
                 <configuration>
                     <!-- root directory that downloaded driver binaries will be stored in -->
                     <rootStandaloneServerDirectory>/tmp/binaries</rootStandaloneServerDirectory>
