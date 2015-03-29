@@ -2,20 +2,25 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
-Breaking changes
-* file path has changed for osx binaries, now root/mac/googlechrome/64bit
-* The 64bit and 32bit options are false by default.  Default will now work out what arcitecture your OS is and download the appropriate binary.  This may cause issues on Windows machines where you want to use the 32bit binary by default
+##Version 1.0.6 Release Notes
 
+* **BREAKING CHANGE** The 64bit and 32bit options are false by default.  Default will now work out what architecture your OS is and download the appropriate binary.  This may cause issues on Windows machines if you want to use the 32bit binary by default
 * XML Parsing rewritten
+* Fix #21 webdriver system property now set by default
 * Fix #22 if overwriteFilesThatExist == false we now don't open the zip if a file with one of the expected binary names for that zip exists on the file system.
+* Fix #23 Setting default proxy to null in error
 
 ##Version 1.0.5 Release Notes
 
-//TODO
+* Add support for Opera Chromium Driver
+* Update RepositoryMap.xml to latest versions of driver binaries
 
 ##Version 1.0.4 Release Notes
 
-//TODO
+* Fixed bug where archives were not closed after files were extracted
+* Fixed bug wherearchives may have been downloaded multiple times
+* Proxy auto detection added
+* Proxy Support added (Merged PR 17 from Nassos A. Machas)
 
 ##Version 1.0.3 Release Notes
 
