@@ -1,6 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OSType;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,13 +18,13 @@ public class RepositoryParserTest {
     private final URL repositoryMap = this.getClass().getResource("/TestRepoMap.xml");
     private final URL repositoryMapWithNoHashs = this.getClass().getResource("/noHash.xml");
     private final URL invalidRepositoryMap = this.getClass().getResource("/InvalidTestRepoMap.xml");
-    private static final ArrayList<OSType> OS_TYPE_LIST = new ArrayList<OSType>();
+    private static final ArrayList<OperatingSystem> OS_TYPE_LIST = new ArrayList<OperatingSystem>();
 
     @BeforeClass
     public static void populateOSList() {
-        OS_TYPE_LIST.add(OSType.LINUX);
-        OS_TYPE_LIST.add(OSType.WINDOWS);
-        OS_TYPE_LIST.add(OSType.OSX);
+        OS_TYPE_LIST.add(OperatingSystem.LINUX);
+        OS_TYPE_LIST.add(OperatingSystem.WINDOWS);
+        OS_TYPE_LIST.add(OperatingSystem.OSX);
     }
 
     @Test

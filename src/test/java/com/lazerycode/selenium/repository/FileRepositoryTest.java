@@ -1,6 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OSType;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
@@ -21,7 +20,7 @@ public class FileRepositoryTest {
     @Test
     public void listOfStuffReturnedWhenPassingInARepositoryMap() throws XPathExpressionException, MojoFailureException, JAXBException, MalformedURLException {
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
-        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OSType>(), new HashMap<String, String>(), false, false);
+        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
         DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope());
 
         assertThat(driverMap.repository.size(),

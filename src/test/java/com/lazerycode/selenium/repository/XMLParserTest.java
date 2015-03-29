@@ -1,7 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OSType;
-import com.sun.org.apache.xml.internal.dtm.ref.DTMNodeList;
 import org.junit.Test;
 import org.w3c.dom.NodeList;
 
@@ -21,7 +19,7 @@ public class XMLParserTest {
 
     @Test
     public void returnsNoOperatingSystemsByDefault() {
-        Set<OSType> none = new HashSet<OSType>();
+        Set<OperatingSystem> none = new HashSet<OperatingSystem>();
         XMLParser parser = new XMLParser(null, none, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
@@ -30,8 +28,8 @@ public class XMLParserTest {
 
     @Test
     public void returnsASingleOperatingSystemWhenAListWithOnEntryIsSupplied() {
-        Set<OSType> one = new HashSet<OSType>();
-        one.add(OSType.WINDOWS);
+        Set<OperatingSystem> one = new HashSet<OperatingSystem>();
+        one.add(OperatingSystem.WINDOWS);
         XMLParser parser = new XMLParser(null, one, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
@@ -40,9 +38,9 @@ public class XMLParserTest {
 
     @Test
     public void returnsACorrectlyFormattedStringWhenMultipleOperatingSystemsAreSupplied() {
-        Set<OSType> two = new HashSet<OSType>();
-        two.add(OSType.WINDOWS);
-        two.add(OSType.LINUX);
+        Set<OperatingSystem> two = new HashSet<OperatingSystem>();
+        two.add(OperatingSystem.WINDOWS);
+        two.add(OperatingSystem.LINUX);
         XMLParser parser = new XMLParser(null, two, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
@@ -118,7 +116,7 @@ public class XMLParserTest {
     @Test
     public void listWithAllNodesReturnedWhenPassingInARepositoryMap() throws XPathExpressionException {
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");
-        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OSType>(), new HashMap<String, String>(), false, false);
+        XMLParser parser = new XMLParser(xmlRepositoryMap, new HashSet<OperatingSystem>(), new HashMap<String, String>(), false, false);
         NodeList nodes = parser.getAllNodesInScope();
 
         assertThat(nodes.getLength(),
@@ -127,8 +125,8 @@ public class XMLParserTest {
 
     @Test
     public void returnsSpecificNodeLocatorWhenOptionsAreSpecified() throws XPathExpressionException {
-        Set<OSType> one = new HashSet<OSType>();
-        one.add(OSType.WINDOWS);
+        Set<OperatingSystem> one = new HashSet<OperatingSystem>();
+        one.add(OperatingSystem.WINDOWS);
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "22");
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");

@@ -1,6 +1,7 @@
 package com.lazerycode.selenium;
 
 import com.lazerycode.selenium.download.DownloadHandler;
+import com.lazerycode.selenium.repository.OperatingSystem;
 import com.lazerycode.selenium.repository.RepositoryParser;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -214,7 +215,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             selectedOperatingSystems = this.operatingSystems;
         }
 
-        ArrayList<OSType> osTypeList = buildOSArrayList(selectedOperatingSystems);
+        ArrayList<OperatingSystem> osTypeList = buildOSArrayList(selectedOperatingSystems);
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
@@ -258,16 +259,16 @@ public class SeleniumServerMojo extends AbstractMojo {
      * @param operatingSystems Operating systems to download Driver Binaries for
      * @return ArrayList<OSType>
      */
-    private ArrayList<OSType> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
-        ArrayList<OSType> operatingSystemsSelected = new ArrayList<OSType>();
+    private ArrayList<OperatingSystem> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
+        ArrayList<OperatingSystem> operatingSystemsSelected = new ArrayList<OperatingSystem>();
         if (operatingSystems == null || operatingSystems.size() < 1) {
             //Default to all Operating Systems
-            Collections.addAll(operatingSystemsSelected, OSType.values());
+            Collections.addAll(operatingSystemsSelected, OperatingSystem.values());
         } else {
             for (Map.Entry<String, String> os : operatingSystems.entrySet()) {
                 if (os.getValue().toLowerCase().equals("true")) {
                     try {
-                        operatingSystemsSelected.add(OSType.valueOf(os.getKey().toUpperCase()));
+                        operatingSystemsSelected.add(OperatingSystem.valueOf(os.getKey().toUpperCase()));
                     } catch (IllegalArgumentException iae) {
                         throw new MojoExecutionException("'" + os.getKey().toUpperCase() + "' is not a known operating system.");
                     }

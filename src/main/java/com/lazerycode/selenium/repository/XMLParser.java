@@ -1,6 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import com.lazerycode.selenium.OSType;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -15,13 +14,13 @@ public class XMLParser {
     private static XPathFactory factory = XPathFactory.newInstance();
     private static XPath xpath = factory.newXPath();
     final InputSource repositoryMap;
-    final Set<OSType> operatingSystems;
+    final Set<OperatingSystem> operatingSystems;
     final Map<String, String> driverVersions;
     final boolean thirtyTwoBit;
     final boolean sixtyFourBit;
 
 
-    public XMLParser(InputStream repositoryMap, Set<OSType> operatingSystems, Map<String, String> driverVersions, boolean thirtyTwoBit, boolean sixtyFourBit) {
+    public XMLParser(InputStream repositoryMap, Set<OperatingSystem> operatingSystems, Map<String, String> driverVersions, boolean thirtyTwoBit, boolean sixtyFourBit) {
         this.repositoryMap = new InputSource(repositoryMap);
         this.operatingSystems = operatingSystems;
         this.driverVersions = driverVersions;
@@ -35,7 +34,7 @@ public class XMLParser {
         }
         StringBuilder operatingSystemsSelector = new StringBuilder();
         operatingSystemsSelector.append("[");
-        for (Iterator<OSType> iterator = operatingSystems.iterator(); iterator.hasNext(); ) {
+        for (Iterator<OperatingSystem> iterator = operatingSystems.iterator(); iterator.hasNext(); ) {
             String operatingSystem = iterator.next().toString().toLowerCase();
             operatingSystemsSelector.append("parent::").append(operatingSystem);
             if (iterator.hasNext()) {
