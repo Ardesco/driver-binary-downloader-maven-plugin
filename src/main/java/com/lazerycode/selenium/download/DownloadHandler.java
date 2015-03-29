@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Map;
 
 import static com.lazerycode.selenium.extract.ExtractFilesFromArchive.extractFileFromArchive;
 
@@ -62,7 +61,7 @@ public class DownloadHandler {
         for (int retryAttempts = 1; retryAttempts <= this.fileDownloadRetryAttempts; retryAttempts++) {
             File downloadedFile = fileDownloader.attemptToDownload(remoteFileLocation);
             if (null != downloadedFile) {
-                if (!shouldWeCheckFileHash || (shouldWeCheckFileHash && checkFileHash(downloadedFile, driverDetails.hash, driverDetails.hashType))) {
+                if (!shouldWeCheckFileHash || checkFileHash(downloadedFile, driverDetails.hash, driverDetails.hashType)) {
                     LOG.info("Archive file '" + downloadedFile.getName() + "' is valid : true");
                     return downloadedFile;
                 } else {
@@ -85,18 +84,15 @@ public class DownloadHandler {
         LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
 
         for (final DriverContext driverContext : filesToDownload.getKeys()) {
-            Map<String, DriverDetails> driverDetails = filesToDownload.getMapForDriverContext(driverContext);
-            for (String version : driverDetails.keySet()) {
-                URL fileLocation = driverDetails.get(version).fileLocation;
-                String hash = driverDetails.get(version).hash;
-                HashType hashType = driverDetails.get(version).hashType;
-                String localZipFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(fileLocation.getFile());
+            for (String version : filesToDownload.getAvailableVersionsForDriverContext(driverContext)) {
+                DriverDetails driverDetails = filesToDownload.getDetailsForVersionOfDriverContext(driverContext, version);
+                String localZipFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(driverDetails.fileLocation.getFile());
                 File localZipFile = new File(localZipFileAbsolutePath);
                 boolean fileNeedsToBeDownloaded = true;
 
                 if (localZipFile.exists()) {
                     if (checkFileHash) {
-                        if (checkFileHash(localZipFile, hash, hashType)) {
+                        if (checkFileHash(localZipFile, driverDetails.hash, driverDetails.hashType)) {
                             fileNeedsToBeDownloaded = false;
                         } else {
                             fileNeedsToBeDownloaded = false;
@@ -105,13 +101,11 @@ public class DownloadHandler {
                 }
 
                 if (fileNeedsToBeDownloaded) {
-                    localZipFile = downloadFile(driverDetails.get(version), checkFileHash);
+                    localZipFile = downloadFile(driverDetails, checkFileHash);
                 }
 
                 String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext();
-                if (extractFileFromArchive(localZipFile, extractedFileLocation, this.overwriteFilesThatExist, driverContext.getBinaryTypeForContext())) {
-                    LOG.info("File(s) copied to " + extractedFileLocation);
-                }
+                driverDetails.extractedLocation = extractFileFromArchive(localZipFile, extractedFileLocation, this.overwriteFilesThatExist, driverContext.getBinaryTypeForContext());
             }
         }
     }

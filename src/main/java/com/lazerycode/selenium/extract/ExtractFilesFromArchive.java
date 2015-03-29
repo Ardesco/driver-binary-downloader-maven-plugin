@@ -35,7 +35,7 @@ public class ExtractFilesFromArchive {
      * @return boolean
      * @throws IOException
      */
-    public static boolean extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
+    public static String extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
         String fileType = FilenameUtils.getExtension(downloadedCompressedFile.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
         LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
@@ -47,7 +47,7 @@ public class ExtractFilesFromArchive {
                     String existingFileName = existingFile.getName();
                     if (possibleFilenames.getBinaryFilenames().contains(existingFileName)) {
                         LOG.info("Binary '" + existingFileName + "' Exists: true");
-                        return false;
+                        return existingFile.getAbsolutePath();
                     }
                 }
             }
@@ -71,8 +71,8 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    static boolean unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException {
-        Boolean fileExtracted = false;
+    static String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException {
+        String fileExtractedAbsolutePath = null;
         LOG.debug("Extracting binary from .zip file");
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
@@ -93,14 +93,15 @@ public class ExtractFilesFromArchive {
                     copy(zip.getInputStream(zipFileEntry), new FileOutputStream(extractedFile));
                     if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
-                    fileExtracted = true;
+                    fileExtractedAbsolutePath = extractedFile.getAbsolutePath();
+                    LOG.info("File(s) copied to " + fileExtractedAbsolutePath);
                     break extractionLoop;
                 }
             }
         }
         zip.close();
 
-        return fileExtracted;
+        return fileExtractedAbsolutePath;
     }
 
     /**
@@ -113,8 +114,8 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    static boolean untarFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, MojoFailureException {
-        Boolean fileExtracted = false;
+    static String untarFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, MojoFailureException {
+        String fileExtractedAbsolutePath = null;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream fileInArchive;
         String fileType = FilenameUtils.getExtension(downloadedCompressedFile.getAbsolutePath());
@@ -145,13 +146,14 @@ public class ExtractFilesFromArchive {
                     copy(fileInArchive, new FileOutputStream(extractedFile));
                     if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
-                    fileExtracted = true;
+                    fileExtractedAbsolutePath = extractedFile.getAbsolutePath();
+                    LOG.info("File(s) copied to " + fileExtractedAbsolutePath);
                     break extractionLoop;
                 }
             }
         }
         fileInArchive.close();
 
-        return fileExtracted;
+        return fileExtractedAbsolutePath;
     }
 }

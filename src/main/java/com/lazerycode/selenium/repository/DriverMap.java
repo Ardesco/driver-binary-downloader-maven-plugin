@@ -45,4 +45,8 @@ public class DriverMap {
         return repository.keySet();
     }
 
+    public Set<String> getAvailableVersionsForDriverContext(DriverContext driverContext) {
+        return repository.get(driverContext).keySet();
+    }
+
 }

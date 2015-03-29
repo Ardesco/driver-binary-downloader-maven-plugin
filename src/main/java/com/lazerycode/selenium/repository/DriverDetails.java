@@ -24,6 +24,8 @@ public class DriverDetails {
     @XmlJavaTypeAdapter(HashTypeAdaptor.class)
     public HashType hashType;
 
+    public String extractedLocation;
+
     @Override
     public int hashCode() {
         int result = fileLocation != null ? fileLocation.hashCode() : 0;

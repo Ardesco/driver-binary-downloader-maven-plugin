@@ -215,7 +215,7 @@ public class SeleniumServerMojo extends AbstractMojo {
 
         //Calculate system architecture
         if (!thirtyTwoBitBinaries && !sixtyFourBitBinaries) {
-            //TODO clean this up, maybe pass in a list of valid arcitectures later on
+            //TODO clean this up, maybe pass in a list of valid architectures later on
             if (getCurrentSystemArcitecture().equals(SystemArchitecture.ARCHITECTURE_64_BIT)) {
                 sixtyFourBitBinaries = true;
             } else {
