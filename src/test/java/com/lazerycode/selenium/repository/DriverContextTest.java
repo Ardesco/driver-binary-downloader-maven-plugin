@@ -22,7 +22,7 @@ public class DriverContextTest {
 
     @Test
     public void driverContextCreatesAStringThatCanBeUsedAsAFilePath() {
-        String expectedFilepath = "mac" + File.separator + "googlechrome" + File.separator + "64bit" + File.separator;
+        String expectedFilepath = "osx" + File.separator + "googlechrome" + File.separator + "64bit" + File.separator;
         String filePath = binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT).buildExtractionPathFromDriverContext();
 
         assertThat(filePath,

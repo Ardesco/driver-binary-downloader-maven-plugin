@@ -36,7 +36,7 @@ public class DriverContext {
     }
 
     public String buildExtractionPathFromDriverContext() {
-        return operatingSystem.getOperatingSystemType() + File.separator + driverType.getBinaryTypeAsString() + File.separator + systemArchitecture.getSystemArchitectureType() + File.separator;
+        return operatingSystem.toString().toLowerCase() + File.separator + driverType.getBinaryTypeAsString() + File.separator + systemArchitecture.getSystemArchitectureType() + File.separator;
     }
 
     public BinaryType getBinaryTypeForContext() {
