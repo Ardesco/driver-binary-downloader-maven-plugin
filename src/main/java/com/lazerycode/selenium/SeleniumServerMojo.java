@@ -26,9 +26,10 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
 
 /**
  * Selenium Standalone Server Maven Plugin
@@ -190,11 +191,6 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info(" ");
         setRepositoryMapFile();
 
-        if (null == this.operatingSystems || this.operatingSystems.size() < 1) {
-            LOG.info("No <operatingSystems> configuration detected.  Defaulting to getting drivers for current operating system only.");
-            this.onlyGetDriversForHostOperatingSystem = true;
-        }
-
         if (fileDownloadRetryAttempts < 1) {
             LOG.warn("Invalid number of retry attempts specified, defaulting to '1'...");
             fileDownloadRetryAttempts = 1;
@@ -202,20 +198,19 @@ public class SeleniumServerMojo extends AbstractMojo {
 
         Map<String, String> selectedOperatingSystems = new HashMap<String, String>();
         LOG.info("Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
-        if (this.onlyGetDriversForHostOperatingSystem) {
-            String currentOS = System.getProperty("os.name").toLowerCase();
-            if (currentOS.startsWith("win")) {
-                selectedOperatingSystems.put("windows", "true");
-            } else if (currentOS.startsWith("mac")) {
-                selectedOperatingSystems.put("osx", "true");
-            } else {
-                selectedOperatingSystems.put("linux", "true");
-            }
-        } else {
-            selectedOperatingSystems = this.operatingSystems;
-        }
 
-        ArrayList<OperatingSystem> osTypeList = buildOSArrayList(selectedOperatingSystems);
+        //Calculate operating systems
+        ArrayList<OperatingSystem> osTypeList = new ArrayList<OperatingSystem>();
+        if (onlyGetDriversForHostOperatingSystem || null == operatingSystems || operatingSystems.size() < 1) {
+            LOG.info("Getting drivers for current operating system only.");
+            osTypeList = OperatingSystem.getCurrentOperatingSystemAsAnArrayList();
+        } else {
+            for (Map.Entry<String, String> os : this.operatingSystems.entrySet()) {
+                if (os.getValue().toLowerCase().equals("true")) {
+                    osTypeList.add(getOperatingSystem(os.getKey()));
+                }
+            }
+        }
 
         RepositoryParser executableBinaryMapping = new RepositoryParser(
                 this.xmlRepositoryMap,
@@ -251,44 +246,6 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOADS COMPLETE");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
-    }
-
-    /**
-     * Build a valid list of operating systems based upon the values parsed from the POM
-     *
-     * @param operatingSystems Operating systems to download Driver Binaries for
-     * @return ArrayList<OSType>
-     */
-    private ArrayList<OperatingSystem> buildOSArrayList(Map<String, String> operatingSystems) throws MojoExecutionException {
-        ArrayList<OperatingSystem> operatingSystemsSelected = new ArrayList<OperatingSystem>();
-        if (operatingSystems == null || operatingSystems.size() < 1) {
-            //Default to all Operating Systems
-            Collections.addAll(operatingSystemsSelected, OperatingSystem.values());
-        } else {
-            for (Map.Entry<String, String> os : operatingSystems.entrySet()) {
-                if (os.getValue().toLowerCase().equals("true")) {
-                    try {
-                        operatingSystemsSelected.add(OperatingSystem.valueOf(os.getKey().toUpperCase()));
-                    } catch (IllegalArgumentException iae) {
-                        throw new MojoExecutionException("'" + os.getKey().toUpperCase() + "' is not a known operating system.");
-                    }
-                }
-            }
-        }
-
-        if (operatingSystemsSelected.size() == 0) {
-            LOG.info(" ");
-            LOG.info("All operating systems have been excluded, check your <operatingSystems> configuration in your POM!");
-            LOG.info(" ");
-            LOG.info("--------------------------------------------------------");
-            LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOAD ABORTED");
-            LOG.info("--------------------------------------------------------");
-            LOG.info(" ");
-
-            throw new MojoExecutionException("All operating systems excluded");
-        }
-
-        return operatingSystemsSelected;
     }
 
     /**
