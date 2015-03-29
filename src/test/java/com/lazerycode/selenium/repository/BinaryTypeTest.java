@@ -29,4 +29,10 @@ public class BinaryTypeTest {
         assertThat(GOOGLECHROME.getBinaryTypeAsString(),
                 is(equalTo("googlechrome")));
     }
+
+    @Test
+    public void willReturnCorrectSystemPropertyForABinary() {
+        assertThat(GOOGLECHROME.getDriverSystemProperty(),
+                is(equalTo("webdriver.chrome.driver")));
+    }
 }
