@@ -5,6 +5,7 @@ import com.lazerycode.selenium.hash.HashType;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Deprecated
 public class FileDetails {
 
     private URL fileLocation;

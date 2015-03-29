@@ -1,5 +1,6 @@
 package com.lazerycode.selenium.extract;
 
+import com.lazerycode.selenium.repository.BinaryType;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -34,7 +35,7 @@ public class ExtractFilesFromArchive {
      * @return boolean
      * @throws IOException
      */
-    public static boolean extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
+    public static boolean extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
         String fileType = FilenameUtils.getExtension(downloadedCompressedFile.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
         if (fileType.equals("zip")) {
@@ -56,7 +57,7 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    static boolean unzipFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException {
+    static boolean unzipFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException {
         Boolean fileExtracted = false;
         LOG.debug("Extracting binary from .zip file");
         ZipFile zip = new ZipFile(downloadedCompressedFile);
@@ -104,7 +105,7 @@ public class ExtractFilesFromArchive {
      * @throws IOException
      */
 
-    static boolean untarFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryFileNames possibleFilenames) throws IOException, MojoFailureException {
+    static boolean untarFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, MojoFailureException {
         Boolean fileExtracted = false;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream fileInArchive;

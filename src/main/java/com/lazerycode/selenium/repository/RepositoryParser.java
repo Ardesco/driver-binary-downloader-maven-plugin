@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class RepositoryParser {
 
     private static final Logger LOG = Logger.getLogger(RepositoryParser.class);

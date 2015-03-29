@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.download;
 
-import com.lazerycode.selenium.extract.BinaryFileNames;
+import com.lazerycode.selenium.repository.BinaryType;
 import com.lazerycode.selenium.extract.ExtractFilesFromArchive;
 import com.lazerycode.selenium.repository.FileDetails;
 import org.apache.commons.io.FilenameUtils;
@@ -67,7 +67,7 @@ public class DownloadHandler {
             String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + fileToDownload.getKey();
             String binaryForOperatingSystem = fileToDownload.getKey().replace("\\", "/").split("/")[1].toUpperCase();  //TODO should really store the OSType we have extracted somewhere rather than doing this hack!
             LOG.debug("Detected a binary for OSType: " + binaryForOperatingSystem);
-            if (ExtractFilesFromArchive.extractFileFromArchive(fileToUnzip, extractedFileLocation, this.overwriteFilesThatExist, BinaryFileNames.valueOf(binaryForOperatingSystem))) {
+            if (ExtractFilesFromArchive.extractFileFromArchive(fileToUnzip, extractedFileLocation, this.overwriteFilesThatExist, BinaryType.valueOf(binaryForOperatingSystem))) {
                 LOG.info("File(s) copied to " + extractedFileLocation);
             }
         }

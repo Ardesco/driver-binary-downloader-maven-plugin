@@ -1,8 +1,8 @@
-package com.lazerycode.selenium.extract;
+package com.lazerycode.selenium.repository;
 
 import java.util.ArrayList;
 
-public enum BinaryFileNames {
+public enum BinaryType {
     INTERNETEXPLORER(new ArrayList<String>() {{
         add("IEDriverServer.exe");
     }}),
@@ -21,7 +21,7 @@ public enum BinaryFileNames {
 
     private final ArrayList<String> binaryFilenames;
 
-    BinaryFileNames(ArrayList<String> binaryFilenames) {
+    BinaryType(ArrayList<String> binaryFilenames) {
         this.binaryFilenames = binaryFilenames;
     }
 
