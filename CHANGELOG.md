@@ -2,10 +2,24 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+Breaking changes
+* file path has changed for osx binaries, now root/mac/googlechrome/64bit
+* The 64bit and 32bit options are false by default.  Default will now work out what arcitecture your OS is and download the appropriate binary.  This may cause issues on Windows machines where you want to use the 32bit binary by default
+
+* XML Parsing rewritten
+
+##Version 1.0.5 Release Notes
+
+//TODO
+
+##Version 1.0.4 Release Notes
+
+//TODO
+
 ##Version 1.0.3 Release Notes
 
 * Additional logging added when defaulting to onlyGetDriversForHostOperatingSystem
-* Fix 14 IE Driver hases incorrect in default RepositoryMap.xml
+* Fix 14 IE Driver hashes are incorrect in default RepositoryMap.xml
 * Fix 'Unsupported Content-Coding: None' error
 * Fix 15 Improved logging on IOException/Invalid File hash
 

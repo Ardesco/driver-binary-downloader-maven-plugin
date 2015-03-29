@@ -2,6 +2,7 @@ package com.lazerycode.selenium.repository;
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class DriverMap {
@@ -38,6 +39,10 @@ public class DriverMap {
         TreeMap<String, DriverDetails> driverVersions = repository.get(driverContext);
 
         return driverVersions.get(driverVersions.lastKey());
+    }
+
+    public Set<DriverContext> getKeys() {
+        return repository.keySet();
     }
 
 }

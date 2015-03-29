@@ -1,8 +1,7 @@
 package com.lazerycode.selenium;
 
 import com.lazerycode.selenium.download.DownloadHandler;
-import com.lazerycode.selenium.repository.OperatingSystem;
-import com.lazerycode.selenium.repository.RepositoryParser;
+import com.lazerycode.selenium.repository.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
@@ -15,21 +14,23 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static com.lazerycode.selenium.repository.FileRepository.buildDownloadableFileRepository;
 import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
+import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
 
 /**
  * Selenium Standalone Server Maven Plugin
@@ -86,17 +87,17 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected Map<String, String> operatingSystems;
 
     /**
-     * <h3>Download 32 bit standalone executable</h3>.
+     * <h3>Force download of 32 bit standalone executable</h3>.
      * <p>&lt;thirtyTwoBitBinaries&gt;true&lt;/thirtyTwoBitBinaries&gt;</p>
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "false")
     protected boolean thirtyTwoBitBinaries;
 
     /**
-     * <h3>Download 64 bit standalone executable</h3>
+     * <h3>Force download of 64 bit standalone executable</h3>
      * <p>&lt;sixtyFourBitBinaries&gt;true&lt;/sixtyFourBitBinaries&gt;</p>
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(defaultValue = "false")
     protected boolean sixtyFourBitBinaries;
 
     /**
@@ -200,10 +201,10 @@ public class SeleniumServerMojo extends AbstractMojo {
         LOG.info("Only get drivers for current Operating System: " + this.onlyGetDriversForHostOperatingSystem);
 
         //Calculate operating systems
-        ArrayList<OperatingSystem> osTypeList = new ArrayList<OperatingSystem>();
+        Set<OperatingSystem> osTypeList = new HashSet<OperatingSystem>();
         if (onlyGetDriversForHostOperatingSystem || null == operatingSystems || operatingSystems.size() < 1) {
             LOG.info("Getting drivers for current operating system only.");
-            osTypeList = OperatingSystem.getCurrentOperatingSystemAsAnArrayList();
+            osTypeList = OperatingSystem.getCurrentOperatingSystemAsAHashSet();
         } else {
             for (Map.Entry<String, String> os : this.operatingSystems.entrySet()) {
                 if (os.getValue().toLowerCase().equals("true")) {
@@ -212,17 +213,17 @@ public class SeleniumServerMojo extends AbstractMojo {
             }
         }
 
-        RepositoryParser executableBinaryMapping = new RepositoryParser(
-                this.xmlRepositoryMap,
-                osTypeList,
-                this.thirtyTwoBitBinaries,
-                this.sixtyFourBitBinaries,
-                this.onlyGetLatestVersions,
-                this.throwExceptionIfSpecifiedVersionIsNotFound);
-        if (this.getSpecificExecutableVersions != null && this.getSpecificExecutableVersions.size() > 0) {
-            executableBinaryMapping.specifySpecificExecutableVersions(this.getSpecificExecutableVersions);
+        //Calculate system architecture
+        if (!thirtyTwoBitBinaries && !sixtyFourBitBinaries) {
+            //TODO clean this up, maybe pass in a list of valid arcitectures later on
+            if (getCurrentSystemArcitecture().equals(SystemArchitecture.ARCHITECTURE_64_BIT)) {
+                sixtyFourBitBinaries = true;
+            } else {
+                thirtyTwoBitBinaries = true;
+            }
         }
 
+        XMLParser parser = new XMLParser(xmlRepositoryMap, osTypeList, getSpecificExecutableVersions, thirtyTwoBitBinaries, sixtyFourBitBinaries);
         try {
             DownloadHandler standaloneExecutableDownloader = new DownloadHandler(
                     this.rootStandaloneServerDirectory,
@@ -230,7 +231,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadRetryAttempts,
                     this.fileDownloadConnectTimeout,
                     this.fileDownloadReadTimeout,
-                    executableBinaryMapping.getFilesToDownload(),
+                    buildDownloadableFileRepository(parser.getAllNodesInScope()),
                     this.overwriteFilesThatExist,
                     this.checkFileHashes,
                     this.useSystemProxy);
@@ -239,6 +240,10 @@ public class SeleniumServerMojo extends AbstractMojo {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
         } catch (URISyntaxException e) {
             throw new MojoExecutionException("Invalid URI detected: " + e.getLocalizedMessage());
+        } catch (XPathExpressionException rethrow) {
+            throw new MojoExecutionException(rethrow.getMessage());
+        } catch (JAXBException rethrow) {
+            throw new MojoExecutionException(rethrow.getMessage());
         }
 
         LOG.info(" ");

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.lazerycode.selenium.repository.OperatingSystem.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.CombinableMatcher.either;
@@ -29,7 +30,7 @@ public class XMLParserTest {
     @Test
     public void returnsASingleOperatingSystemWhenAListWithOnEntryIsSupplied() {
         Set<OperatingSystem> one = new HashSet<OperatingSystem>();
-        one.add(OperatingSystem.WINDOWS);
+        one.add(WINDOWS);
         XMLParser parser = new XMLParser(null, one, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
@@ -39,8 +40,8 @@ public class XMLParserTest {
     @Test
     public void returnsACorrectlyFormattedStringWhenMultipleOperatingSystemsAreSupplied() {
         Set<OperatingSystem> two = new HashSet<OperatingSystem>();
-        two.add(OperatingSystem.WINDOWS);
-        two.add(OperatingSystem.LINUX);
+        two.add(WINDOWS);
+        two.add(LINUX);
         XMLParser parser = new XMLParser(null, two, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
@@ -126,7 +127,7 @@ public class XMLParserTest {
     @Test
     public void returnsSpecificNodeLocatorWhenOptionsAreSpecified() throws XPathExpressionException {
         Set<OperatingSystem> one = new HashSet<OperatingSystem>();
-        one.add(OperatingSystem.WINDOWS);
+        one.add(WINDOWS);
         Map<String, String> versionsToFind = new HashMap<String, String>();
         versionsToFind.put("googlechrome", "22");
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap.xml");

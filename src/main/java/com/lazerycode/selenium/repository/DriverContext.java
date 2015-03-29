@@ -1,5 +1,7 @@
 package com.lazerycode.selenium.repository;
 
+import java.io.File;
+
 public class DriverContext {
     private final BinaryType driverType;
     private final SystemArchitecture systemArchitecture;
@@ -17,12 +19,20 @@ public class DriverContext {
         this.systemArchitecture = systemArchitecture;
     }
 
-    public static DriverContext binaryDataFor(BinaryType browserType, OperatingSystem osName, SystemArchitecture architecture) {
+    public static DriverContext binaryDataFor(OperatingSystem osName, BinaryType browserType, SystemArchitecture architecture) {
         return new DriverContext(browserType, osName, architecture);
     }
 
-    public static DriverContext binaryDataFor(String browserType, String osName, SystemArchitecture architecture) {
+    public static DriverContext binaryDataFor(String osName, String browserType, SystemArchitecture architecture) {
         return new DriverContext(browserType, osName, architecture);
+    }
+
+    public String buildExtractionPathFromDriverContext() {
+        return operatingSystem.getOperatingSystemType() + File.separator + driverType.getBinaryTypeAsString() + File.separator + systemArchitecture.getSystemArchitectureType() + File.separator;
+    }
+
+    public BinaryType getBinaryTypeForContext() {
+        return driverType;
     }
 
     @Override

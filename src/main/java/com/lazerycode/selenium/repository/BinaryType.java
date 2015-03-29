@@ -29,4 +29,8 @@ public enum BinaryType {
         return binaryFilenames;
     }
 
+    public String getBinaryTypeAsString(){
+        return this.toString().toLowerCase();
+    }
+
 }

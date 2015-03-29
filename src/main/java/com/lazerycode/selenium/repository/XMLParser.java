@@ -47,7 +47,7 @@ public class XMLParser {
     }
 
     protected String driverVersionSelector() {
-        if (driverVersions.size() == 0) {
+        if (null == driverVersions || driverVersions.size() == 0) {
             return "";
         }
         StringBuilder versionSelector = new StringBuilder();
@@ -84,6 +84,7 @@ public class XMLParser {
     public NodeList getAllNodesInScope() throws XPathExpressionException {
         String nodeLocator = "//driver" + operatingSystemSelector() + "/version" + driverVersionSelector() + "/bitrate" + calculateBitrate();
         XPathExpression expression = xpath.compile(nodeLocator);
+
         return (NodeList) expression.evaluate(repositoryMap, XPathConstants.NODESET);
     }
 }

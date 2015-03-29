@@ -15,14 +15,14 @@ import java.net.URL;
 public class DriverDetails {
 
     @XmlElement(name = "filelocation")
-    URL fileLocation;
+    public URL fileLocation;
 
     @XmlElement()
-    String hash;
+    public String hash;
 
     @XmlElement(name = "hashtype")
     @XmlJavaTypeAdapter(HashTypeAdaptor.class)
-    HashType hashType;
+    public HashType hashType;
 
     @Override
     public int hashCode() {

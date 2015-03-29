@@ -5,8 +5,8 @@ import java.util.List;
 
 public enum SystemArchitecture {
 
-    ARCHITECTURE_64_BIT("64 bit"),
-    ARCHITECTURE_32_BIT("32 bit");
+    ARCHITECTURE_64_BIT("64bit"),
+    ARCHITECTURE_32_BIT("32bit");
 
     private String systemArchitectureName;
 
@@ -21,10 +21,7 @@ public enum SystemArchitecture {
     public static final SystemArchitecture defaultSystemArchitecture = ARCHITECTURE_32_BIT;
     private static List<String> architecture64bitNames = Arrays.asList("amd64", "x86_64");
 
-    static SystemArchitecture getSystemArchitecture() {
-
-        final String currentArchitecture = System.getProperties().getProperty("os.arch");
-
+    public static SystemArchitecture getSystemArchitecture(String currentArchitecture) {
         SystemArchitecture result = defaultSystemArchitecture;
 
         if (architecture64bitNames.contains(currentArchitecture)) {
@@ -32,5 +29,11 @@ public enum SystemArchitecture {
         }
 
         return result;
+    }
+
+    public static SystemArchitecture getCurrentSystemArcitecture() {
+        final String currentArchitecture = System.getProperties().getProperty("os.arch");
+
+        return getSystemArchitecture(currentArchitecture);
     }
 }

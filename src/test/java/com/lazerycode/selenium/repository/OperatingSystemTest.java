@@ -2,7 +2,7 @@ package com.lazerycode.selenium.repository;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -26,7 +26,7 @@ public class OperatingSystemTest {
 
     @Test
     public void willReturnAValidArrayListBasedOnCurrentOperatingSystemType() {
-        ArrayList<OperatingSystem> currentOperatingSystem = OperatingSystem.getCurrentOperatingSystemAsAnArrayList();
+        HashSet<OperatingSystem> currentOperatingSystem = OperatingSystem.getCurrentOperatingSystemAsAHashSet();
 
         assertThat(currentOperatingSystem.size(),
                 is(equalTo(1)));

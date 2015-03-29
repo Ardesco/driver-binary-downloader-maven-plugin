@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.repository;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public enum OperatingSystem {
 
@@ -28,10 +28,10 @@ public enum OperatingSystem {
         throw new IllegalArgumentException("Unrecognised operating system name '" + osName + "'");
     }
 
-    public static ArrayList<OperatingSystem> getCurrentOperatingSystemAsAnArrayList() {
+    public static HashSet<OperatingSystem> getCurrentOperatingSystemAsAHashSet() {
         String currentOperatingSystemName = System.getProperties().getProperty("os.name");
 
-        ArrayList<OperatingSystem> listOfOperatingSystems = new ArrayList<OperatingSystem>();
+        HashSet<OperatingSystem> listOfOperatingSystems = new HashSet<OperatingSystem>();
         listOfOperatingSystems.add(getOperatingSystem(currentOperatingSystemName));
 
         return listOfOperatingSystems;

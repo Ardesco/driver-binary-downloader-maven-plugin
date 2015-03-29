@@ -1,21 +1,18 @@
 package com.lazerycode.selenium.repository;
 
-import org.apache.maven.plugin.MojoFailureException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPathExpressionException;
-import java.net.MalformedURLException;
 
 import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_32_BIT;
 import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_64_BIT;
 
 public class FileRepository {
 
-    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound) throws MalformedURLException, MojoFailureException, JAXBException, XPathExpressionException {
+    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound) throws JAXBException {
         DriverMap driverMap = new DriverMap();
         Unmarshaller unmarshaller = JAXBContext.newInstance(DriverDetails.class).createUnmarshaller();
         unmarshaller.setEventHandler(new unmarshallingEventHandler());
@@ -39,10 +36,10 @@ public class FileRepository {
 
             DriverDetails driverDetails = unmarshaller.unmarshal(node, DriverDetails.class).getValue();
             if (thisIs32Bit) {
-                driverMap.getMapForDriverContext(DriverContext.binaryDataFor(driver, operatingSystem, ARCHITECTURE_32_BIT)).put(version, driverDetails);
+                driverMap.getMapForDriverContext(DriverContext.binaryDataFor(operatingSystem, driver, ARCHITECTURE_32_BIT)).put(version, driverDetails);
             }
             if (thisIs64Bit) {
-                driverMap.getMapForDriverContext(DriverContext.binaryDataFor(driver, operatingSystem, ARCHITECTURE_64_BIT)).put(version, driverDetails);
+                driverMap.getMapForDriverContext(DriverContext.binaryDataFor(operatingSystem, driver, ARCHITECTURE_64_BIT)).put(version, driverDetails);
             }
         }
 
