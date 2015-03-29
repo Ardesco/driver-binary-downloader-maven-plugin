@@ -25,15 +25,17 @@ public class DownloadHandler {
     protected final int fileDownloadRetryAttempts;
     private boolean overwriteFilesThatExist = false;
     private boolean checkFileHash = true;
+    private boolean onlyGetLatestVersions = true;
     private FileDownloader fileDownloader;
 
-    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, DriverMap filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy) throws MojoFailureException {
+    public DownloadHandler(File rootStandaloneServerDirectory, File downloadedZipFileDirectory, int fileDownloadRetryAttempts, int fileDownloadConnectTimeout, int fileDownloadReadTimeout, DriverMap filesToDownload, boolean overwriteFilesThatExist, boolean checkFileHash, boolean useSystemProxy, boolean onlyGetLatestVersions) throws MojoFailureException {
         this.rootStandaloneServerDirectory = rootStandaloneServerDirectory;
         this.downloadedZipFileDirectory = downloadedZipFileDirectory;
         this.filesToDownload = filesToDownload;
         this.fileDownloadRetryAttempts = fileDownloadRetryAttempts;
         this.overwriteFilesThatExist = overwriteFilesThatExist;
         this.checkFileHash = checkFileHash;
+        this.onlyGetLatestVersions = onlyGetLatestVersions;
 
         fileDownloader = new FileDownloader(downloadedZipFileDirectory, useSystemProxy);
         fileDownloader.setReadTimeout(fileDownloadReadTimeout);
@@ -84,29 +86,39 @@ public class DownloadHandler {
         LOG.info("Preparing to download Selenium Standalone Executable Binaries...");
 
         for (final DriverContext driverContext : filesToDownload.getKeys()) {
-            for (String version : filesToDownload.getAvailableVersionsForDriverContext(driverContext)) {
-                DriverDetails driverDetails = filesToDownload.getDetailsForVersionOfDriverContext(driverContext, version);
-                String localZipFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(driverDetails.fileLocation.getFile());
-                File localZipFile = new File(localZipFileAbsolutePath);
-                boolean fileNeedsToBeDownloaded = true;
-
-                if (localZipFile.exists()) {
-                    if (checkFileHash) {
-                        if (checkFileHash(localZipFile, driverDetails.hash, driverDetails.hashType)) {
-                            fileNeedsToBeDownloaded = false;
-                        } else {
-                            fileNeedsToBeDownloaded = false;
-                        }
-                    }
+            if (onlyGetLatestVersions) {
+                DriverDetails driverDetails = filesToDownload.getDetailsForLatestVersionOfDriverContext(driverContext);
+                downloadAndExtractExecutableFiles(driverContext, driverDetails);
+            } else {
+                for (String version : filesToDownload.getAvailableVersionsForDriverContext(driverContext)) {
+                    DriverDetails driverDetails = filesToDownload.getDetailsForVersionOfDriverContext(driverContext, version);
+                    downloadAndExtractExecutableFiles(driverContext, driverDetails);
                 }
-
-                if (fileNeedsToBeDownloaded) {
-                    localZipFile = downloadFile(driverDetails, checkFileHash);
-                }
-
-                String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext();
-                driverDetails.extractedLocation = extractFileFromArchive(localZipFile, extractedFileLocation, this.overwriteFilesThatExist, driverContext.getBinaryTypeForContext());
             }
         }
     }
+
+    private void downloadAndExtractExecutableFiles(DriverContext driverContext, DriverDetails driverDetails) throws IOException, MojoExecutionException, URISyntaxException, MojoFailureException {
+        String localZipFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(driverDetails.fileLocation.getFile());
+        File localZipFile = new File(localZipFileAbsolutePath);
+        boolean fileNeedsToBeDownloaded = true;
+
+        if (localZipFile.exists()) {
+            if (checkFileHash) {
+                if (checkFileHash(localZipFile, driverDetails.hash, driverDetails.hashType)) {
+                    fileNeedsToBeDownloaded = false;
+                } else {
+                    fileNeedsToBeDownloaded = false;
+                }
+            }
+        }
+
+        if (fileNeedsToBeDownloaded) {
+            localZipFile = downloadFile(driverDetails, checkFileHash);
+        }
+
+        String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext();
+        driverDetails.extractedLocation = extractFileFromArchive(localZipFile, extractedFileLocation, this.overwriteFilesThatExist, driverContext.getBinaryTypeForContext());
+    }
+
 }

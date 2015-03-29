@@ -37,6 +37,7 @@ public class DownloadHandlerTest {
     private final boolean doNotCheckFileHashes = false;
     private final boolean checkFileHashes = true;
     private final boolean doNotUseSystemProxy = false;
+    private final boolean getAllVersions = false;
 
     private static final String validSHA1Hash = "8604c05969a0eefa0edf0d71ae809310832afdc7";
     private static final JettyServer localWebServer = new JettyServer();
@@ -82,7 +83,7 @@ public class DownloadHandlerTest {
         fileDetails.hash = "";
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.downloadFile(fileDetails, checkFileHashes);
     }
 
@@ -94,13 +95,13 @@ public class DownloadHandlerTest {
         fileDetails.hash = "invalidHash";
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.downloadFile(fileDetails, checkFileHashes);
     }
 
     @Test
     public void hashCheck() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, oneRetryAttempt, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.downloadFile(validFileDetails, checkFileHashes);
 
         assertThat(new File(expectedDownloadedFilePath).exists(), is(equalTo(true)));
@@ -114,13 +115,13 @@ public class DownloadHandlerTest {
         fileDetails.hash = validSHA1Hash;
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, downloadDirectory, 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.downloadFile(fileDetails, checkFileHashes);
     }
 
     @Test(expected = MojoFailureException.class)
     public void specifyAFileInsteadOfADirectory() throws Exception {
-        DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(null, File.createTempFile("foo", "bar"), 3, connectTimeout, readTimeout, null, doNotOverwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.downloadFile(validFileDetails, checkFileHashes);
     }
 
@@ -136,7 +137,7 @@ public class DownloadHandlerTest {
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
-        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.ensureStandaloneExecutableFilesExist();
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
@@ -161,7 +162,7 @@ public class DownloadHandlerTest {
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
-        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, doNotCheckFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, doNotCheckFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.ensureStandaloneExecutableFilesExist();
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
@@ -175,7 +176,7 @@ public class DownloadHandlerTest {
         fileDetails.hash = null;
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.ensureStandaloneExecutableFilesExist();
     }
 
@@ -187,7 +188,7 @@ public class DownloadHandlerTest {
         fileDetails.hash = validSHA1Hash;
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy);
+        DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, checkFileHashes, doNotUseSystemProxy, getAllVersions);
         downloadTestFile.ensureStandaloneExecutableFilesExist();
     }
 }

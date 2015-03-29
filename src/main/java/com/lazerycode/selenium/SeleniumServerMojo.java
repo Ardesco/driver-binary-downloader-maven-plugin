@@ -234,7 +234,8 @@ public class SeleniumServerMojo extends AbstractMojo {
                     buildDownloadableFileRepository(parser.getAllNodesInScope()),
                     this.overwriteFilesThatExist,
                     this.checkFileHashes,
-                    this.useSystemProxy);
+                    this.useSystemProxy,
+                    this.onlyGetLatestVersions);
             standaloneExecutableDownloader.ensureStandaloneExecutableFilesExist();
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
