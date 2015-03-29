@@ -10,7 +10,7 @@
 
     <groupId>com.lazerycode.selenium</groupId>
     <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Selenium Binary Downloader Maven Plugin</name>
     <description>
@@ -65,7 +65,7 @@
         <connection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:Ardesco/selenium-standalone-server-plugin.git</developerConnection>
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin</url>
-        <tag>driver-binary-downloader-maven-plugin-1.0.6</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
