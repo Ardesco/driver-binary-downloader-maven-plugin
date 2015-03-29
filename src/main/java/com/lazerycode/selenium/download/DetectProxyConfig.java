@@ -65,9 +65,7 @@ public class DetectProxyConfig {
     private Proxy getProxy() {
         List<Proxy> proxyList = null;
         try {
-            ProxySelector defaultProxy = ProxySelector.getDefault();
-            proxyList = defaultProxy.select(new URI("http://foo.bar"));
-            ProxySelector.setDefault(null);
+            proxyList = ProxySelector.getDefault().select(new URI("http://foo.bar"));
         } catch (Exception ignored) {
         }
         if (null != proxyList) {
