@@ -28,20 +28,35 @@ public class ExtractFilesFromArchive {
     /**
      * Extract binary from a downloaded archive file
      *
-     * @param downloadedCompressedFile  The downloaded compressed file
-     * @param extractedToFilePath       Path to extracted file
-     * @param overwriteFilesThatExist   Overwrite any existing files
-     * @param possibleFilenames         Names of the files we want to extract
+     * @param downloadedCompressedFile The downloaded compressed file
+     * @param extractedToFilePath      Path to extracted file
+     * @param overwriteFilesThatExist  Overwrite any existing files
+     * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
      * @throws IOException
      */
     public static boolean extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
         String fileType = FilenameUtils.getExtension(downloadedCompressedFile.getAbsolutePath());
         LOG.debug("Determined archive type: " + fileType);
+        LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
+
+        if (!overwriteFilesThatExist) {
+            File[] existingFiles = new File(extractedToFilePath).listFiles();
+            if (null != existingFiles && existingFiles.length > 0) {
+                for (File existingFile : existingFiles) {
+                    String existingFileName = existingFile.getName();
+                    if (possibleFilenames.getBinaryFilenames().contains(existingFileName)) {
+                        LOG.info("Binary '" + existingFileName + "' Exists: true");
+                        return false;
+                    }
+                }
+            }
+        }
+
         if (fileType.equals("zip")) {
-            return unzipFile(downloadedCompressedFile, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
+            return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
         } else if (fileType.equals("gz") || fileType.equals("bz2")) {
-            return untarFile(downloadedCompressedFile, extractedToFilePath, overwriteFilesThatExist, possibleFilenames);
+            return untarFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
         }
         throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
     }
@@ -49,15 +64,14 @@ public class ExtractFilesFromArchive {
     /**
      * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
      *
-     * @param downloadedCompressedFile  The downloaded zip file
-     * @param extractedToFilePath       Path to extracted file
-     * @param overwriteFilesThatExist   Overwrite any existing files
-     * @param possibleFilenames         Names of the files we want to extract
+     * @param downloadedCompressedFile The downloaded zip file
+     * @param extractedToFilePath      Path to extracted file
+     * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
      * @throws IOException
      */
 
-    static boolean unzipFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException {
+    static boolean unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException {
         Boolean fileExtracted = false;
         LOG.debug("Extracting binary from .zip file");
         ZipFile zip = new ZipFile(downloadedCompressedFile);
@@ -72,10 +86,6 @@ public class ExtractFilesFromArchive {
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
                     boolean doesfileAlreadyExist = extractedFile.exists();
                     LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
-                    LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
-                    if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        continue;
-                    }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
                         throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
                     }
@@ -88,7 +98,6 @@ public class ExtractFilesFromArchive {
                 }
             }
         }
-
         zip.close();
 
         return fileExtracted;
@@ -97,15 +106,14 @@ public class ExtractFilesFromArchive {
     /**
      * Unzip a downloaded tar.gz/tar.bz2 file (this will implicitly overwrite any existing files)
      *
-     * @param downloadedCompressedFile  The downloaded tar.gz/tar.bz2 file
-     * @param extractedToFilePath       Path to extracted file
-     * @param overwriteFilesThatExist   Overwrite any existing files
-     * @param possibleFilenames         Names of the files we want to extract
+     * @param downloadedCompressedFile The downloaded tar.gz/tar.bz2 file
+     * @param extractedToFilePath      Path to extracted file
+     * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
      * @throws IOException
      */
 
-    static boolean untarFile(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, MojoFailureException {
+    static boolean untarFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, MojoFailureException {
         Boolean fileExtracted = false;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream fileInArchive;
@@ -130,10 +138,6 @@ public class ExtractFilesFromArchive {
                     File extractedFile = new File(extractedToFilePath, aFilenameWeAreSearchingFor);
                     boolean doesfileAlreadyExist = extractedFile.exists();
                     LOG.info("Binary '" + extractedFile.getName() + "' Exists: " + extractedFile.exists());
-                    LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
-                    if (doesfileAlreadyExist && !overwriteFilesThatExist) {
-                        continue;
-                    }
                     if (!doesfileAlreadyExist && !extractedFile.getParentFile().mkdirs() && !extractedFile.createNewFile()) {
                         throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
                     }
@@ -146,7 +150,6 @@ public class ExtractFilesFromArchive {
                 }
             }
         }
-
         fileInArchive.close();
 
         return fileExtracted;

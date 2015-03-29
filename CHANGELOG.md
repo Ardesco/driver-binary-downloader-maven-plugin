@@ -7,6 +7,7 @@ Breaking changes
 * The 64bit and 32bit options are false by default.  Default will now work out what arcitecture your OS is and download the appropriate binary.  This may cause issues on Windows machines where you want to use the 32bit binary by default
 
 * XML Parsing rewritten
+* Fix #22 if overwriteFilesThatExist == false we now don't open the zip if a file with one of the expected binary names for that zip exists on the file system.
 
 ##Version 1.0.5 Release Notes
 

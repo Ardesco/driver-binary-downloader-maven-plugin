@@ -41,7 +41,7 @@ public class ExtractFilesFromArchiveTest {
 
     @Test
     public void successfullyExtractFileFromZipArchive() throws Exception {
-        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
@@ -51,27 +51,27 @@ public class ExtractFilesFromArchiveTest {
 
     @Test
     public void overwriteExistingFileWhenExtractingFromZip() throws Exception {
-        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(not(equalTo(lastModified))));
     }
 
     @Test
     public void doNotOverwriteExistingFileWhenExtractingFromZip() throws Exception {
-        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        ExtractFilesFromArchive.unzipFile(new File(testZipFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(equalTo(lastModified)));
     }
 
     @Test
     public void successfullyExtractFileFromTarGZipArchive() throws Exception {
-        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
@@ -81,27 +81,27 @@ public class ExtractFilesFromArchiveTest {
 
     @Test
     public void overwriteExistingFileWhenExtractingFromTar() throws Exception {
-        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(not(equalTo(lastModified))));
     }
 
     @Test
     public void doNotOverwriteExistingFileWhenExtractingFromTar() throws Exception {
-        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        ExtractFilesFromArchive.untarFile(new File(testTarGZFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(equalTo(lastModified)));
     }
 
     @Test
     public void successfullyExtractFileFromTarBZip2Archive() throws Exception {
-        ExtractFilesFromArchive.untarFile(new File(testTarBZ2File.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.untarFile(new File(testTarBZ2File.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
@@ -111,7 +111,7 @@ public class ExtractFilesFromArchiveTest {
 
     @Test(expected = MojoFailureException.class)
     public void tryToUntarAnArchiveThatIsNotATarFile() throws Exception {
-        ExtractFilesFromArchive.untarFile(new File(test7ZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        ExtractFilesFromArchive.untarFile(new File(test7ZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
     }
 
     @Test
