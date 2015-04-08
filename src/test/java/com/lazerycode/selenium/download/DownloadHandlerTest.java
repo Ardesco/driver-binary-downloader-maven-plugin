@@ -1,5 +1,6 @@
 package com.lazerycode.selenium.download;
 
+import com.lazerycode.selenium.repository.DriverContext;
 import com.lazerycode.selenium.repository.DriverDetails;
 import com.lazerycode.selenium.repository.DriverMap;
 import org.apache.commons.io.FileUtils;
@@ -131,8 +132,9 @@ public class DownloadHandlerTest {
         fileDetails.fileLocation = downloadZipURL;
         fileDetails.hashType = SHA1;
         fileDetails.hash = validSHA1Hash;
+        DriverContext driverContext = binaryDataFor(OSX, PHANTOMJS, ARCHITECTURE_64_BIT);
         DriverMap driverMap = new DriverMap();
-        driverMap.getMapForDriverContext(binaryDataFor(OSX, PHANTOMJS, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
+        driverMap.getMapForDriverContext(driverContext).put("2.13", fileDetails);
         File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + "osx" + File.separator + "phantomjs" + File.separator + "64bit" + File.separator + "phantomjs");
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
@@ -148,6 +150,8 @@ public class DownloadHandlerTest {
         downloadTestFile.ensureStandaloneExecutableFilesExist();
 
         assertThat(expectedDownloadedFile.lastModified(), is(not(equalTo(lastModified))));
+        assertThat(driverMap.getDetailsForLatestVersionOfDriverContext(driverContext).extractedLocation,
+                is(equalTo(expectedDownloadedFile.getAbsolutePath())));
     }
 
     @Test
@@ -163,7 +167,7 @@ public class DownloadHandlerTest {
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
         DownloadHandler downloadTestFile = new DownloadHandler(new File(rootStandaloneServerDirectoryPath), new File(downloadDirectoryPath), oneRetryAttempt, connectTimeout, readTimeout, driverMap, overwriteFilesThatExist, doNotCheckFileHashes, doNotUseSystemProxy, getAllVersions);
-        DriverMap driverMap2 = downloadTestFile.ensureStandaloneExecutableFilesExist();
+        downloadTestFile.ensureStandaloneExecutableFilesExist();
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
     }

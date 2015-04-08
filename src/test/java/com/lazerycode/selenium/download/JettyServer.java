@@ -3,7 +3,7 @@ package com.lazerycode.selenium.download;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-class JettyServer {
+public class JettyServer {
 
     private Server jettyServer;
 

@@ -1,7 +1,5 @@
 package com.lazerycode.selenium.repository;
 
-import sun.awt.OSInfo;
-
 import java.util.*;
 
 import static com.lazerycode.selenium.repository.OperatingSystem.getCurrentOperatingSystem;
@@ -51,10 +49,10 @@ public class DriverMap {
         return repository.get(driverContext).keySet();
     }
 
-    public ArrayList<DriverContext> getDriverContextsForOperatingSystem(OperatingSystem operatingSystem, SystemArchitecture systemArchitecture){
+    public ArrayList<DriverContext> getDriverContextsForOperatingSystem(OperatingSystem operatingSystem, SystemArchitecture systemArchitecture) {
         ArrayList<DriverContext> matchingContexts = new ArrayList<DriverContext>();
-        for(DriverContext driverContext: repository.keySet()){
-            if(driverContext.getOperatingSystem().equals(operatingSystem) && driverContext.getSystemArchitecture().equals(systemArchitecture)){
+        for (DriverContext driverContext : repository.keySet()) {
+            if (driverContext.getOperatingSystem().equals(operatingSystem) && driverContext.getSystemArchitecture().equals(systemArchitecture)) {
                 matchingContexts.add(driverContext);
             }
         }
@@ -62,7 +60,7 @@ public class DriverMap {
         return matchingContexts;
     }
 
-    public ArrayList<DriverContext> getDriverContextsForCurrentOperatingSystem(){
+    public ArrayList<DriverContext> getDriverContextsForCurrentOperatingSystem() {
         OperatingSystem operatingSystem = getCurrentOperatingSystem();
         SystemArchitecture systemArchitecture = getCurrentSystemArcitecture();
 

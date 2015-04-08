@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+    <windows>
+        <driver id="phantomjs">
+            <version id="1.9.8">
+                <bitrate thirtytwobit="true" sixtyfourbit="true">
+                    <filelocation>http://localhost:9081/files/download.zip</filelocation>
+                    <hash>8604c05969a0eefa0edf0d71ae809310832afdc7</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </windows>
+    <linux>
+        <driver id="phantomjs">
+            <version id="1.9.8">
+                <bitrate sixtyfourbit="true" thirtytwobit="true">
+                    <filelocation>http://localhost:9081/files/download.zip</filelocation>
+                    <hash>8604c05969a0eefa0edf0d71ae809310832afdc7</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </linux>
+    <osx>
+        <driver id="phantomjs">
+            <version id="1.9.8">
+                <bitrate sixtyfourbit="true" thirtytwobit="true">
+                    <filelocation>http://localhost:9081/files/download.zip</filelocation>
+                    <hash>8604c05969a0eefa0edf0d71ae809310832afdc7</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+    </osx>
+</root>

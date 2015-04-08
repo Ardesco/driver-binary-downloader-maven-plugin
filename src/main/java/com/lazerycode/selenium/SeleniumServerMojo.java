@@ -248,17 +248,27 @@ public class SeleniumServerMojo extends AbstractMojo {
             throw new MojoExecutionException(rethrow.getMessage());
         }
 
-        ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();
-        for (DriverContext driverContext : driverContextsForCurrentOperatingSystem) {
-            DriverDetails driverDetails = driverRepository.getDetailsForLatestVersionOfDriverContext(driverContext);
-            System.setProperty(driverContext.getBinaryTypeForContext().getDriverSystemProperty(), driverDetails.extractedLocation);
-        }
+        setSystemProperties(driverRepository);
 
         LOG.info(" ");
         LOG.info("--------------------------------------------------------");
         LOG.info("SELENIUM STAND-ALONE EXECUTABLE DOWNLOADS COMPLETE");
         LOG.info("--------------------------------------------------------");
         LOG.info(" ");
+    }
+
+    /**
+     * Set the system property webdriver.*.driver for the latest revision of each binary extracted.
+     *
+     * @param driverRepository
+     */
+    protected static void setSystemProperties(DriverMap driverRepository) {
+        ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();
+        for (DriverContext driverContext : driverContextsForCurrentOperatingSystem) {
+            DriverDetails driverDetails = driverRepository.getDetailsForLatestVersionOfDriverContext(driverContext);
+            LOG.debug("Setting system property - " + driverContext.getBinaryTypeForContext().getDriverSystemProperty() + ":" + driverDetails.extractedLocation);
+            System.setProperty(driverContext.getBinaryTypeForContext().getDriverSystemProperty(), driverDetails.extractedLocation);
+        }
     }
 
     /**

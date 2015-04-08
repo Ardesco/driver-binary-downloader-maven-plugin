@@ -14,7 +14,7 @@ public enum SystemArchitecture {
         this.systemArchitectureName = systemArchitectureName;
     }
 
-    String getSystemArchitectureType() {
+    public String getSystemArchitectureType() {
         return systemArchitectureName;
     }
 
