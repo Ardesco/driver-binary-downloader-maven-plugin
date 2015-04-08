@@ -24,12 +24,18 @@ public class ExtractFilesFromArchiveTest {
     private final URL testZipFile = this.getClass().getResource("/jetty/files/download.zip");
     private final URL testTarGZFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final URL testTarBZ2File = this.getClass().getResource("/jetty/files/download.tar.bz2");
-    private final String tempDir = System.getProperty("java.io.tmpdir") + File.separator + java.util.UUID.randomUUID();
+    private static String tempDir;
     private final boolean overwriteExistingFiles = true;
     private static File phantomJSTestFile;
 
     @Before
     public void initialiseFile() {
+        String tempDirectory = System.getProperty("java.io.tmpdir");
+        if (tempDirectory.endsWith("/")) {
+            tempDir = System.getProperty("java.io.tmpdir") + java.util.UUID.randomUUID();
+        } else {
+            tempDir = System.getProperty("java.io.tmpdir") + File.separator + java.util.UUID.randomUUID();
+        }
         phantomJSTestFile = new File(tempDir + File.separator + "phantomjs");
     }
 
@@ -49,8 +55,8 @@ public class ExtractFilesFromArchiveTest {
 
         assertThat(downloadedFileHash,
                 is(equalTo(validHash)));
-//        assertThat(extractedFilePath,
-//                is(equalTo(tempDir + "/phantomjs")));
+        assertThat(extractedFilePath,
+                is(equalTo(tempDir + "/phantomjs")));
     }
 
     @Test
@@ -82,8 +88,8 @@ public class ExtractFilesFromArchiveTest {
 
         assertThat(downloadedFileHash,
                 is(equalTo(validHash)));
-//        assertThat(extractedFilePath,
-//                is(equalTo(tempDir + "/phantomjs")));
+        assertThat(extractedFilePath,
+                is(equalTo(tempDir + "/phantomjs")));
     }
 
     @Test
