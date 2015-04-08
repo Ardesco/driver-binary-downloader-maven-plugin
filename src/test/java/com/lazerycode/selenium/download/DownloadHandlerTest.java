@@ -172,6 +172,7 @@ public class DownloadHandlerTest {
         assertThat(expectedDownloadedFile.exists(), is(equalTo(true)));
     }
 
+    @Ignore
     @Test(expected = MojoExecutionException.class)
     public void errorThrownIfThereIsNoHashInFileDownloadListFileDetailsAndHashShouldBeChecked() throws Exception {
         DriverDetails fileDetails = new DriverDetails();
