@@ -10,10 +10,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.lazerycode.selenium.repository.OperatingSystem.*;
+import static com.lazerycode.selenium.repository.OperatingSystem.LINUX;
+import static com.lazerycode.selenium.repository.OperatingSystem.WINDOWS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.CombinableMatcher.either;
+import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.core.Is.is;
 
 public class XMLParserTest {
@@ -45,8 +46,7 @@ public class XMLParserTest {
         XMLParser parser = new XMLParser(null, two, null, false, false);
 
         assertThat(parser.operatingSystemSelector(),
-                either(is("[parent::windows|parent::linux]"))
-                        .or(is("[parent::linux|parent::windows]"))
+                isOneOf("[parent::windows|parent::linux]", "[parent::linux|parent::windows]")
         );
     }
 
@@ -77,8 +77,8 @@ public class XMLParserTest {
         XMLParser parser = new XMLParser(null, null, versionsToFind, false, false);
 
         assertThat(parser.driverVersionSelector(),
-                either(is("[(parent::*[@id='googlechrome'] and @id='2.14') or (parent::*[@id='internetexplorer'] and @id='2.45.0')]"))
-                        .or(is("[(parent::*[@id='internetexplorer'] and @id='2.45.0') or (parent::*[@id='googlechrome'] and @id='2.14')]"))
+                isOneOf("[(parent::*[@id='googlechrome'] and @id='2.14') or (parent::*[@id='internetexplorer'] and @id='2.45.0')]",
+                        "[(parent::*[@id='internetexplorer'] and @id='2.45.0') or (parent::*[@id='googlechrome'] and @id='2.14')]")
         );
     }
 
