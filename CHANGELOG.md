@@ -2,6 +2,10 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.0.7 Release Notes
+
+* Fix #21 properly.  The plugin now sets maven properties which can be imported into projects as environmental properties.
+
 ##Version 1.0.6 Release Notes
 
 * **BREAKING CHANGE** The 64bit and 32bit options are false by default.  Default will now work out what architecture your OS is and download the appropriate binary.  This may cause issues on Windows machines if you want to use the 32bit binary by default
