@@ -11,6 +11,7 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -179,6 +180,9 @@ public class SeleniumServerMojo extends AbstractMojo {
     @Parameter(defaultValue = "true")
     protected boolean checkFileHashes;
 
+    @Parameter(defaultValue = "${project}", required = true, readonly = true)
+    protected MavenProject project;
+
     protected InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
 
@@ -262,12 +266,12 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @param driverRepository
      */
-    protected static void setSystemProperties(DriverMap driverRepository) {
+    protected void setSystemProperties(DriverMap driverRepository) {
         ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();
         for (DriverContext driverContext : driverContextsForCurrentOperatingSystem) {
             DriverDetails driverDetails = driverRepository.getDetailsForLatestVersionOfDriverContext(driverContext);
-            LOG.debug("Setting system property - " + driverContext.getBinaryTypeForContext().getDriverSystemProperty() + ":" + driverDetails.extractedLocation);
-            System.setProperty(driverContext.getBinaryTypeForContext().getDriverSystemProperty(), driverDetails.extractedLocation);
+            LOG.info("Setting maven property - ${" + driverContext.getBinaryTypeForContext().getDriverSystemProperty() + "} = " + driverDetails.extractedLocation);
+            project.getProperties().setProperty(driverContext.getBinaryTypeForContext().getDriverSystemProperty(), driverDetails.extractedLocation);
         }
     }
 
