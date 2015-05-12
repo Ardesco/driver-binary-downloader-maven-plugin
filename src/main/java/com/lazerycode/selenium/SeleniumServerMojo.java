@@ -78,7 +78,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      * &lt;operatingSystems&gt;
      * &lt;windows&gt;true&lt;/windows&gt;
      * &lt;linux&gt;true&lt;/linux&gt;
-     * &lt;osx&gt;true&lt;/osx&gt;
+     * &lt;mac&gt;true&lt;/mac&gt;
      * &lt;/operatingSystems&gt;
      * <p/>
      * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
@@ -264,7 +264,7 @@ public class SeleniumServerMojo extends AbstractMojo {
     /**
      * Set the system property webdriver.*.driver for the latest revision of each binary extracted.
      *
-     * @param driverRepository
+     * @param driverRepository map of drivers that system properties will be set for
      */
     protected void setSystemProperties(DriverMap driverRepository) {
         ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();

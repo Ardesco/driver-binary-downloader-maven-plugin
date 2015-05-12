@@ -54,7 +54,7 @@ Advanced Usage
                     <operatingSystems>
                         <windows>true</windows>
                         <linux>true</linux>
-                        <osx>true</osx>
+                        <mac>true</mac>
                     </operatingSystems>
                     <!-- Download 32bit binaries -->
                     <thirtyTwoBitBinaries>true</thirtyTwoBitBinaries>

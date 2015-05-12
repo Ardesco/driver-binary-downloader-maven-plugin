@@ -9,6 +9,7 @@
 ##Version 1.0.6 Release Notes
 
 * **BREAKING CHANGE** The 64bit and 32bit options are false by default.  Default will now work out what architecture your OS is and download the appropriate binary.  This may cause issues on Windows machines if you want to use the 32bit binary by default
+* **BREAKING CHANGE** When specifying operating systems you now need to use <mac>true</mac> instead of <osx>true</osx>
 * XML Parsing rewritten
 * Fix #21 webdriver system property now set by default
 * Fix #22 if overwriteFilesThatExist == false we now don't open the zip if a file with one of the expected binary names for that zip exists on the file system.
