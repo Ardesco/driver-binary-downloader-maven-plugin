@@ -100,6 +100,20 @@ Custom RepositoryMap.xml
 
 You __should__ supply your own RepositoryMap.xml file, if you don't supply one a default one (which will most likely be out of date) will be used instead.  Your RepositoryMap.xml must match the schema available at [Here](https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/src/main/resources/RepositoryMap.xsd).
 
+How do I get the SHA1/MD5 hases for the binaries I ant to download?
+
+The people providing the binaries should be publishing MD5/SHA1 hashes as well so that you can check that the file you have downloaded is not corrupt.  It seems that recently this does not seem to be happening as a matter of course.  If you can't find a published SHA1/MD5 hash you can always download the file yourself, check that it is not corrupt and then generate the hash using the following commands:
+
+On a *nix system it's pretty easy. perform the following command:
+
+    openssl md5 <filename>
+    openssl sha1 <filename>
+
+On windows you can do the following (according to https://support.microsoft.com/en-us/kb/889768):
+
+    FCIV -sha1 <filename>
+    FCIV -md5 <filename>
+
 ___Below is an example RepositoryMap.xml that I will endeavour to keep up to date so that you can just copy/paste the contents into your own file.___
 
     <?xml version="1.0" encoding="utf-8" standalone="yes"?>
