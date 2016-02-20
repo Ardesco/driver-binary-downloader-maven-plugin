@@ -4,6 +4,8 @@ docker:
   image: "maven:3-jdk-7"
 decrypt:
   settings.xml: "repo/settings.xml.asc"
+  pubring.gpg: "repo/pubring.gpg.asc"
+  secring.gpg: "repo/secring.gpg.asc"
 release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
