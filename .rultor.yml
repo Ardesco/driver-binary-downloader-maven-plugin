@@ -2,6 +2,8 @@ install: |-
   sudo apt-get install gsettings-desktop-schemas
 architect:
   - ardesco
+commander:
+  - ardesco
 decrypt:
   settings.xml: "repo/settings.xml.asc"
   pubring.gpg: "repo/pubring.gpg.asc"
@@ -11,4 +13,4 @@ release:
   script: |-
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy --settings /home/r/settings.xml
+    mvn clean deploy -Prelease --settings /home/r/settings.xml
