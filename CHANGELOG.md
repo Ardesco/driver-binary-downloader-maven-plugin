@@ -3,6 +3,7 @@
 ##Next Version (Release Date TBC) Release Notes
 
 * Fix #24 documentation updated to show correct usage of &lt;operatingSystems&gt; for mac
+* Fix bug where file stream may not have been closed correctly (Thanks [Aneesh Joseph](https://github.com/aneesh-josephUpdate CHANGELO))
 
 ##Version 1.0.7 Release Notes
 
@@ -27,7 +28,7 @@
 * Fixed bug where archives were not closed after files were extracted
 * Fixed bug wherearchives may have been downloaded multiple times
 * Proxy auto detection added
-* Proxy Support added (Merged PR 17 from Nassos A. Machas)
+* Proxy Support added (Thanks [Nassos A. Machas](https://github.com/NMichas))
 
 ##Version 1.0.3 Release Notes
 
