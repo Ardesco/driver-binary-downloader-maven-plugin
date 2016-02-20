@@ -8,6 +8,7 @@ decrypt:
   secring.gpg: "repo/secring.gpg.asc"
 release:
   script: |
+    apt-get install gsettings-desktop-schemas -y
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean deploy --settings /home/r/settings.xml
