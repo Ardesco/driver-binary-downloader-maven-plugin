@@ -143,7 +143,9 @@ public class ExtractFilesFromArchive {
                         throw new IOException("Unable to create " + extractedFile.getAbsolutePath());
                     }
                     LOG.info("Extracting binary '" + extractedFile.getName() + "'...");
-                    copy(fileInArchive, new FileOutputStream(extractedFile));
+                    FileOutputStream extractedFileStream = new FileOutputStream(extractedFile);
+                    copy(fileInArchive, extractedFileStream);
+                    extractedFileStream.close();
                     if (!extractedFile.setExecutable(true) && !extractedFile.canExecute())
                         LOG.warn("Unable to set the executable flag for '" + extractedFile.getName() + "'!");
                     fileExtractedAbsolutePath = extractedFile.getAbsolutePath();
