@@ -25,6 +25,11 @@ public enum BinaryType {
                 add("operadriver.exe");
                 add("operadriver");
             }},
+            "webdriver.opera.driver"),
+    MARIONETTE(
+            new ArrayList<String>() {{
+                add("wires.*");
+            }},
             "webdriver.opera.driver");
 
     private final ArrayList<String> binaryFilenames;
