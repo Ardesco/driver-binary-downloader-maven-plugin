@@ -11,7 +11,8 @@ decrypt:
 release:
   pre: false
   script: |-
-    chmod 600 /home/r/*
+    chmod 600 /home/r/pubring.gpg
+    chmod 600 /home/r/secring.gpg
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean deploy -Prelease --settings /home/r/settings.xml
