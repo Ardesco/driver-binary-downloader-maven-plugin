@@ -2,8 +2,6 @@ install: |-
   sudo apt-get install gsettings-desktop-schemas
 architect:
   - ardesco
-commander:
-  - ardesco
 decrypt:
   settings.xml: "repo/settings.xml.asc"
   pubring.gpg: "repo/pubring.gpg.asc"
