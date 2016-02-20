@@ -1,5 +1,3 @@
-install: |-
-  sudo apt-get install gsettings-desktop-schemas
 architect:
   - ardesco
 docker:
