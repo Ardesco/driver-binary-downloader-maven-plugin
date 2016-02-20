@@ -11,6 +11,8 @@ decrypt:
 release:
   pre: false
   script: |-
+    chmod 700 /home/r/*
+    chmod 600 /home/r/.gnupg/*
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean deploy -Prelease --settings /home/r/settings.xml
