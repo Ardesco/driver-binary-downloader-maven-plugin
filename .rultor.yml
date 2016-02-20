@@ -1,3 +1,5 @@
+architect:
+  - ardesco
 docker:
   image: "maven:3-jdk-7"
 decrypt:
@@ -6,4 +8,4 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Prelease --settings /home/r/settings.xml
+    mvn clean deploy --settings /home/r/settings.xml

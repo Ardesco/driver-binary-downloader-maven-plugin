@@ -5,7 +5,7 @@ if [[ "${TRAVIS_BRANCH}" == 'master' ]] ; then
     <settings>
         <servers>
             <server>
-                <id>sonatype-nexus-snapshots</id>
+                <id>oss-sonatype</id>
                 <username>'"${SONATYPE_USER}"'</username>
                 <password>'"${SONATYPE_PASS}"'</password>
             </server>
