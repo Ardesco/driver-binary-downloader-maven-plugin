@@ -11,5 +11,6 @@ if [[ "${TRAVIS_BRANCH}" == 'master' ]] ; then
             </server>
         </servers>
     </settings>'
+    echo ${MVNSETTINGS} > ./target/maven-settings.xml
     mvn deploy -s ./target/maven-settings.xml
 fi
