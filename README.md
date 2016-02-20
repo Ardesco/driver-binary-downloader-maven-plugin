@@ -2,6 +2,7 @@ Selenium driver-binary-downloader-maven-plugin
 =================================
 
 [![Join the chat at https://gitter.im/Ardesco/selenium-standalone-server-plugin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Ardesco/selenium-standalone-server-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/Ardesco/selenium-standalone-server-plugin.svg?branch=master)](https://travis-ci.org/Ardesco/selenium-standalone-server-plugin)
 
 A Maven plugin that will download the WebDriver stand alone server binaries for use in your mavenised Selenium project.
 
