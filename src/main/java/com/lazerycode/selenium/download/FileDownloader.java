@@ -49,8 +49,11 @@ public class FileDownloader {
     /**
      * Attempt to download a file
      *
+     * @param fileLocation URL of the file to download
+     *
      * @return File
-     * @throws java.lang.Exception
+     * @throws URISyntaxException Invalid URI
+     * @throws IOException Unable to interact with file system
      */
     public File attemptToDownload(URL fileLocation) throws URISyntaxException, IOException {
         String filename = FilenameUtils.getName(fileLocation.getFile());

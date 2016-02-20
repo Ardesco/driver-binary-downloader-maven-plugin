@@ -74,13 +74,11 @@ public class SeleniumServerMojo extends AbstractMojo {
 
     /**
      * <h3>The Operating systems you would like to download a standalone executable for</h3>
-     * <p/>
-     * &lt;operatingSystems&gt;
-     * &lt;windows&gt;true&lt;/windows&gt;
-     * &lt;linux&gt;true&lt;/linux&gt;
-     * &lt;mac&gt;true&lt;/mac&gt;
-     * &lt;/operatingSystems&gt;
-     * <p/>
+     * <p>&lt;operatingSystems&gt;</p>
+     * <p>&lt;windows&gt;true&lt;/windows&gt;</p>
+     * <p>&lt;linux&gt;true&lt;/linux&gt;</p>
+     * <p>&lt;mac&gt;true&lt;/mac&gt;</p>
+     * <p>&lt;/operatingSystems&gt;</p>
      * <p>Unknown operating systems will cause an error to be thrown, only use the options shown above.</p>
      * <p><strong>WARNING</strong>if <em>onlyGetDriversForHostOperatingSystem</em> is true, this <strong>will</strong> be ignored!</p>
      */
@@ -112,12 +110,10 @@ public class SeleniumServerMojo extends AbstractMojo {
 
     /**
      * <h3>A map of driver standalone versions to download</h3>
-     * <p>
-     * &lt;getSpecificExecutableVersions&gt;
-     * &lt;googlechrome&gt;19&lt;/googlechrome&gt;
-     * &lt;internetexplorer&gt;2.21.0&lt;/internetexplorer&gt;
-     * &lt;/getSpecificExecutableVersions&gt;
-     * <p/>
+     * <p>&lt;getSpecificExecutableVersions&gt;</p>
+     * <p>&lt;googlechrome&gt;19&lt;/googlechrome&gt;</p>
+     * <p>&lt;internetexplorer&gt;2.21.0&lt;/internetexplorer&gt;</p>
+     * <p>&lt;/getSpecificExecutableVersions&gt;</p>
      * <p>Unrecognised browser names/versions will be ignored by default</p>
      */
     @Parameter
@@ -303,7 +299,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      * Throw an error and stop if it is not valid.
      * Assume it doesn't exist if we get an IOError and fall back to default file.
      *
-     * @throws MojoExecutionException
+     * @throws MojoExecutionException thrown if customRepositoryMap is not valid
      */
     protected void checkRepositoryMapIsValid() throws MojoExecutionException {
         URL schemaFile = this.getClass().getResource("/RepositoryMap.xsd");

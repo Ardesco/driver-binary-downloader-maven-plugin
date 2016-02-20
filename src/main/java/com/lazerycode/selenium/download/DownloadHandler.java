@@ -51,9 +51,13 @@ public class DownloadHandler {
 
     /**
      * Perform the file download
+     * @param driverDetails Driver details extracted from Repositorymap.xml
+     * @param shouldWeCheckFileHash true if file hash should be checked
      *
      * @return File
-     * @throws MojoExecutionException
+     * @throws MojoExecutionException Unable to download file
+     * @throws IOException Error writing to file system
+     * @throws URISyntaxException Invalid URI
      */
     protected File downloadFile(DriverDetails driverDetails, boolean shouldWeCheckFileHash) throws MojoExecutionException, IOException, URISyntaxException {
 

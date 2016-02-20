@@ -32,8 +32,12 @@ public class ExtractFilesFromArchive {
      * @param extractedToFilePath      Path to extracted file
      * @param overwriteFilesThatExist  Overwrite any existing files
      * @param possibleFilenames        Names of the files we want to extract
+     *
      * @return boolean
-     * @throws IOException
+     *
+     * @throws IOException Unable to write to filesystem
+     * @throws IllegalArgumentException Unsupported archive
+     * @throws MojoFailureException Error running plugin
      */
     public static String extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, boolean overwriteFilesThatExist, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
         String fileType = FilenameUtils.getExtension(downloadedCompressedFile.getAbsolutePath());
@@ -111,7 +115,7 @@ public class ExtractFilesFromArchive {
      * @param extractedToFilePath      Path to extracted file
      * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
-     * @throws IOException
+     * @throws IOException MojoFailureException
      */
 
     static String untarFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, MojoFailureException {
