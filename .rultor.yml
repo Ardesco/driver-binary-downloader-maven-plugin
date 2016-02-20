@@ -1,7 +1,5 @@
 architect:
   - ardesco
-docker:
-  image: "maven:3-jdk-7"
 decrypt:
   settings.xml: "repo/settings.xml.asc"
   pubring.gpg: "repo/pubring.gpg.asc"
