@@ -2,6 +2,7 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+# Fix #29 Clean up logging to make it clearer when file is downloaded, and when an existing file is used
 # Fix #34 Add support for wires (Marionette) binaries.
 
 ##Version 1.0.8 Release Notes

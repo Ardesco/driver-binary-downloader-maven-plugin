@@ -1,6 +1,6 @@
 package com.lazerycode.selenium.extract;
 
-import com.lazerycode.selenium.exceptions.*;
+import com.lazerycode.selenium.exceptions.ExpectedFileNotFoundException;
 import com.lazerycode.selenium.repository.BinaryType;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
@@ -12,11 +12,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
-
-import static org.apache.commons.io.IOUtils.copy;
 
 public class FileExtractor {
 
@@ -74,7 +74,7 @@ public class FileExtractor {
      */
 
     protected String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
-        LOG.debug("Extracting binary from .zip file");
+        LOG.debug("Attempting to extract binary from .zip file...");
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
@@ -92,7 +92,7 @@ public class FileExtractor {
             zip.close();
         }
 
-        throw new ExpectedFileNotFoundException("Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
+        throw new ExpectedFileNotFoundException("Unable to find any expected files for " + possibleFilenames.getBinaryTypeAsString());
     }
 
     /**
@@ -106,15 +106,13 @@ public class FileExtractor {
      */
 
     protected String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
-        LOG.debug("Extracting binary from .tar file");
+        LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
         try {
             while ((currentFile = archiveInputStream.getNextEntry()) != null) {
-                LOG.debug("Examining " + currentFile.getName());
                 for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
-                    LOG.debug("Searching for " + aFilenameWeAreSearchingFor + "...");
                     if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
                         LOG.debug("Found: " + currentFile.getName());
                         return copyFileToDisk(archiveInputStream, extractedToFilePath, aFilenameWeAreSearchingFor);
@@ -131,10 +129,10 @@ public class FileExtractor {
     /**
      * Copy a file from an inputsteam to disk
      *
-     * @param inputStream       A valid iput stream to read
-     * @param pathToExtractTo   Path of the file we want to create
-     * @param filename          Filename of the file we want to create
-     * @return                  Absolute path of the newly created file (Or existing file if overwriteFilesThatExist is set to false)
+     * @param inputStream     A valid iput stream to read
+     * @param pathToExtractTo Path of the file we want to create
+     * @param filename        Filename of the file we want to create
+     * @return Absolute path of the newly created file (Or existing file if overwriteFilesThatExist is set to false)
      * @throws IOException
      */
     protected String copyFileToDisk(InputStream inputStream, String pathToExtractTo, String filename) throws IOException {
@@ -145,6 +143,7 @@ public class FileExtractor {
                     String existingFilename = existingFile.getName();
                     if (existingFilename.equals(filename)) {
                         LOG.info("Binary '" + existingFilename + "' Exists: true");
+                        LOG.info("Using existing '" + existingFilename + "'binary.");
                         return existingFile.getAbsolutePath();
                     }
                 }
@@ -158,9 +157,9 @@ public class FileExtractor {
             }
             LOG.info("Extracting binary '" + filename + "'...");
             FileUtils.copyInputStreamToFile(inputStream, outputFile);
-            LOG.info("File(s) copied to " + outputFile.getAbsolutePath());
+            LOG.info("Binary copied to " + outputFile.getAbsolutePath());
             if (!outputFile.setExecutable(true) && !outputFile.canExecute()) {
-                LOG.warn("Unable to set executable flag on " + filename);
+                LOG.warn("Unable to set executable flag (+x) on " + filename);
             }
         } finally {
             inputStream.close();
