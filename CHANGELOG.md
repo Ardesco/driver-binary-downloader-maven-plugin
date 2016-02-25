@@ -2,7 +2,12 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+# Fix #34 Add support for wires (Marionette) binaries.
+
+##Version 1.0.8 Release Notes
+
 * Fix #24 documentation updated to show correct usage of &lt;operatingSystems&gt; for mac
+* Fix #33 Use Travis CI for build, and Rultor for release.
 * Fix bug where file stream may not have been closed correctly (Thanks [Aneesh Joseph](https://github.com/aneesh-josephUpdate CHANGELO))
 
 ##Version 1.0.7 Release Notes
