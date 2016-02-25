@@ -2,7 +2,6 @@ package com.lazerycode.selenium.extract;
 
 import com.lazerycode.selenium.repository.BinaryType;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.maven.plugin.MojoFailureException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,22 +10,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
 
-import static com.lazerycode.selenium.extract.ExtractFilesFromArchive.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
-public class ExtractFilesFromArchiveTest {
+public class FileExtractorTest {
 
-    private final String validHash = "add36bb347a987b56e533c2034fd37b1";
+    private static final boolean OVERWRITE_EXISTING_FILES = true;
+    private static final boolean DO_NOT_OVERWRITE_EXISTING_FILES = false;
+    private static final String VALID_HASH = "add36bb347a987b56e533c2034fd37b1";
     private final URL test7ZipFile = this.getClass().getResource("/jetty/files/download.7z");
     private final URL testZipFile = this.getClass().getResource("/jetty/files/download.zip");
     private final URL testTarGZFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final URL testTarBZ2File = this.getClass().getResource("/jetty/files/download.tar.bz2");
-    private static String tempDir;
-    private final boolean overwriteExistingFiles = true;
     private static File phantomJSTestFile;
+    private static String tempDir;
 
     @Before
     public void initialiseFile() {
@@ -48,117 +47,129 @@ public class ExtractFilesFromArchiveTest {
 
     @Test
     public void successfullyExtractFileFromZipArchive() throws Exception {
-        String extractedFilePath = unzipFile(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        String extractedFilePath = fileExtractor.unzipFile(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
         assertThat(downloadedFileHash,
-                is(equalTo(validHash)));
+                is(equalTo(VALID_HASH)));
         assertThat(extractedFilePath,
                 is(equalTo(tempDir + "/phantomjs")));
     }
 
     @Test
     public void overwriteExistingFileWhenExtractingFromZip() throws Exception {
-        extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        fileExtractor.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(not(equalTo(lastModified))));
     }
 
     @Test
     public void doNotOverwriteExistingFileWhenExtractingFromZip() throws Exception {
-        extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        extractFileFromArchive(new File(testZipFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
+        fileExtractor.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(equalTo(lastModified)));
     }
 
     @Test
     public void successfullyExtractFileFromTarGZipArchive() throws Exception {
-        String extractedFilePath = untarFile(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        String extractedFilePath = fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
         assertThat(downloadedFileHash,
-                is(equalTo(validHash)));
+                is(equalTo(VALID_HASH)));
         assertThat(extractedFilePath,
                 is(equalTo(tempDir + "/phantomjs")));
     }
 
     @Test
     public void overwriteExistingFileWhenExtractingFromTar() throws Exception {
-        extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(not(equalTo(lastModified))));
     }
 
     @Test
     public void doNotOverwriteExistingFileWhenExtractingFromTar() throws Exception {
-        extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         long lastModified = phantomJSTestFile.lastModified();
         Thread.sleep(1000);  //Wait 1 second so that the file isn't copied and then overwritten in the same second
-        extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, false, BinaryType.PHANTOMJS);
+        fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
 
         assertThat(phantomJSTestFile.lastModified(), is(equalTo(lastModified)));
     }
 
     @Test
     public void successfullyExtractFileFromTarBZip2Archive() throws Exception {
-        untarFile(new File(testTarBZ2File.getFile()), tempDir, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testTarBZ2File.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
-        assertThat(downloadedFileHash, is(equalTo(validHash)));
+        assertThat(downloadedFileHash, is(equalTo(VALID_HASH)));
     }
 
-    @Test(expected = MojoFailureException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void tryToUntarAnArchiveThatIsNotATarFile() throws Exception {
-        untarFile(new File(test7ZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
     }
 
     @Test
     public void successfullyWorkOutArchiveTypeAndExtractFileFromZipArchive() throws Exception {
-        extractFileFromArchive(new File(testZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
-        assertThat(downloadedFileHash, is(equalTo(validHash)));
+        assertThat(downloadedFileHash, is(equalTo(VALID_HASH)));
     }
 
     @Test
     public void successfullyWorkOutArchiveTypeAndExtractFileFromTarGZipArchive() throws Exception {
-        extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testTarGZFile.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
-        assertThat(downloadedFileHash, is(equalTo(validHash)));
+        assertThat(downloadedFileHash, is(equalTo(VALID_HASH)));
     }
 
     @Test
     public void successfullyWorkOutArchiveTypeAndExtractFileFromTarBZip2Archive() throws Exception {
-        extractFileFromArchive(new File(testTarBZ2File.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(testTarBZ2File.getFile()), tempDir, BinaryType.PHANTOMJS);
         FileInputStream fileToCheck = new FileInputStream(phantomJSTestFile);
         String downloadedFileHash = DigestUtils.md5Hex(fileToCheck);
         fileToCheck.close();
 
-        assertThat(downloadedFileHash, is(equalTo(validHash)));
+        assertThat(downloadedFileHash, is(equalTo(VALID_HASH)));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void tryAndExtractFromAnUnsupportedArchive() throws Exception {
-        extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, overwriteExistingFiles, BinaryType.PHANTOMJS);
+        FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
+        fileExtractor.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
     }
 }

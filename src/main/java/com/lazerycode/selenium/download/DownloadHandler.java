@@ -1,5 +1,6 @@
 package com.lazerycode.selenium.download;
 
+import com.lazerycode.selenium.extract.FileExtractor;
 import com.lazerycode.selenium.hash.HashType;
 import com.lazerycode.selenium.repository.DriverContext;
 import com.lazerycode.selenium.repository.DriverDetails;
@@ -13,8 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import static com.lazerycode.selenium.extract.ExtractFilesFromArchive.extractFileFromArchive;
 
 public class DownloadHandler {
 
@@ -51,13 +50,13 @@ public class DownloadHandler {
 
     /**
      * Perform the file download
-     * @param driverDetails Driver details extracted from Repositorymap.xml
-     * @param shouldWeCheckFileHash true if file hash should be checked
      *
+     * @param driverDetails         Driver details extracted from Repositorymap.xml
+     * @param shouldWeCheckFileHash true if file hash should be checked
      * @return File
      * @throws MojoExecutionException Unable to download file
-     * @throws IOException Error writing to file system
-     * @throws URISyntaxException Invalid URI
+     * @throws IOException            Error writing to file system
+     * @throws URISyntaxException     Invalid URI
      */
     protected File downloadFile(DriverDetails driverDetails, boolean shouldWeCheckFileHash) throws MojoExecutionException, IOException, URISyntaxException {
 
@@ -124,7 +123,8 @@ public class DownloadHandler {
         }
 
         String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext();
-        driverDetails.extractedLocation = extractFileFromArchive(localZipFile, extractedFileLocation, this.overwriteFilesThatExist, driverContext.getBinaryTypeForContext());
+        FileExtractor fileExtractor = new FileExtractor(this.overwriteFilesThatExist);
+        driverDetails.extractedLocation = fileExtractor.extractFileFromArchive(localZipFile, extractedFileLocation, driverContext.getBinaryTypeForContext());
     }
 
 }

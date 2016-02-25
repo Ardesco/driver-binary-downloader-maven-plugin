@@ -30,7 +30,7 @@ public enum BinaryType {
             new ArrayList<String>() {{
                 add("wires.*");
             }},
-            "webdriver.opera.driver");
+            "webdriver.gecko.driver");
 
     private final ArrayList<String> binaryFilenames;
     private final String driverSystemProperty;
