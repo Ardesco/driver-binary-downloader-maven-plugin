@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import static com.lazerycode.selenium.extract.ArchiveType.TAR;
+
 public class FileExtractor {
 
     private static final Logger LOG = Logger.getLogger(FileExtractor.class);
@@ -50,11 +52,10 @@ public class FileExtractor {
             case GZ:
             case BZ2:
                 CompressedFile compressedFile = new CompressedFile(downloadedCompressedFile);
-                switch (compressedFile.getArchiveType()) {
-                    case TAR:
-                        return untarFile(compressedFile.getInputStream(), extractedToFilePath, possibleFilenames);
-                    default:
-                        return copyFileToDisk(compressedFile.getInputStream(), extractedToFilePath, compressedFile.getDecompressedFilename());
+                if (null != compressedFile.getArchiveType() && compressedFile.getArchiveType().equals(TAR)) {
+                    return untarFile(compressedFile.getInputStream(), extractedToFilePath, possibleFilenames);
+                } else {
+                    return copyFileToDisk(compressedFile.getInputStream(), extractedToFilePath, compressedFile.getDecompressedFilename());
                 }
             case ZIP:
                 return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
