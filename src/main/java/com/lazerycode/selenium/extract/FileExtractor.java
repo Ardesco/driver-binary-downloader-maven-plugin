@@ -77,12 +77,18 @@ public class FileExtractor {
     protected String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        String driverName = possibleFilenames.getDriverSystemProperty();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
             Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
             while (zipFile.hasMoreElements()) {
                 ZipArchiveEntry zipFileEntry = zipFile.nextElement();
                 for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
+                    if (driverName.equals("webdriver.gecko.driver") &&
+                      zipFileEntry.getName().matches(aFilenameWeAreSearchingFor)) {
+                        LOG.debug("Found: " + zipFileEntry.getName());
+                        return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, zipFileEntry.getName());
+                    }
                     if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
                         LOG.debug("Found: " + zipFileEntry.getName());
                         return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, aFilenameWeAreSearchingFor);
