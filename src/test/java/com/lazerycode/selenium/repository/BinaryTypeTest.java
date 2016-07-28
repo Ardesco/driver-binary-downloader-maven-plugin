@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static com.lazerycode.selenium.repository.BinaryType.GOOGLECHROME;
+import static com.lazerycode.selenium.repository.BinaryType.MARIONETTE;
 import static com.lazerycode.selenium.repository.BinaryType.PHANTOMJS;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -34,5 +35,23 @@ public class BinaryTypeTest {
     public void willReturnCorrectSystemPropertyForABinary() {
         assertThat(GOOGLECHROME.getDriverSystemProperty(),
                 is(equalTo("webdriver.chrome.driver")));
+    }
+
+    @Test
+    public void testWiresRegexWindows() {
+        String wireBinary = "wires-0.0.0-win.exe";
+        ArrayList<String> matchers = MARIONETTE.getBinaryFilenames();
+        for(String matcher : matchers) {
+            assertThat(wireBinary.matches(matcher), is(true));
+        }
+    }
+
+    @Test
+    public void testWiresRegexNix() {
+        String wireBinary = "wires-0.0.0-OSX";
+        ArrayList<String> matchers = MARIONETTE.getBinaryFilenames();
+        for(String matcher : matchers) {
+            assertThat(wireBinary.matches(matcher), is(true));
+        }
     }
 }

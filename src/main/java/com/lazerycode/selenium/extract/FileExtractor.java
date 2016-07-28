@@ -74,15 +74,20 @@ public class FileExtractor {
      * @throws IOException
      */
 
-    protected String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
+    protected String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType type) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
-        ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        ArrayList<String> filenamesWeAreSearchingFor = type.getBinaryFilenames();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
             Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
             while (zipFile.hasMoreElements()) {
                 ZipArchiveEntry zipFileEntry = zipFile.nextElement();
                 for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
+                    if (type.equals(BinaryType.MARIONETTE) &&
+                      zipFileEntry.getName().matches(aFilenameWeAreSearchingFor)) {
+                        LOG.debug("Found: " + zipFileEntry.getName());
+                        return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, zipFileEntry.getName());
+                    }
                     if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
                         LOG.debug("Found: " + zipFileEntry.getName());
                         return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, aFilenameWeAreSearchingFor);
@@ -93,7 +98,7 @@ public class FileExtractor {
             zip.close();
         }
 
-        throw new ExpectedFileNotFoundException("Unable to find any expected files for " + possibleFilenames.getBinaryTypeAsString());
+        throw new ExpectedFileNotFoundException("Unable to find any expected files for " + type.getBinaryTypeAsString());
     }
 
     /**
