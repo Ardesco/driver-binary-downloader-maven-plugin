@@ -2,6 +2,12 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.10.0 Release Notes
+
+* Fix #36 Change expected filenames for Marionette binaries.  We now support Marionette binaries version 0.7.1 onwards.  If you are using earlier binary versions things will break for you.
+
+##Version 1.0.9 Release Notes
+
 * Update default RepositoryMap.xml to latest binary versions
 * Fix #29 Clean up logging to make it clearer when file is downloaded, and when an existing file is used
 * Fix #34 Add support for wires (Marionette) binaries.

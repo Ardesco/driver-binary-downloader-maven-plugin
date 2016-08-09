@@ -130,7 +130,7 @@ public class FileExtractor {
     /**
      * Copy a file from an inputsteam to disk
      *
-     * @param inputStream     A valid iput stream to read
+     * @param inputStream     A valid input stream to read
      * @param pathToExtractTo Path of the file we want to create
      * @param filename        Filename of the file we want to create
      * @return Absolute path of the newly created file (Or existing file if overwriteFilesThatExist is set to false)

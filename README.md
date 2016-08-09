@@ -124,24 +124,24 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
     <root>
         <windows>
             <driver id="internetexplorer">
-                <version id="2.52.0">
+                <version id="2.53.1">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.52/IEDriverServer_x64_2.52.0.zip</filelocation>
-                        <hash>c850d584bc647a52c1c1311c233c68d4ac9f1ac8</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.53/IEDriverServer_x64_2.53.1.zip</filelocation>
+                        <hash>8bb35310de86b4dd58915a5f430d4ccab1266698</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/2.52/IEDriverServer_Win32_2.52.0.zip</filelocation>
-                        <hash>55bbe45c5ebfdb66edc6502afd05a2342183ebb9</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/2.53/IEDriverServer_Win32_2.53.1.zip</filelocation>
+                        <hash>ecd2d40f6b9b50e18903fd4c0ad286939bfd04a7</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="googlechrome">
-                <version id="2.21">
+                <version id="2.23">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.21/chromedriver_win32.zip</filelocation>
-                        <hash>2ee59a8047ec345f886d5b90656dbea1469b7e44</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.23/chromedriver_win32.zip</filelocation>
+                        <hash>847bf2497eab7aac5cf0622e49939f976087aae4</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -161,10 +161,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="phantomjs">
-                <version id="2.0.0">
+                <version id="2.1.1">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-windows.zip</filelocation>
-                        <hash>ca0c753e5d8820a271dd7c2d6a9fad6ff86fb09f</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip</filelocation>
+                        <hash>eb61e6dc49832a3d60f708a92fa7299c57cad7db</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -177,10 +177,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.6.2">
-                    <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-win.zip</filelocation>
-                        <hash>20a0eca607edd98392e0590a5a307ef56526647e</hash>
+                <version id="0.10.0">
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-win64.zip</filelocation>
+                        <hash>babc51b39da6f9a090c3c0e3ab9e800086f6140c</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -188,15 +188,15 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.21">
+                <version id="2.23">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip</filelocation>
-                        <hash>7be5d5c58fa826147aa83aa61c7fb0d8ca94805b</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.23/chromedriver_linux64.zip</filelocation>
+                        <hash>917f9e939e816c4f4487b2ebfddb21ecc77a4a9c</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux32.zip</filelocation>
-                        <hash>f783f76e06db305f10df0d307abc4ab3e9b0d998</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.23/chromedriver_linux32.zip</filelocation>
+                        <hash>b4bc392b16a62988cf0aa8e609e7edcc7a13ecc8</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -216,6 +216,18 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="phantomjs">
+                <version id="2.1.1">
+                    <bitrate sixtyfourbit="true">
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2</filelocation>
+                        <hash>f8afc8a24eec34c2badccc93812879a3d6f2caf3</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                    <bitrate thirtytwobit="true">
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-i686.tar.bz2</filelocation>
+                        <hash>9870663f5c2826501508972b8a201d9210d27b59</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
                 <version id="1.9.8">
                     <bitrate sixtyfourbit="true">
                         <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2</filelocation>
@@ -230,10 +242,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.6.2">
+                <version id="0.10.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz</filelocation>
-                        <hash>0adc84131607057ca37d42426798bff99faafb56</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz</filelocation>
+                        <hash>7dd33d2779aedaca41f94dee2f1db6a25d9230a2</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -241,10 +253,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.21">
+                <version id="2.23">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>http://chromedriver.storage.googleapis.com/2.21/chromedriver_mac32.zip</filelocation>
-                        <hash>49afcd80ab445c3085f8012180f7579b90afb364</hash>
+                        <filelocation>http://chromedriver.storage.googleapis.com/2.23/chromedriver_mac32.zip</filelocation>
+                        <hash>8343cb5ed784c1c23c90ecfa86da0dc058d68c89</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -259,10 +271,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="phantomjs">
-                <version id="2.0.0">
+                <version id="2.1.1">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-macosx.zip</filelocation>
-                        <hash>97f87188bb2fc81e0c57ec3a376b722e3bcc30c9</hash>
+                        <filelocation>https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip</filelocation>
+                        <hash>c6e1a16bb9e89ce1e392a4768e99177797c93350</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -275,10 +287,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.6.2">
+                <version id="0.10.0">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-OSX.gz</filelocation>
-                        <hash>2efc475bcc736d0502fb09051932e63052e98c4e</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-macos.tar.gz</filelocation>
+                        <hash>ca22ac7a159bc81f2e2f35fd29ccd6693a81b763</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>

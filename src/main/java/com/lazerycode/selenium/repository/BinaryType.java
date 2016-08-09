@@ -28,7 +28,10 @@ public enum BinaryType {
             "webdriver.opera.driver"),
     MARIONETTE(
             new ArrayList<String>() {{
-                add("wires.*");
+                add("wires");
+                add("wires.exe");
+                add("geckodriver");
+                add("geckodriver.exe");
             }},
             "webdriver.gecko.driver");
 
