@@ -33,7 +33,12 @@ public enum BinaryType {
                 add("geckodriver");
                 add("geckodriver.exe");
             }},
-            "webdriver.gecko.driver");
+            "webdriver.gecko.driver"),
+    EDGE(
+            new ArrayList<String>() {{
+                add("MicrosoftWebDriver.exe");
+            }},
+            "webdriver.edge.driver");
 
     private final ArrayList<String> binaryFilenames;
     private final String driverSystemProperty;

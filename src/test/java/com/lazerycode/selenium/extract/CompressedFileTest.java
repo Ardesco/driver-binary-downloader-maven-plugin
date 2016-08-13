@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.lazerycode.selenium.extract.ArchiveType.TAR;
+import static com.lazerycode.selenium.extract.DownloadableFileType.TAR;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;

@@ -20,10 +20,12 @@ public class FileExtractorTest {
     private static final boolean OVERWRITE_EXISTING_FILES = true;
     private static final boolean DO_NOT_OVERWRITE_EXISTING_FILES = false;
     private static final String VALID_HASH = "add36bb347a987b56e533c2034fd37b1";
+    private static final String VALID_HASH_FOR_EXE = "0a263b6c69c81e137d74240350e293bc0ca604a3";
     private final URL test7ZipFile = this.getClass().getResource("/jetty/files/download.7z");
     private final URL testZipFile = this.getClass().getResource("/jetty/files/download.zip");
     private final URL testTarGZFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final URL testTarBZ2File = this.getClass().getResource("/jetty/files/download.tar.bz2");
+    private final URL textExeFile = this.getClass().getResource("/jetty/files/MicrosoftWebDriver.exe");
     private static File phantomJSTestFile;
     private static String tempDir;
 
@@ -171,5 +173,16 @@ public class FileExtractorTest {
     public void tryAndExtractFromAnUnsupportedArchive() throws Exception {
         FileExtractor fileExtractor = new FileExtractor(DO_NOT_OVERWRITE_EXISTING_FILES);
         fileExtractor.extractFileFromArchive(new File(test7ZipFile.getFile()), tempDir, BinaryType.PHANTOMJS);
+    }
+
+    @Test
+    public void successfullyDownloadAnEXEFile() throws Exception {
+        FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
+        String extractedFile = fileExtractor.extractFileFromArchive(new File(textExeFile.getFile()), tempDir, BinaryType.EDGE);
+        FileInputStream fileToCheck = new FileInputStream(extractedFile);
+        String downloadedFileHash = DigestUtils.sha1Hex(fileToCheck);
+        fileToCheck.close();
+
+        assertThat(downloadedFileHash, is(equalTo(VALID_HASH_FOR_EXE)));
     }
 }

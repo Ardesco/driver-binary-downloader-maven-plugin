@@ -11,24 +11,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.lazerycode.selenium.extract.ArchiveType.BZ2;
-import static com.lazerycode.selenium.extract.ArchiveType.GZ;
+import static com.lazerycode.selenium.extract.DownloadableFileType.BZ2;
+import static com.lazerycode.selenium.extract.DownloadableFileType.GZ;
 
-public class CompressedFile {
+class CompressedFile {
 
     private static final Logger LOG = Logger.getLogger(FileExtractor.class);
-    File compressedFile;
-    String decompressedFilename;
-    ArchiveType filetype = null;
+    private File compressedFile;
+    private String decompressedFilename;
+    private DownloadableFileType filetype = null;
 
     /**
      * A class that will take a compressed file.
      *
      * @param compressedFile A compressed file of type .gz or .bz2
-     * @throws InvalidFileTypeException
+     * @throws InvalidFileTypeException InvalidFileTypeException
      */
-    public CompressedFile(File compressedFile) throws InvalidFileTypeException {
-        filetype = ArchiveType.valueOf(FilenameUtils.getExtension(compressedFile.getName()).toUpperCase());
+    CompressedFile(File compressedFile) throws InvalidFileTypeException {
+        filetype = DownloadableFileType.valueOf(FilenameUtils.getExtension(compressedFile.getName()).toUpperCase());
         if (filetype != GZ && filetype != BZ2) {
             throw new InvalidFileTypeException(compressedFile.getName() + " is an archive, not a known compressed file type");
         }
@@ -41,7 +41,7 @@ public class CompressedFile {
      *
      * @return The decompressed filename as a String.
      */
-    public String getDecompressedFilename() {
+    String getDecompressedFilename() {
         return decompressedFilename;
     }
 
@@ -49,9 +49,9 @@ public class CompressedFile {
      * Get an InputStream for the decompressed file.
      *
      * @return An InputStream, the type could be BZip2CompressorInputStream, or GzipCompressorInputStream depending on what type of file was initially supplied
-     * @throws IOException
+     * @throws IOException IOException
      */
-    public InputStream getInputStream() throws IOException {
+    InputStream getInputStream() throws IOException {
         switch (filetype) {
             case GZ:
                 LOG.debug("Decompressing .gz file");
@@ -68,9 +68,9 @@ public class CompressedFile {
      *
      * @return ArchiveType.TAR if a tar, or null if not an archive
      */
-    public ArchiveType getArchiveType() {
+    DownloadableFileType getArchiveType() {
         try {
-            return ArchiveType.valueOf(FilenameUtils.getExtension(decompressedFilename).toUpperCase());
+            return DownloadableFileType.valueOf(FilenameUtils.getExtension(decompressedFilename).toUpperCase());
         } catch (IllegalArgumentException e) {
             LOG.debug("Not a recognised Archive type");
             return null;

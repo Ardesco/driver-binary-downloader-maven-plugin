@@ -13,12 +13,13 @@ import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import static com.lazerycode.selenium.extract.ArchiveType.TAR;
+import static com.lazerycode.selenium.extract.DownloadableFileType.TAR;
 
 public class FileExtractor {
 
@@ -44,7 +45,7 @@ public class FileExtractor {
      * @throws MojoFailureException     Error running plugin
      */
     public String extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
-        ArchiveType fileType = ArchiveType.valueOf(FilenameUtils.getExtension(downloadedCompressedFile.getName()).toUpperCase());
+        DownloadableFileType fileType = DownloadableFileType.valueOf(FilenameUtils.getExtension(downloadedCompressedFile.getName()).toUpperCase());
         LOG.debug("Determined archive type: " + fileType);
         LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
 
@@ -59,6 +60,10 @@ public class FileExtractor {
                 }
             case ZIP:
                 return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
+            case EXE:
+                if(possibleFilenames.getBinaryFilenames().contains(downloadedCompressedFile.getName())) {
+                    return copyFileToDisk(new FileInputStream(downloadedCompressedFile), extractedToFilePath, downloadedCompressedFile.getName());
+                }
             default:
                 throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
         }
@@ -71,10 +76,10 @@ public class FileExtractor {
      * @param extractedToFilePath      Path to extracted file
      * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
-     * @throws IOException
+     * @throws IOException IOException
      */
 
-    protected String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
+    String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
@@ -106,7 +111,7 @@ public class FileExtractor {
      * @throws IOException MojoFailureException
      */
 
-    protected String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
+    private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
@@ -134,9 +139,9 @@ public class FileExtractor {
      * @param pathToExtractTo Path of the file we want to create
      * @param filename        Filename of the file we want to create
      * @return Absolute path of the newly created file (Or existing file if overwriteFilesThatExist is set to false)
-     * @throws IOException
+     * @throws IOException IOException
      */
-    protected String copyFileToDisk(InputStream inputStream, String pathToExtractTo, String filename) throws IOException {
+    private String copyFileToDisk(InputStream inputStream, String pathToExtractTo, String filename) throws IOException {
         if (!overwriteFilesThatExist) {
             File[] existingFiles = new File(pathToExtractTo).listFiles();
             if (null != existingFiles && existingFiles.length > 0) {
