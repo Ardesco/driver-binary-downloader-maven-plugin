@@ -137,7 +137,7 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                     </bitrate>
                 </version>
             </driver>
-            <driver id="edgedriver">
+            <driver id="edge">
                 <version id="3.14393">
                     <bitrate sixtyfourbit="true" thirtytwobit="true">
                         <filelocation>https://download.microsoft.com/download/3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15/MicrosoftWebDriver.exe</filelocation>
