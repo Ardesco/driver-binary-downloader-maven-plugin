@@ -40,7 +40,6 @@ import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSy
  */
 
 @Mojo(name = "selenium", defaultPhase = LifecyclePhase.TEST_COMPILE)
-@Execute(phase = LifecyclePhase.TEST_COMPILE)
 @SuppressWarnings({"UnusedDeclaration"})
 public class SeleniumServerMojo extends AbstractMojo {
     /**
