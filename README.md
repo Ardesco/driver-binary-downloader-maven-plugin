@@ -138,19 +138,19 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="edge">
-                        <version id="3.14393">
-                            <bitrate sixtyfourbit="true" thirtytwobit="true">
-                                <filelocation>https://download.microsoft.com/download/3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15/MicrosoftWebDriver.exe</filelocation>
-                                <hash>6f9e81e5f60fa3e8dccba15a3715ba20d44d0775</hash>
-                                <hashtype>sha1</hashtype>
-                            </bitrate>
-                        </version>
-                    </driver>
+                <version id="3.14393">
+                    <bitrate sixtyfourbit="true" thirtytwobit="true">
+                        <filelocation>https://download.microsoft.com/download/3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15/MicrosoftWebDriver.exe</filelocation>
+                        <hash>6f9e81e5f60fa3e8dccba15a3715ba20d44d0775</hash>
+                        <hashtype>sha1</hashtype>
+                    </bitrate>
+                </version>
+            </driver>
             <driver id="googlechrome">
-                <version id="2.28">
+                <version id="2.29">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.28/chromedriver_win32.zip</filelocation>
-                        <hash>8d64e00d3587c1238c270e39fa220b66100cd14c</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip</filelocation>
+                        <hash>2f02f28d3ff1b8f2a63cb3bc32c26ade60ac4737</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -202,15 +202,15 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.28">
+                <version id="2.29">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.28/chromedriver_linux64.zip</filelocation>
-                        <hash>54a181aa1a704457c735112b1b1971d3abc226bf</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux64.zip</filelocation>
+                        <hash>025a098cde0a6ad8aef53d6734979c9845bf49b5</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.28/chromedriver_linux32.zip</filelocation>
-                        <hash>cc48f8cce4d5757507c3f5d3c997fc67ee579467</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_linux32.zip</filelocation>
+                        <hash>36d4082a6fb3b3cbb31b013a08b1900baf13743d</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -267,10 +267,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.28">
+                <version id="2.29">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.28/chromedriver_mac64.zip</filelocation>
-                        <hash>44e2f5798ac1f579225b317de69029fbcdd162cf</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.29/chromedriver_mac64.zip</filelocation>
+                        <hash>cec18df4ef736d6712593faf91b462352217214a</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
