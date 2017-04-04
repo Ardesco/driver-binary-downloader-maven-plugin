@@ -71,7 +71,7 @@
                     <hashtype>sha1</hashtype>
                 </bitrate>
                 <bitrate thirtytwobit="true">
-                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.15.0-win32.zip</filelocation>
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.15.0/geckodriver-v0.15.0-win32.zip</filelocation>
                     <hash>896d88662371932dd666f8268c9718bda09f280a</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>

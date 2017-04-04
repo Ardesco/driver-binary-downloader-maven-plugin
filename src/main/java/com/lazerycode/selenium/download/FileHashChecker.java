@@ -46,6 +46,7 @@ public class FileHashChecker {
             return true;
         }
 
+        LOG.error("File : '" + fileToCheck.getName() + "'.");
         LOG.error("Expected file hash : '" + expectedHash + "'.");
         LOG.error("Actual file hash   : '" + actualFileHash + "'.");
 
