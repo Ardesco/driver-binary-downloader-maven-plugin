@@ -148,8 +148,8 @@ public class FileExtractor {
                 for (File existingFile : existingFiles) {
                     String existingFilename = existingFile.getName();
                     if (existingFilename.equals(filename)) {
-                        LOG.info("Binary '" + existingFilename + "' Exists: true");
-                        LOG.info("Using existing '" + existingFilename + "'binary.");
+                        LOG.info("Binary '" + existingFilename + "' exists: true");
+                        LOG.info("Using existing '" + existingFilename + " 'binary.");
                         return existingFile.getAbsolutePath();
                     }
                 }
