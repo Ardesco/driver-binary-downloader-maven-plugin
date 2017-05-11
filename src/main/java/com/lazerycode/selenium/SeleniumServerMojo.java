@@ -1,19 +1,25 @@
 package com.lazerycode.selenium;
 
 import com.lazerycode.selenium.download.DownloadHandler;
-import com.lazerycode.selenium.repository.*;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.xml.sax.SAXException;
-
+import com.lazerycode.selenium.repository.DriverContext;
+import com.lazerycode.selenium.repository.DriverDetails;
+import com.lazerycode.selenium.repository.DriverMap;
+import static com.lazerycode.selenium.repository.FileRepository.buildDownloadableFileRepository;
+import com.lazerycode.selenium.repository.OperatingSystem;
+import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
+import com.lazerycode.selenium.repository.SystemArchitecture;
+import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
+import com.lazerycode.selenium.repository.XMLParser;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.Source;
@@ -22,16 +28,20 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.*;
-
-import static com.lazerycode.selenium.repository.FileRepository.buildDownloadableFileRepository;
-import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
-import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.resource.ResourceManager;
+import org.codehaus.plexus.resource.loader.FileResourceCreationException;
+import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
+import org.xml.sax.SAXException;
 
 /**
  * Selenium Standalone Server Maven Plugin
@@ -57,11 +67,11 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected File downloadedZipFileDirectory;
 
     /**
-     * <h3>Absolute path to the XML RepositoryMap</h3>
+     * <h3>Path to the XML RepositoryMap</h3>
      * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/main/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
      */
     @Parameter
-    protected File customRepositoryMap;
+    protected String customRepositoryMap;
 
     /**
      * <h3>Only get drivers that are compatible with the operating system running the plugin</h3>
@@ -178,6 +188,9 @@ public class SeleniumServerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     protected MavenProject project;
 
+    @Component
+    private ResourceManager locator;
+
     protected InputStream xmlRepositoryMap = null;
     private static final Logger LOG = Logger.getLogger(SeleniumServerMojo.class);
 
@@ -270,6 +283,17 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
     }
 
+    private File getRepositoryMapFile(String customRepositoryMap) {
+        File repositoryMap = null;
+        try {
+            repositoryMap = locator.getResourceAsFile(customRepositoryMap);
+        } catch (ResourceNotFoundException e) {
+            LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...\n");
+        } catch (FileResourceCreationException e) {
+        }
+        return repositoryMap;
+    }
+
     /**
      * Set the RepositoryMap used to get file information.
      * If the supplied map is invalid it will default to the pre-packaged one here.
@@ -277,16 +301,13 @@ public class SeleniumServerMojo extends AbstractMojo {
      * @throws MojoExecutionException
      */
     private void setRepositoryMapFile() throws MojoExecutionException {
-        if (this.customRepositoryMap == null || !this.customRepositoryMap.exists()) {
-            if (this.customRepositoryMap != null) {
-                LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...");
-                LOG.info(" ");
-            }
+        File repositoryMap = getRepositoryMapFile(this.customRepositoryMap);
+        if (repositoryMap == null || !repositoryMap.exists()) {
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         } else {
-            checkRepositoryMapIsValid();
+            checkRepositoryMapIsValid(repositoryMap);
             try {
-                this.xmlRepositoryMap = this.customRepositoryMap.toURI().toURL().openStream();
+                this.xmlRepositoryMap = repositoryMap.toURI().toURL().openStream();
             } catch (IOException ioe) {
                 throw new MojoExecutionException(ioe.getLocalizedMessage());
             }
@@ -300,9 +321,9 @@ public class SeleniumServerMojo extends AbstractMojo {
      *
      * @throws MojoExecutionException thrown if customRepositoryMap is not valid
      */
-    protected void checkRepositoryMapIsValid() throws MojoExecutionException {
+    protected void checkRepositoryMapIsValid(File repositoryMap) throws MojoExecutionException {
         URL schemaFile = this.getClass().getResource("/RepositoryMap.xsd");
-        Source xmlFile = new StreamSource(this.customRepositoryMap);
+        Source xmlFile = new StreamSource(repositoryMap);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             Schema schema = schemaFactory.newSchema(schemaFile);
@@ -311,7 +332,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             LOG.info(" " + xmlFile.getSystemId() + " is valid");
             LOG.info(" ");
         } catch (SAXException saxe) {
-            throw new MojoExecutionException(this.customRepositoryMap.getName() + " is not valid: " + saxe.getLocalizedMessage());
+            throw new MojoExecutionException(repositoryMap.getName() + " is not valid: " + saxe.getLocalizedMessage());
         } catch (IOException ioe) {
             //Assume it doesn't exist, set to null so that we default to packaged version
             this.customRepositoryMap = null;
