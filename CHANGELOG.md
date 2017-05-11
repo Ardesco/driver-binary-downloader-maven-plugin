@@ -4,7 +4,7 @@
 
 ##Version 1.13.0 Release Notes
 
-* Fix #47 Support to read the RepositoryMap.xml from plugin dependencies added (Thanks Haroon Sheikh)
+* Fix #47 Support to read the RepositoryMap.xml from plugin dependencies added (Thanks [Haroon Sheikh](https://github.com/haroon-sheikh))
 
 ##Version 1.12.0 Release Notes
 
@@ -30,7 +30,7 @@
 
 * Fix #24 documentation updated to show correct usage of &lt;operatingSystems&gt; for mac
 * Fix #33 Use Travis CI for build, and Rultor for release.
-* Fix bug where file stream may not have been closed correctly (Thanks [Aneesh Joseph](https://github.com/aneesh-josephUpdate CHANGELO))
+* Fix bug where file stream may not have been closed correctly (Thanks [Aneesh Joseph](https://github.com/aneesh-josephUpdate))
 
 ##Version 1.0.7 Release Notes
 

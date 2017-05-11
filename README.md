@@ -18,7 +18,7 @@ Default Usage
         <plugin>
             <groupId>com.lazerycode.selenium</groupId>
             <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-            <version>1.0.12</version>
+            <version>1.0.13</version>
             <configuration>
                 <!-- root directory that downloaded driver binaries will be stored in -->
                 <rootStandaloneServerDirectory>/my/location/binaries</rootStandaloneServerDirectory>
@@ -46,7 +46,7 @@ Advanced Usage
             <plugin>
                 <groupId>com.lazerycode.selenium</groupId>
                 <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-                <version>1.0.12</version>
+                <version>1.0.13</version>
                 <configuration>
                     <!-- root directory that downloaded driver binaries will be stored in -->
                     <rootStandaloneServerDirectory>/tmp/binaries</rootStandaloneServerDirectory>
