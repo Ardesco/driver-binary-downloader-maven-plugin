@@ -279,7 +279,8 @@ public class SeleniumServerMojo extends AbstractMojo {
         try {
             repositoryMap = locator.getResourceAsFile(customRepositoryMap);
         } catch (ResourceNotFoundException | FileResourceCreationException e) {
-            LOG.info("Unable to find the specified custom repository map, attempting to use value as a file path...\n");
+            LOG.info("Unable to find the specified custom repository map in dependencies, attempting to use value as a file path...");
+            LOG.info(" ");
             repositoryMap = new File(customRepositoryMap);
         }
         return repositoryMap;
@@ -292,16 +293,22 @@ public class SeleniumServerMojo extends AbstractMojo {
      * @throws MojoExecutionException
      */
     private void setRepositoryMapFile() throws MojoExecutionException {
-        File repositoryMap = getRepositoryMapFile(this.customRepositoryMap);
-        if (repositoryMap == null || !repositoryMap.exists()) {
-            this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
-        } else {
-            checkRepositoryMapIsValid(repositoryMap);
-            try {
-                this.xmlRepositoryMap = repositoryMap.toURI().toURL().openStream();
-            } catch (IOException ioe) {
-                throw new MojoExecutionException(ioe.getLocalizedMessage());
+        if (this.customRepositoryMap != null && !this.customRepositoryMap.isEmpty()) {
+            File repositoryMap = getRepositoryMapFile(this.customRepositoryMap);
+            if (repositoryMap.exists()) {
+                checkRepositoryMapIsValid(repositoryMap);
+                try {
+                    this.xmlRepositoryMap = repositoryMap.toURI().toURL().openStream();
+                } catch (IOException ioe) {
+                    throw new MojoExecutionException(ioe.getLocalizedMessage());
+                }
+            } else {
+                throw new MojoExecutionException("Repository map '" + repositoryMap.getAbsolutePath() + "' does not exist");
             }
+        }
+
+        if (this.xmlRepositoryMap == null) {
+            this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         }
     }
 
@@ -320,7 +327,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             Schema schema = schemaFactory.newSchema(schemaFile);
             Validator validator = schema.newValidator();
             validator.validate(xmlFile);
-            LOG.info(" " + xmlFile.getSystemId() + " is valid");
+            LOG.info("Repository map '" + xmlFile.getSystemId() + "' is valid");
             LOG.info(" ");
         } catch (SAXException | IOException ex) {
             throw new MojoExecutionException(repositoryMap.getName() + " is not valid: " + ex.getLocalizedMessage());

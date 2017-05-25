@@ -4,7 +4,8 @@
 
 ##Version 1.0.14 Release Notes
 
-* Fix #55 Relative file paths are now supported again. 
+* Fix #55 Relative file paths are now supported again.
+* Fix #57 NPE's being thrown if a repository map what not explicitly specified.
 
 ##Version 1.0.13 Release Notes
 
