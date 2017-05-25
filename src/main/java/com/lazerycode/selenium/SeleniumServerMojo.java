@@ -102,6 +102,13 @@ public class SeleniumServerMojo extends AbstractMojo {
     protected boolean sixtyFourBitBinaries;
 
     /**
+     * <h3>Force download of arm standalone executable</h3>.
+     * <p>&lt;armBinaries&gt;true&lt;/armBinaries&gt;</p>
+     */
+    @Parameter(defaultValue = "false")
+    protected boolean armBinaries;
+
+    /**
      * <h3>Only get the latest version of each standalone executable in RepositoryMap.xml</h3>
      * <p>&lt;onlyGetLatestVersions&gt;true&lt;/onlyGetLatestVersions&gt;</p>
      * <p>If set to false this will download all versions specified in the RepositoryMap.xml</p>
@@ -219,10 +226,12 @@ public class SeleniumServerMojo extends AbstractMojo {
         }
 
         //Calculate system architecture
-        if (!thirtyTwoBitBinaries && !sixtyFourBitBinaries) {
+        if (!thirtyTwoBitBinaries && !sixtyFourBitBinaries && !armBinaries) {
             //TODO clean this up, maybe pass in a list of valid architectures later on
             if (getCurrentSystemArcitecture().equals(SystemArchitecture.ARCHITECTURE_64_BIT)) {
                 sixtyFourBitBinaries = true;
+            } else if (getCurrentSystemArcitecture().equals(SystemArchitecture.ARCHITECTURE_ARM)) {
+                armBinaries = true;
             } else {
                 thirtyTwoBitBinaries = true;
             }
@@ -237,7 +246,7 @@ public class SeleniumServerMojo extends AbstractMojo {
                     this.fileDownloadRetryAttempts,
                     this.fileDownloadConnectTimeout,
                     this.fileDownloadReadTimeout,
-                    buildDownloadableFileRepository(parser.getAllNodesInScope(), thirtyTwoBitBinaries, sixtyFourBitBinaries),
+                    buildDownloadableFileRepository(parser.getAllNodesInScope(), thirtyTwoBitBinaries, sixtyFourBitBinaries, armBinaries),
                     this.overwriteFilesThatExist,
                     this.checkFileHashes,
                     this.useSystemProxy,
@@ -267,6 +276,9 @@ public class SeleniumServerMojo extends AbstractMojo {
      */
     protected void setSystemProperties(DriverMap driverRepository) {
         ArrayList<DriverContext> driverContextsForCurrentOperatingSystem = driverRepository.getDriverContextsForCurrentOperatingSystem();
+        if (driverContextsForCurrentOperatingSystem.size() == 0) {
+            LOG.warn("No driver contexts detected for the current operating system, no maven properties set!");
+        }
         for (DriverContext driverContext : driverContextsForCurrentOperatingSystem) {
             DriverDetails driverDetails = driverRepository.getDetailsForLatestVersionOfDriverContext(driverContext);
             LOG.info("Setting maven property - ${" + driverContext.getBinaryTypeForContext().getDriverSystemProperty() + "} = " + driverDetails.extractedLocation);

@@ -26,6 +26,7 @@
         </xs:sequence>
         <xs:attribute type="xs:string" name="sixtyfourbit" use="optional"/>
         <xs:attribute type="xs:string" name="thirtytwobit" use="optional"/>
+        <xs:attribute type="xs:string" name="arm" use="optional"/>
     </xs:complexType>
     <xs:complexType name="rootType">
         <xs:sequence>

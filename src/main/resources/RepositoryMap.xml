@@ -140,6 +140,11 @@
                     <hash>95276285b65987b6e94e57be55fdc60b95423016</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
+                <bitrate arm="true">
+                    <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-arm7hf.tar.gz</filelocation>
+                    <hash>6f013de184c8f3dba3ec39ea49de2a166cb18efb</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
             </version>
         </driver>
     </linux>

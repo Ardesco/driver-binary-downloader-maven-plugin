@@ -31,6 +31,7 @@ public class SeleniumServerMojoTest {
     private static String rootStandaloneServerDirectoryPath;
     private static boolean getThirtyTwoBitBinaries = false;
     private static boolean getSixtyFourBitBinaries = false;
+    private static boolean getArmBinaries = false;
     private final int oneRetryAttempt = 1;
     private final int connectTimeout = 15000;
     private final int readTimeout = 15000;
@@ -73,7 +74,7 @@ public class SeleniumServerMojoTest {
         String relativeExecutablePath = File.separator + currentOperatingSystem + File.separator + "phantomjs" + File.separator + currentArchitecture + File.separator + "phantomjs";
         InputStream xmlRepositoryMap = this.getClass().getResourceAsStream("/TestRepoMap2.xml");
         XMLParser parser = new XMLParser(xmlRepositoryMap, OperatingSystem.getCurrentOperatingSystemAsAHashSet(), null, getThirtyTwoBitBinaries, getSixtyFourBitBinaries);
-        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), getThirtyTwoBitBinaries, getSixtyFourBitBinaries);
+        DriverMap driverMap = buildDownloadableFileRepository(parser.getAllNodesInScope(), getThirtyTwoBitBinaries, getSixtyFourBitBinaries, getArmBinaries);
         DownloadHandler standaloneExecutableDownloader = new DownloadHandler(
                 new File(rootStandaloneServerDirectoryPath),
                 new File(downloadDirectoryPath),

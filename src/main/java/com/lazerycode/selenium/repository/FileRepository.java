@@ -7,12 +7,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_32_BIT;
-import static com.lazerycode.selenium.repository.SystemArchitecture.ARCHITECTURE_64_BIT;
+import static com.lazerycode.selenium.repository.SystemArchitecture.*;
 
 public class FileRepository {
 
-    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound, boolean useThirtyTwoBitBinaries, boolean useSixtyFourBitBinaries) throws JAXBException {
+    public static DriverMap buildDownloadableFileRepository(NodeList nodesFound, boolean useThirtyTwoBitBinaries, boolean useSixtyFourBitBinaries, boolean useArmBinaries) throws JAXBException {
         DriverMap driverMap = new DriverMap();
         Unmarshaller unmarshaller = JAXBContext.newInstance(DriverDetails.class).createUnmarshaller();
         unmarshaller.setEventHandler(new unmarshallingEventHandler());
@@ -23,6 +22,7 @@ public class FileRepository {
             String version = node.getParentNode().getAttributes().getNamedItem("id").getNodeValue();
             boolean thisIs64Bit = false;
             boolean thisIs32Bit = false;
+            boolean thisIsArm = false;
             if (useThirtyTwoBitBinaries && node.getAttributes().getNamedItem("thirtytwobit") != null) {
                 if (Boolean.valueOf(node.getAttributes().getNamedItem("thirtytwobit").getNodeValue())) {
                     thisIs32Bit = true;
@@ -33,6 +33,11 @@ public class FileRepository {
                     thisIs64Bit = true;
                 }
             }
+            if (useArmBinaries && node.getAttributes().getNamedItem("arm") != null) {
+                if (Boolean.valueOf(node.getAttributes().getNamedItem("arm").getNodeValue())) {
+                    thisIsArm = true;
+                }
+            }
 
             DriverDetails driverDetails = unmarshaller.unmarshal(node, DriverDetails.class).getValue();
             if (thisIs32Bit) {
@@ -40,6 +45,9 @@ public class FileRepository {
             }
             if (thisIs64Bit) {
                 driverMap.getMapForDriverContext(DriverContext.binaryDataFor(operatingSystem, driver, ARCHITECTURE_64_BIT)).put(version, driverDetails);
+            }
+            if (thisIsArm) {
+                driverMap.getMapForDriverContext(DriverContext.binaryDataFor(operatingSystem, driver, ARCHITECTURE_ARM)).put(version, driverDetails);
             }
         }
 

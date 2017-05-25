@@ -64,7 +64,7 @@
                     <hash>1a559a110751e40a2719d277436d1a039596026b</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
-                <bitrate thirtytwobit="true">
+                <bitrate thirtytwobit="true" arm="true">
                     <filelocation>http://chromedriver.googlecode.com/files/chromedriver_bitrate32_20.0.1133.0.zip</filelocation>
                     <hash>2d7c775ce163576cfe595d55820d0f3a562ab373</hash>
                     <hashtype>sha1</hashtype>
