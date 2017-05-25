@@ -2,17 +2,17 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
-##Version 1.13.0 Release Notes
+##Version 1.0.13 Release Notes
 
 * Fix #47 Support to read the RepositoryMap.xml from plugin dependencies added (Thanks [Haroon Sheikh](https://github.com/haroon-sheikh))
 
-##Version 1.12.0 Release Notes
+##Version 1.0.12 Release Notes
 
 * Fix #50 Remove the @Execute annotation causing test-compile to be executed twice
 * Fix #49 Fix a couple of logging typos
 * Fix a typo in the README.md that referred 'edgedriver' instead of 'edge'
 
-##Version 1.11.0 Release Notes
+##Version 1.0.11. Release Notes
 
 * Fix #38 Add in support for Edge Driver
 
