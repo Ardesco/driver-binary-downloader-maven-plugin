@@ -6,6 +6,8 @@
 
 * Fix #55 Relative file paths are now supported again.
 * Fix #57 NPE's being thrown if a repository map what not explicitly specified.
+* Fix #51 NPE no longer thrown if RepositoryMap.xml is invalid, instead you will see an error telling you the repository map is not valid
+* Fix #48 Add support for Arm binaries for Geckodriver
 
 ##Version 1.0.13 Release Notes
 
