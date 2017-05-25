@@ -4,6 +4,7 @@
 
 ##Version 1.0.14 Release Notes
 
+* **BREAKING CHANGE** This plugin now requires Java 8 (This brings it into line with Selenium 3.x)
 * Fix #55 Relative file paths are now supported again.
 * Fix #57 NPE's being thrown if a repository map what not explicitly specified.
 * Fix #51 NPE no longer thrown if RepositoryMap.xml is invalid, instead you will see an error telling you the repository map is not valid

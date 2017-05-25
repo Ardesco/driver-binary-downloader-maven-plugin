@@ -11,6 +11,8 @@ A Maven plugin that will download the WebDriver stand alone server binaries for 
 
 What's changed?  See the [Changelog](https://github.com/Ardesco/selenium-standalone-server-plugin/blob/master/CHANGELOG.md).
 
+**This plugin now requires Java 8!**
+
 Default Usage
 -----
 
