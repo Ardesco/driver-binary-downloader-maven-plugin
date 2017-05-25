@@ -1,33 +1,7 @@
 package com.lazerycode.selenium;
 
 import com.lazerycode.selenium.download.DownloadHandler;
-import com.lazerycode.selenium.repository.DriverContext;
-import com.lazerycode.selenium.repository.DriverDetails;
-import com.lazerycode.selenium.repository.DriverMap;
-import static com.lazerycode.selenium.repository.FileRepository.buildDownloadableFileRepository;
-import com.lazerycode.selenium.repository.OperatingSystem;
-import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
-import com.lazerycode.selenium.repository.SystemArchitecture;
-import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
-import com.lazerycode.selenium.repository.XMLParser;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBException;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import javax.xml.xpath.XPathExpressionException;
+import com.lazerycode.selenium.repository.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.AbstractMojo;
@@ -42,6 +16,25 @@ import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBException;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import javax.xml.xpath.XPathExpressionException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.*;
+
+import static com.lazerycode.selenium.repository.FileRepository.buildDownloadableFileRepository;
+import static com.lazerycode.selenium.repository.OperatingSystem.getOperatingSystem;
+import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSystemArcitecture;
 
 /**
  * Selenium Standalone Server Maven Plugin
@@ -254,9 +247,7 @@ public class SeleniumServerMojo extends AbstractMojo {
             throw new MojoExecutionException("Failed to download all of the standalone executables: " + e.getLocalizedMessage());
         } catch (URISyntaxException e) {
             throw new MojoExecutionException("Invalid URI detected: " + e.getLocalizedMessage());
-        } catch (XPathExpressionException rethrow) {
-            throw new MojoExecutionException(rethrow.getMessage());
-        } catch (JAXBException rethrow) {
+        } catch (XPathExpressionException | JAXBException rethrow) {
             throw new MojoExecutionException(rethrow.getMessage());
         }
 
@@ -284,12 +275,12 @@ public class SeleniumServerMojo extends AbstractMojo {
     }
 
     private File getRepositoryMapFile(String customRepositoryMap) {
-        File repositoryMap = null;
+        File repositoryMap;
         try {
             repositoryMap = locator.getResourceAsFile(customRepositoryMap);
-        } catch (ResourceNotFoundException e) {
-            LOG.info("Unable to access the specified custom repository map, defaulting to bundled version...\n");
-        } catch (FileResourceCreationException e) {
+        } catch (ResourceNotFoundException | FileResourceCreationException e) {
+            LOG.info("Unable to find the specified custom repository map, attempting to use value as a file path...\n");
+            repositoryMap = new File(customRepositoryMap);
         }
         return repositoryMap;
     }
@@ -331,12 +322,8 @@ public class SeleniumServerMojo extends AbstractMojo {
             validator.validate(xmlFile);
             LOG.info(" " + xmlFile.getSystemId() + " is valid");
             LOG.info(" ");
-        } catch (SAXException saxe) {
-            throw new MojoExecutionException(repositoryMap.getName() + " is not valid: " + saxe.getLocalizedMessage());
-        } catch (IOException ioe) {
-            //Assume it doesn't exist, set to null so that we default to packaged version
-            this.customRepositoryMap = null;
+        } catch (SAXException | IOException ex) {
+            throw new MojoExecutionException(repositoryMap.getName() + " is not valid: " + ex.getLocalizedMessage());
         }
     }
-
 }

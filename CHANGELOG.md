@@ -2,6 +2,10 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.0.14 Release Notes
+
+* Fix #55 Relative file paths are now supported again. 
+
 ##Version 1.0.13 Release Notes
 
 * Fix #47 Support to read the RepositoryMap.xml from plugin dependencies added (Thanks [Haroon Sheikh](https://github.com/haroon-sheikh))
