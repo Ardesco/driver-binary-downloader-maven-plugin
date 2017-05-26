@@ -11,7 +11,7 @@
 
     <groupId>com.lazerycode.selenium</groupId>
     <artifactId>driver-binary-downloader-maven-plugin</artifactId>
-    <version>DEV-SNAPSHOT</version>
+    <version>1.0.14</version>
     <packaging>maven-plugin</packaging>
     <name>Selenium Binary Downloader Maven Plugin</name>
     <description>
