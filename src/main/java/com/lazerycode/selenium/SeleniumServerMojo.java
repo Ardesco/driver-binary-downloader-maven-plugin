@@ -47,21 +47,21 @@ import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSy
 public class SeleniumServerMojo extends AbstractMojo {
     /**
      * <h3>Root directory where the standalone server file structure will be created and files will be saved</h3>
-     * <p>&lt;rootStandaloneServerDirectory&gt;${project.basedir}/src/main/resources/standalone_executable_root&lt;/rootStandaloneServerDirectory&gt;</p>
+     * <p>&lt;rootStandaloneServerDirectory&gt;${project.basedir}/src/test/resources/webdriver/binaries&lt;/rootStandaloneServerDirectory&gt;</p>
      */
-    @Parameter(defaultValue = "${project.basedir}/selenium_standalone")
+    @Parameter(defaultValue = "${project.basedir}/src/test/resources/webdriver/binaries")
     protected File rootStandaloneServerDirectory;
 
     /**
      * <h3>Directory where downloaded standalone executable zip files will be saved</h3>
-     * <p>&lt;downloadedZipFileDirectory&gt;${project.basedir}/src/main/resources/downloaded_zip_files&lt;/downloadedZipFileDirectory&gt;</p>
+     * <p>&lt;downloadedZipFileDirectory&gt;${project.basedir}/src/test/resources/webdriver/compressed_files&lt;/downloadedZipFileDirectory&gt;</p>
      */
-    @Parameter(defaultValue = "${project.basedir}/selenium_standalone_zips")
+    @Parameter(defaultValue = "${project.basedir}/src/test/resources/webdriver/compressed_files")
     protected File downloadedZipFileDirectory;
 
     /**
      * <h3>Path to the XML RepositoryMap</h3>
-     * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/main/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
+     * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/test/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
      */
     @Parameter
     protected String customRepositoryMap;
