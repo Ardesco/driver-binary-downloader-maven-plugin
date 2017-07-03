@@ -38,7 +38,13 @@ public enum BinaryType {
             new ArrayList<String>() {{
                 add("MicrosoftWebDriver.exe");
             }},
-            "webdriver.edge.driver");
+            "webdriver.edge.driver"),
+    FIREFOX(
+            new ArrayList<String>() {{
+                add("firefox.exe");
+                add("firefox");
+            }},
+            "webdriver.firefox.bin");
 
     private final ArrayList<String> binaryFilenames;
     private final String driverSystemProperty;
