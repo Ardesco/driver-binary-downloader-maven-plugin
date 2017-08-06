@@ -41,6 +41,7 @@ public enum BinaryType {
             "webdriver.edge.driver"),
     FIREFOX(
             new ArrayList<String>() {{
+                add("*");
                 add("firefox.exe");
                 add("firefox");
             }},

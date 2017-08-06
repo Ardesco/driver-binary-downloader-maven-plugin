@@ -2,6 +2,7 @@ package com.lazerycode.selenium.extract;
 
 import com.lazerycode.selenium.repository.BinaryType;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import java.net.URL;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
 public class FileExtractorTest {
@@ -26,13 +28,14 @@ public class FileExtractorTest {
     private final URL testTarGZFile = this.getClass().getResource("/jetty/files/download.tar.gz");
     private final URL testTarBZ2File = this.getClass().getResource("/jetty/files/download.tar.bz2");
     private final URL textExeFile = this.getClass().getResource("/jetty/files/MicrosoftWebDriver.exe");
+    private final URL testFirefoxFile = this.getClass().getResource("/jetty/files/FirefoxPortable.zip");
     private static File phantomJSTestFile;
     private static String tempDir;
 
     @Before
     public void initialiseFile() {
         String tempDirectory = System.getProperty("java.io.tmpdir");
-        if (tempDirectory.endsWith("/")) {
+        if (tempDirectory.endsWith(File.separator)) {
             tempDir = System.getProperty("java.io.tmpdir") + java.util.UUID.randomUUID();
         } else {
             tempDir = System.getProperty("java.io.tmpdir") + File.separator + java.util.UUID.randomUUID();
@@ -184,5 +187,13 @@ public class FileExtractorTest {
         fileToCheck.close();
 
         assertThat(downloadedFileHash, is(equalTo(VALID_HASH_FOR_EXE)));
+    }
+    
+    @Test
+    public void successfullyDownloadAnFirefoxFile() throws Exception {
+        FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
+        String extractedFile = fileExtractor.extractFileFromArchive(new File(testFirefoxFile.getFile()), tempDir, BinaryType.FIREFOX);
+        
+        assertThat(extractedFile, containsString("firefox"));
     }
 }
