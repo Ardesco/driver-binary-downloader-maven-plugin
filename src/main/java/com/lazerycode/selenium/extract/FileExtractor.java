@@ -148,11 +148,17 @@ public class FileExtractor {
 		ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
 		ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
 		try {
-			while ((currentFile = archiveInputStream.getNextEntry()) != null) {
-				for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
-					if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
-						LOG.debug("Found: " + currentFile.getName());
-						return copyFileToDisk(archiveInputStream, extractedToFilePath, aFilenameWeAreSearchingFor);
+			if (filenamesWeAreSearchingFor.contains("*")) {
+				filenamesWeAreSearchingFor.remove(0);
+				LOG.debug("Extracting full archive");
+				return this.untarFolder(compressedFileInputStream, extractedToFilePath, filenamesWeAreSearchingFor);
+			} else {
+				while ((currentFile = archiveInputStream.getNextEntry()) != null) {
+					for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
+						if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
+							LOG.debug("Found: " + currentFile.getName());
+							return copyFileToDisk(archiveInputStream, extractedToFilePath, aFilenameWeAreSearchingFor);
+						}
 					}
 				}
 			}
@@ -164,31 +170,42 @@ public class FileExtractor {
 				"Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
 	}
 
-	private String unzipFolder(ZipFile zipFile, String zipDestinationFolder, ArrayList<String> possibleFilenames) {
+	private String untarFolder(InputStream compressedFileInputStream, String destinationFolder,
+			ArrayList<String> possibleFilenames) throws IOException {
+		String executablePath = "";
+		ArchiveEntry currentFile;
+		ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
+		try {
+			while ((currentFile = archiveInputStream.getNextEntry()) != null) {
+				String name = currentFile.getName();
+				name = this.handlePathCreation(name, destinationFolder);
+				if (name.length() > 0) {
+					String extractedFile = copyFileToDisk(archiveInputStream, destinationFolder, name);
+					for (String expectedFileName : possibleFilenames) {
+						if (extractedFile.endsWith(expectedFileName)) {
+							executablePath = extractedFile;
+						}
+					}
+				}
+			}
+		} finally {
+			compressedFileInputStream.close();
+		}
+
+		return executablePath;
+	}
+
+	private String unzipFolder(ZipFile zipFile, String destinationFolder, ArrayList<String> possibleFilenames) {
 		String executablePath = "";
 		try {
 			Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
 			while (entries.hasMoreElements()) {
 				ZipArchiveEntry zipEntry = entries.nextElement();
 				String name = zipEntry.getName();
-				// this.copyFileToDisk(inputStream, pathToExtractTo, filename);
-				name = name.replace('\\', '/');
 
-				File destinationFile = new File(zipDestinationFolder, name);
-				if (name.endsWith("/")) {
-					if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {
-						LOG.error("Error creating temp directory:" + destinationFile.getPath());
-					}
-					continue;
-				} else {
-					// Create the the parent directory if it doesn't exist
-					File parentFolder = destinationFile.getParentFile();
-					if (!parentFolder.isDirectory()) {
-						if (!parentFolder.mkdirs()) {
-							LOG.error("Error creating temp directory:" + parentFolder.getPath());
-						}
-					}
-					String extractedFile = copyFileToDisk(zipFile.getInputStream(zipEntry), zipDestinationFolder, name);
+				name = this.handlePathCreation(name, destinationFolder);
+				if (name.length() > 0) {
+					String extractedFile = copyFileToDisk(zipFile.getInputStream(zipEntry), destinationFolder, name);
 					for (String expectedFileName : possibleFilenames) {
 						if (extractedFile.endsWith(expectedFileName)) {
 							executablePath = extractedFile;
@@ -256,5 +273,26 @@ public class FileExtractor {
 		}
 
 		return outputFile.getAbsolutePath();
+	}
+
+	private String handlePathCreation(String name, String destinationFolder) {
+		name = name.replace('\\', '/');
+
+		File destinationFile = new File(destinationFolder, name);
+		if (name.endsWith("/")) {
+			if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {
+				LOG.error("Error creating temp directory:" + destinationFile.getPath());
+			}
+			return "";
+		} else {
+			// Create the the parent directory if it doesn't exist
+			File parentFolder = destinationFile.getParentFile();
+			if (!parentFolder.isDirectory()) {
+				if (!parentFolder.mkdirs()) {
+					LOG.error("Error creating temp directory:" + parentFolder.getPath());
+				}
+			}
+			return name;
+		}
 	}
 }

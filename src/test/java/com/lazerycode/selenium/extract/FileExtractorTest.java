@@ -61,7 +61,7 @@ public class FileExtractorTest {
         assertThat(downloadedFileHash,
                 is(equalTo(VALID_HASH)));
         assertThat(extractedFilePath,
-                is(equalTo(tempDir + "/phantomjs")));
+                is(equalTo(tempDir + File.separator + "phantomjs")));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class FileExtractorTest {
         assertThat(downloadedFileHash,
                 is(equalTo(VALID_HASH)));
         assertThat(extractedFilePath,
-                is(equalTo(tempDir + "/phantomjs")));
+                is(equalTo(tempDir + File.separator + "phantomjs")));
     }
 
     @Test
