@@ -9,6 +9,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -37,46 +38,36 @@ public class FileExtractor {
     /**
      * Extract binary from a downloaded archive file
      *
-     * @param downloadedCompressedFile
-     *            The downloaded compressed file
-     * @param extractedToFilePath
-     *            Path to extracted file
-     * @param possibleFilenames
-     *            Names of the files we want to extract
+     * @param downloadedCompressedFile The downloaded compressed file
+     * @param extractedToFilePath      Path to extracted file
+     * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
-     * @throws IOException
-     *             Unable to write to filesystem
-     * @throws IllegalArgumentException
-     *             Unsupported archive
-     * @throws MojoFailureException
-     *             Error running plugin
+     * @throws IOException              Unable to write to filesystem
+     * @throws IllegalArgumentException Unsupported archive
+     * @throws MojoFailureException     Error running plugin
      */
-    public String extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath,
-            BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
-        DownloadableFileType fileType = DownloadableFileType
-                .valueOf(FilenameUtils.getExtension(downloadedCompressedFile.getName()).toUpperCase());
+    public String extractFileFromArchive(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, IllegalArgumentException, MojoFailureException {
+        DownloadableFileType fileType = DownloadableFileType.valueOf(FilenameUtils.getExtension(downloadedCompressedFile.getName()).toUpperCase());
         LOG.debug("Determined archive type: " + fileType);
         LOG.debug("Overwrite files that exist: " + overwriteFilesThatExist);
 
         switch (fileType) {
-        case GZ:
-        case BZ2:
-            CompressedFile compressedFile = new CompressedFile(downloadedCompressedFile);
-            if (null != compressedFile.getArchiveType() && compressedFile.getArchiveType().equals(TAR)) {
-                return untarFile(compressedFile.getInputStream(), extractedToFilePath, possibleFilenames);
-            } else {
-                return copyFileToDisk(compressedFile.getInputStream(), extractedToFilePath,
-                        compressedFile.getDecompressedFilename());
-            }
-        case ZIP:
-            return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
-        case EXE:
-            if (possibleFilenames.getBinaryFilenames().contains(downloadedCompressedFile.getName())) {
-                return copyFileToDisk(new FileInputStream(downloadedCompressedFile), extractedToFilePath,
-                        downloadedCompressedFile.getName());
-            }
-        default:
-            throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
+            case GZ:
+            case BZ2:
+                CompressedFile compressedFile = new CompressedFile(downloadedCompressedFile);
+                if (null != compressedFile.getArchiveType() && compressedFile.getArchiveType().equals(TAR)) {
+                    return untarFile(compressedFile.getInputStream(), extractedToFilePath, possibleFilenames);
+                } else {
+                    return copyFileToDisk(compressedFile.getInputStream(), extractedToFilePath, compressedFile.getDecompressedFilename());
+                }
+            case ZIP:
+                return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
+            case EXE:
+                if (possibleFilenames.getBinaryFilenames().contains(downloadedCompressedFile.getName())) {
+                    return copyFileToDisk(new FileInputStream(downloadedCompressedFile), extractedToFilePath, downloadedCompressedFile.getName());
+                }
+            default:
+                throw new IllegalArgumentException("." + fileType + " is an unsupported archive type");
         }
     }
 
@@ -84,15 +75,11 @@ public class FileExtractor {
      * Unzip a downloaded zip file (this will implicitly overwrite any existing
      * files)
      *
-     * @param downloadedCompressedFile
-     *            The downloaded zip file
-     * @param extractedToFilePath
-     *            Path to extracted file
-     * @param possibleFilenames
-     *            Names of the files we want to extract
+     * @param downloadedCompressedFile The downloaded zip file
+     * @param extractedToFilePath      Path to extracted file
+     * @param possibleFilenames        Names of the files we want to extract
      * @return boolean
-     * @throws IOException
-     *             IOException
+     * @throws IOException IOException
      */
 
     String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames)
@@ -112,8 +99,7 @@ public class FileExtractor {
                     for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
                         if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
                             LOG.debug("Found: " + zipFileEntry.getName());
-                            return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath,
-                                    aFilenameWeAreSearchingFor);
+                            return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, aFilenameWeAreSearchingFor);
                         }
                     }
                 }
@@ -122,37 +108,30 @@ public class FileExtractor {
             zip.close();
         }
 
-        throw new ExpectedFileNotFoundException(
-                "Unable to find any expected files for " + possibleFilenames.getBinaryTypeAsString());
+        throw new ExpectedFileNotFoundException("Unable to find any expected files for " + possibleFilenames.getBinaryTypeAsString());
     }
 
     /**
-     * Untar a decompressed tar file (this will implicitly overwrite any existing
-     * files)
+     * Untar a decompressed tar file (this will implicitly overwrite any existing files)
      *
-     * @param compressedFileInputStream
-     *            The expanded tar file
-     * @param extractedToFilePath
-     *            Path to extracted file
-     * @param possibleFilenames
-     *            Names of the files we want to extract
+     * @param compressedFileInputStream The expanded tar file
+     * @param extractedToFilePath       Path to extracted file
+     * @param possibleFilenames         Names of the files we want to extract
      * @return boolean
-     * @throws IOException
-     *             MojoFailureException
+     * @throws IOException MojoFailureException
      */
 
-    private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath,
-            BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
+    private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
-        ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
         try {
             if (filenamesWeAreSearchingFor.contains("*")) {
                 filenamesWeAreSearchingFor.remove(0);
                 LOG.debug("Extracting full archive");
                 return this.untarFolder(compressedFileInputStream, extractedToFilePath, filenamesWeAreSearchingFor);
             } else {
+                ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
                 while ((currentFile = archiveInputStream.getNextEntry()) != null) {
                     for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
                         if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
@@ -170,17 +149,17 @@ public class FileExtractor {
                 "Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
     }
 
-    private String untarFolder(InputStream compressedFileInputStream, String destinationFolder,
-            ArrayList<String> possibleFilenames) throws IOException {
+    private String untarFolder(InputStream compressedFileInputStream, String destinationFolder, ArrayList<String> possibleFilenames) throws IOException {
         String executablePath = "";
         ArchiveEntry currentFile;
         ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
+        CloseShieldInputStream notClosableArchiveInputStream = new CloseShieldInputStream(archiveInputStream);
         try {
             while ((currentFile = archiveInputStream.getNextEntry()) != null) {
                 String name = currentFile.getName();
                 name = this.handlePathCreation(name, destinationFolder);
                 if (name.length() > 0) {
-                    String extractedFile = copyFileToDisk(archiveInputStream, destinationFolder, name);
+                    String extractedFile = copyFileToDisk(notClosableArchiveInputStream, destinationFolder, name);
                     for (String expectedFileName : possibleFilenames) {
                         if (extractedFile.endsWith(expectedFileName)) {
                             executablePath = extractedFile;
@@ -190,6 +169,7 @@ public class FileExtractor {
             }
         } finally {
             compressedFileInputStream.close();
+            notClosableArchiveInputStream.close();
         }
 
         return executablePath;
@@ -231,16 +211,11 @@ public class FileExtractor {
     /**
      * Copy a file from an inputsteam to disk
      *
-     * @param inputStream
-     *            A valid input stream to read
-     * @param pathToExtractTo
-     *            Path of the file we want to create
-     * @param filename
-     *            Filename of the file we want to create
-     * @return Absolute path of the newly created file (Or existing file if
-     *         overwriteFilesThatExist is set to false)
-     * @throws IOException
-     *             IOException
+     * @param inputStream     A valid input stream to read
+     * @param pathToExtractTo Path of the file we want to create
+     * @param filename        Filename of the file we want to create
+     * @return Absolute path of the newly created file (Or existing file if overwriteFilesThatExist is set to false)
+     * @throws IOException IOException
      */
     private String copyFileToDisk(InputStream inputStream, String pathToExtractTo, String filename) throws IOException {
         if (!overwriteFilesThatExist) {

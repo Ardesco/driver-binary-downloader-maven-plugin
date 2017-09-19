@@ -29,6 +29,7 @@ public class FileExtractorTest {
     private final URL testTarBZ2File = this.getClass().getResource("/jetty/files/download.tar.bz2");
     private final URL textExeFile = this.getClass().getResource("/jetty/files/MicrosoftWebDriver.exe");
     private final URL testFirefoxZipFile = this.getClass().getResource("/jetty/files/FirefoxPortable.zip");
+    private final URL testFirefoxTarFile = this.getClass().getResource("/jetty/files/FirefoxPortable.tar.bz2");
     private static File phantomJSTestFile;
     private static String tempDir;
 
@@ -190,9 +191,17 @@ public class FileExtractorTest {
     }
     
     @Test
-    public void successfullyDownloadAnFirefoxFile() throws Exception {
+    public void successfullyDownloadAnFirefoxZipFile() throws Exception {
         FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
         String extractedFile = fileExtractor.extractFileFromArchive(new File(testFirefoxZipFile.getFile()), tempDir, BinaryType.FIREFOX);
+        
+        assertThat(extractedFile, containsString("firefox"));
+    }
+    
+    @Test
+    public void successfullyDownloadAnFirefoxTarFile() throws Exception {
+        FileExtractor fileExtractor = new FileExtractor(OVERWRITE_EXISTING_FILES);
+        String extractedFile = fileExtractor.extractFileFromArchive(new File(testFirefoxTarFile.getFile()), tempDir, BinaryType.FIREFOX);
         
         assertThat(extractedFile, containsString("firefox"));
     }
