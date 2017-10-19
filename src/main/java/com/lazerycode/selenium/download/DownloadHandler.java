@@ -113,7 +113,7 @@ public class DownloadHandler {
                 if (checkFileHash(localZipFile, driverDetails.hash, driverDetails.hashType)) {
                     fileNeedsToBeDownloaded = false;
                 } else {
-                    fileNeedsToBeDownloaded = false;
+                    fileNeedsToBeDownloaded = true;
                 }
             }
         }
