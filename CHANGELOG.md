@@ -2,6 +2,12 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.0.15 Release Notes
+
+* Default location where binaries are stored is slightly different, if you haven't specified a location it may download then all again
+* Bug that stop files being downloaded if check hash was disabled fixed (Thanks Alex Kress)
+* Fix #65 Env variables for proxies are no longer ignored
+
 ##Version 1.0.14 Release Notes
 
 * **BREAKING CHANGE** This plugin now requires Java 8 (This brings it into line with Selenium 3.x)
