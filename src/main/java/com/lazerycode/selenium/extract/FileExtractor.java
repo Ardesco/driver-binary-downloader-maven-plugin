@@ -28,8 +28,7 @@ public class FileExtractor {
     private final boolean overwriteFilesThatExist;
 
     /**
-     * @param overwriteFilesThatExist
-     *            Overwrite any existing files
+     * @param overwriteFilesThatExist Overwrite any existing files
      */
     public FileExtractor(boolean overwriteFilesThatExist) {
         this.overwriteFilesThatExist = overwriteFilesThatExist;
@@ -72,8 +71,7 @@ public class FileExtractor {
     }
 
     /**
-     * Unzip a downloaded zip file (this will implicitly overwrite any existing
-     * files)
+     * Unzip a downloaded zip file (this will implicitly overwrite any existing files)
      *
      * @param downloadedCompressedFile The downloaded zip file
      * @param extractedToFilePath      Path to extracted file
