@@ -80,8 +80,7 @@ public class FileExtractor {
      * @throws IOException IOException
      */
 
-    String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames)
-            throws IOException, ExpectedFileNotFoundException {
+    String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
         ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
