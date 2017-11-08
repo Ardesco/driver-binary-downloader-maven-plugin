@@ -28,8 +28,9 @@ public class DetectProxyConfig {
 
     public DetectProxyConfig() {
 
-        String proxyHost = System.getProperty("http.proxyHost");
-        Integer proxyPort = Integer.getInteger(System.getProperty("http.proxyPort"));
+        String proxyHost = System.getProperty("http.proxyHost", System.getenv("http.proxyHost"));
+        String proxyPortFromSystem = System.getProperty("http.proxyPort", System.getenv("http.proxyPort"));
+        Integer proxyPort = Integer.valueOf(proxyPortFromSystem);
 
         if (Strings.isNullOrEmpty(proxyHost) || null == proxyPort) {
 
