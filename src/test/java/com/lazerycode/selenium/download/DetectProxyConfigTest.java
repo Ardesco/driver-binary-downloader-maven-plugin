@@ -64,9 +64,7 @@ public class DetectProxyConfigTest {
     }
 
     @Test
-    public void nullProxyHostOrProxyPort() throws Exception {
+    public void nullProxyHostOrProxyPortDoesNotCauseANullPointerErrorToBeThrown() throws Exception {
         DetectProxyConfig proxyConfig = new DetectProxyConfig();
-
-        assertThat(proxyConfig.isProxyAvailable(), is(equalTo(false)));
     }
 }
