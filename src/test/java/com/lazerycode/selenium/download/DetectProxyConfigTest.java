@@ -29,6 +29,7 @@ public class DetectProxyConfigTest {
         System.setProperty("http.proxyPort", "" + port);
 
         DetectProxyConfig proxyConfig = new DetectProxyConfig();
+
         assertThat(proxyConfig.getHost(), is(equalTo(host)));
         assertThat(proxyConfig.getPort(), is(equalTo(port)));
         assertThat(proxyConfig.isProxyAvailable(), is(equalTo(true)));
@@ -40,6 +41,7 @@ public class DetectProxyConfigTest {
         envVars.set("http.proxyPort", Integer.toString(envPort));
 
         DetectProxyConfig proxyConfig = new DetectProxyConfig();
+
         assertThat(proxyConfig.getHost(), is(equalTo(envHost)));
         assertThat(proxyConfig.getPort(), is(equalTo(envPort)));
         assertThat(proxyConfig.isProxyAvailable(), is(equalTo(true)));
@@ -55,9 +57,16 @@ public class DetectProxyConfigTest {
         envVars.set("http.proxyPort", Integer.toString(envPort));
 
         DetectProxyConfig proxyConfig = new DetectProxyConfig();
+
         assertThat(proxyConfig.getHost(), is(equalTo(propHost)));
         assertThat(proxyConfig.getPort(), is(equalTo(propPort)));
         assertThat(proxyConfig.isProxyAvailable(), is(equalTo(true)));
     }
 
+    @Test
+    public void nullProxyHostOrProxyPort() throws Exception {
+        DetectProxyConfig proxyConfig = new DetectProxyConfig();
+
+        assertThat(proxyConfig.isProxyAvailable(), is(equalTo(false)));
+    }
 }
