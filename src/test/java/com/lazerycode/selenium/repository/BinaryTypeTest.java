@@ -2,7 +2,7 @@ package com.lazerycode.selenium.repository;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static com.lazerycode.selenium.repository.BinaryType.GOOGLECHROME;
 import static com.lazerycode.selenium.repository.BinaryType.PHANTOMJS;
@@ -14,7 +14,7 @@ public class BinaryTypeTest {
 
     @Test
     public void willReturnAListOfFilenameAssociatedWithBinary() {
-        ArrayList<String> binaryFilenames = PHANTOMJS.getBinaryFilenames();
+        List<String> binaryFilenames = PHANTOMJS.getBinaryFilenames();
 
         assertThat(binaryFilenames.size(),
                 is(equalTo(2)));

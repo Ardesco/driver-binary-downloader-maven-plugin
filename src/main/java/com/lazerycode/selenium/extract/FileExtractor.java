@@ -16,8 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import static com.lazerycode.selenium.extract.DownloadableFileType.TAR;
 
@@ -81,7 +81,7 @@ public class FileExtractor {
 
     String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
-        ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        List<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
             Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
@@ -114,7 +114,7 @@ public class FileExtractor {
     private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
-        ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        List<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
         ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
         try {
             while ((currentFile = archiveInputStream.getNextEntry()) != null) {
