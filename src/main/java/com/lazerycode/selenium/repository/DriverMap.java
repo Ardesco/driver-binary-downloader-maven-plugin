@@ -41,6 +41,15 @@ public class DriverMap {
         return driverVersions.get(driverVersions.lastKey());
     }
 
+    public String getLatestVersionOfDriverContext(DriverContext driverContext) {
+        if (!repository.containsKey(driverContext)) {
+            throw new IllegalArgumentException("Driver context not found in driver repository");
+        }
+
+        TreeMap<String, DriverDetails> driverVersions = repository.get(driverContext);
+        return driverVersions.lastKey();
+    }
+
     public Set<DriverContext> getKeys() {
         return repository.keySet();
     }

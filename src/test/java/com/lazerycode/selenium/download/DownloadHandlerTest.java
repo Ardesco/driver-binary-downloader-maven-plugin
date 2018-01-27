@@ -134,8 +134,9 @@ public class DownloadHandlerTest {
         fileDetails.hash = validSHA1Hash;
         DriverContext driverContext = binaryDataFor(OSX, PHANTOMJS, ARCHITECTURE_64_BIT);
         DriverMap driverMap = new DriverMap();
-        driverMap.getMapForDriverContext(driverContext).put("2.13", fileDetails);
-        File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + "osx" + File.separator + "phantomjs" + File.separator + "64bit" + File.separator + "phantomjs");
+        String version = "2.13";
+        driverMap.getMapForDriverContext(driverContext).put(version, fileDetails);
+        File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + "osx" + File.separator + "phantomjs" + File.separator + version + File.separator + "64bit" + File.separator + "phantomjs");
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 
@@ -161,8 +162,9 @@ public class DownloadHandlerTest {
         fileDetails.hashType = null;
         fileDetails.hash = null;
         DriverMap driverMap = new DriverMap();
-        driverMap.getMapForDriverContext(binaryDataFor(OSX, PHANTOMJS, ARCHITECTURE_64_BIT)).put("2.13", fileDetails);
-        File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + "osx" + File.separator + "phantomjs" + File.separator + "64bit" + File.separator + "phantomjs");
+        String version = "2.13";
+        driverMap.getMapForDriverContext(binaryDataFor(OSX, PHANTOMJS, ARCHITECTURE_64_BIT)).put(version, fileDetails);
+        File expectedDownloadedFile = new File(rootStandaloneServerDirectoryPath + File.separator + "osx" + File.separator + "phantomjs" + File.separator + version + File.separator + "64bit" + File.separator + "phantomjs");
 
         assertThat(expectedDownloadedFile.exists(), is(equalTo(false)));
 

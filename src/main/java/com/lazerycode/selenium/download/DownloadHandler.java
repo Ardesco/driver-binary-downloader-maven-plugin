@@ -91,11 +91,11 @@ public class DownloadHandler {
         for (final DriverContext driverContext : filesToDownload.getKeys()) {
             if (onlyGetLatestVersions) {
                 DriverDetails driverDetails = filesToDownload.getDetailsForLatestVersionOfDriverContext(driverContext);
-                downloadAndExtractExecutableFiles(driverContext, driverDetails);
+                downloadAndExtractExecutableFiles(driverContext, driverDetails, filesToDownload.getLatestVersionOfDriverContext(driverContext));
             } else {
                 for (String version : filesToDownload.getAvailableVersionsForDriverContext(driverContext)) {
                     DriverDetails driverDetails = filesToDownload.getDetailsForVersionOfDriverContext(driverContext, version);
-                    downloadAndExtractExecutableFiles(driverContext, driverDetails);
+                    downloadAndExtractExecutableFiles(driverContext, driverDetails, version);
                 }
             }
         }
@@ -103,7 +103,7 @@ public class DownloadHandler {
         return filesToDownload;
     }
 
-    private void downloadAndExtractExecutableFiles(DriverContext driverContext, DriverDetails driverDetails) throws IOException, MojoExecutionException, URISyntaxException, MojoFailureException {
+    private void downloadAndExtractExecutableFiles(DriverContext driverContext, DriverDetails driverDetails, String version) throws IOException, MojoExecutionException, URISyntaxException, MojoFailureException {
         String localZipFileAbsolutePath = this.downloadedZipFileDirectory + File.separator + FilenameUtils.getName(driverDetails.fileLocation.getFile());
         File localZipFile = new File(localZipFileAbsolutePath);
         boolean fileNeedsToBeDownloaded = true;
@@ -122,7 +122,7 @@ public class DownloadHandler {
             localZipFile = downloadFile(driverDetails, checkFileHash);
         }
 
-        String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext();
+        String extractedFileLocation = this.rootStandaloneServerDirectory.getAbsolutePath() + File.separator + driverContext.buildExtractionPathFromDriverContext(version);
         FileExtractor fileExtractor = new FileExtractor(this.overwriteFilesThatExist);
         driverDetails.extractedLocation = fileExtractor.extractFileFromArchive(localZipFile, extractedFileLocation, driverContext.getBinaryTypeForContext());
     }

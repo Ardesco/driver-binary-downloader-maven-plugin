@@ -35,8 +35,8 @@ public class DriverContext {
         return new DriverContext(browserType, osName, architecture);
     }
 
-    public String buildExtractionPathFromDriverContext() {
-        return operatingSystem.toString().toLowerCase() + File.separator + driverType.getBinaryTypeAsString() + File.separator + systemArchitecture.getSystemArchitectureType() + File.separator;
+    public String buildExtractionPathFromDriverContext(String version) {
+        return operatingSystem.toString().toLowerCase() + File.separator + driverType.getBinaryTypeAsString() + File.separator + version.toLowerCase() + File.separator + systemArchitecture.getSystemArchitectureType() + File.separator;
     }
 
     public BinaryType getBinaryTypeForContext() {
