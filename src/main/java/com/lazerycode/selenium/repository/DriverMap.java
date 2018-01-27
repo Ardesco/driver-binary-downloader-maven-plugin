@@ -23,8 +23,8 @@ public class DriverMap {
         }
 
         TreeMap<String, DriverDetails> driverVersions = repository.get(driverContext);
-        DriverDetails detailsToReturn = driverVersions.get(driverVersions.lastKey());
-        if (detailsToReturn.hashCode() == 0) {
+        DriverDetails detailsToReturn = driverVersions.get(version);
+        if (detailsToReturn == null) {
             throw new NoSuchElementException("No driver version " + version + " exists for the context " + driverContext.toString());
         }
 

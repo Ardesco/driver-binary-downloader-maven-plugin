@@ -101,6 +101,31 @@ public class DriverMapTest {
     }
 
     @Test
+    public void correctlyReturnsSpecificVersion() throws MalformedURLException {
+        DriverMap driverMap = new DriverMap();
+        DriverDetails oldestVersion = new DriverDetails();
+        oldestVersion.hash = "oldest";
+        oldestVersion.hashType = HashType.SHA1;
+        oldestVersion.fileLocation = new URL("http://www.example.com/foo/bar");
+        DriverDetails latestVersion = new DriverDetails();
+        latestVersion.hash = "latest";
+        latestVersion.hashType = HashType.MD5;
+        latestVersion.fileLocation = new URL("http://www.example.com/bar/foo");
+        Map originalVersionMap = driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT));
+        originalVersionMap.put("2.13", oldestVersion);
+        originalVersionMap.put("4", latestVersion);
+
+        DriverDetails returnedDetails = driverMap.getDetailsForVersionOfDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT),"2.13");
+
+        assertThat(returnedDetails.hash,
+                is(equalTo("oldest")));
+        assertThat(returnedDetails.hashType,
+                is(equalTo(HashType.SHA1)));
+        assertThat(returnedDetails.fileLocation,
+                is(equalTo(new URL("http://www.example.com/foo/bar"))));
+    }
+
+    @Test
     public void willReturnAValidKeySetWithASingleKey() throws MalformedURLException {
         DriverMap driverMap = new DriverMap();
         driverMap.getMapForDriverContext(binaryDataFor(OSX, GOOGLECHROME, ARCHITECTURE_64_BIT));
