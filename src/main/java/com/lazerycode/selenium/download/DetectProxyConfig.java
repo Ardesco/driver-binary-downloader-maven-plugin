@@ -1,6 +1,7 @@
 package com.lazerycode.selenium.download;
 
 import com.google.common.base.Strings;
+import org.apache.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class DetectProxyConfig {
 
+    private static final Logger LOG = Logger.getLogger(DetectProxyConfig.class);
     private static String host;
     private static int port;
     private static boolean proxyAvailable = false;
@@ -30,7 +32,12 @@ public class DetectProxyConfig {
 
         String proxyHost = System.getProperty("http.proxyHost", System.getenv("http.proxyHost"));
         String proxyPortFromSystem = System.getProperty("http.proxyPort", System.getenv("http.proxyPort"));
-        Integer proxyPort = Integer.valueOf(proxyPortFromSystem);
+        Integer proxyPort = null;
+        try {
+            proxyPort = Integer.valueOf(proxyPortFromSystem);
+        } catch (NumberFormatException ignored) {
+            LOG.debug("Invalid proxy port of '" + proxyPortFromSystem + "' found, ignoring...");
+        }
 
         if (Strings.isNullOrEmpty(proxyHost) || null == proxyPort) {
 

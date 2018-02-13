@@ -2,6 +2,14 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.0.17 Release Notes
+
+* Add Java 9 support (Thanks M.P. Korstanje)
+
+##Version 1.0.16 Release Notes
+
+* Fix #68 Null pointer errors thrown for users who are not using proxies.
+
 ##Version 1.0.15 Release Notes
 
 * Default location where binaries are stored is slightly different, if you haven't specified a location it may download then all again

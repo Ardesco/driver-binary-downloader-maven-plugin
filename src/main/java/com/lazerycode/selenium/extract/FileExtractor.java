@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import static com.lazerycode.selenium.extract.DownloadableFileType.TAR;
 
@@ -82,7 +83,7 @@ public class FileExtractor {
 
     String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
-        ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        ArrayList<String> filenamesWeAreSearchingFor = new ArrayList<String>(possibleFilenames.getBinaryFilenames());
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
             Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
@@ -121,7 +122,7 @@ public class FileExtractor {
     private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
-        ArrayList<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        ArrayList<String> filenamesWeAreSearchingFor = new ArrayList<String>(possibleFilenames.getBinaryFilenames());
         try {
             if (filenamesWeAreSearchingFor.contains("*")) {
                 filenamesWeAreSearchingFor.remove(0);
@@ -146,7 +147,7 @@ public class FileExtractor {
                 "Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
     }
 
-    private String untarFolder(InputStream compressedFileInputStream, String destinationFolder, ArrayList<String> possibleFilenames) throws IOException {
+    private String untarFolder(InputStream compressedFileInputStream, String destinationFolder, List<String> possibleFilenames) throws IOException {
         String executablePath = "";
         ArchiveEntry currentFile;
         ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
@@ -172,7 +173,7 @@ public class FileExtractor {
         return executablePath;
     }
 
-    private String unzipFolder(ZipFile zipFile, String destinationFolder, ArrayList<String> possibleFilenames) {
+    private String unzipFolder(ZipFile zipFile, String destinationFolder, List<String> possibleFilenames) {
         String executablePath = "";
         try {
             Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();

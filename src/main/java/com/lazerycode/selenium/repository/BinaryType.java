@@ -1,61 +1,63 @@
 package com.lazerycode.selenium.repository;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public enum BinaryType {
     INTERNETEXPLORER(
-            new ArrayList<String>() {{
-                add("IEDriverServer.exe");
-            }},
+            asList(
+                    "IEDriverServer.exe"
+            ),
             "webdriver.ie.driver"),
     GOOGLECHROME(
-            new ArrayList<String>() {{
-                add("chromedriver.exe");
-                add("chromedriver");
-            }},
+            asList(
+                    "chromedriver.exe",
+                    "chromedriver"
+            ),
             "webdriver.chrome.driver"),
     PHANTOMJS(
-            new ArrayList<String>() {{
-                add("phantomjs.exe");
-                add("phantomjs");
-            }},
+            asList(
+                    "phantomjs.exe",
+                    "phantomjs"
+            ),
             "phantomjs.binary.path"),
     OPERACHROMIUM(
-            new ArrayList<String>() {{
-                add("operadriver.exe");
-                add("operadriver");
-            }},
+            asList(
+                    "operadriver.exe",
+                    "operadriver"
+            ),
             "webdriver.opera.driver"),
     MARIONETTE(
-            new ArrayList<String>() {{
-                add("wires");
-                add("wires.exe");
-                add("geckodriver");
-                add("geckodriver.exe");
-            }},
+            asList(
+                    "wires",
+                    "wires.exe",
+                    "geckodriver",
+                    "geckodriver.exe"
+            ),
             "webdriver.gecko.driver"),
     EDGE(
-            new ArrayList<String>() {{
-                add("MicrosoftWebDriver.exe");
-            }},
+            asList(
+                    "MicrosoftWebDriver.exe"
+            ),
             "webdriver.edge.driver"),
     FIREFOX(
-            new ArrayList<String>() {{
-                add("*");
-                add("firefox.exe");
-                add("firefox");
-            }},
+            asList(
+                "*",
+                "firefox.exe",
+                "firefox"
+            ),
             "webdriver.firefox.bin");
 
-    private final ArrayList<String> binaryFilenames;
+    private final List<String> binaryFilenames;
     private final String driverSystemProperty;
 
-    BinaryType(ArrayList<String> binaryFilenames, String driverSystemProperty) {
+    BinaryType(List<String> binaryFilenames, String driverSystemProperty) {
         this.binaryFilenames = binaryFilenames;
         this.driverSystemProperty = driverSystemProperty;
     }
 
-    public ArrayList<String> getBinaryFilenames() {
+    public List<String> getBinaryFilenames() {
         return binaryFilenames;
     }
 
