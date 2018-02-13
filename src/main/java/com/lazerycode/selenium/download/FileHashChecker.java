@@ -35,6 +35,12 @@ public class FileHashChecker {
             case MD5:
                 actualFileHash = DigestUtils.md5Hex(fileToHashCheck);
                 break;
+            case SHA256:
+                actualFileHash = DigestUtils.sha256Hex(fileToHashCheck);
+                break;
+            case SHA512:
+                actualFileHash = DigestUtils.sha512Hex(fileToHashCheck);
+                break;
             case SHA1:
             default:
                 actualFileHash = DigestUtils.shaHex(fileToHashCheck);
