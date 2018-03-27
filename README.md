@@ -126,15 +126,15 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
     <root>
         <windows>
             <driver id="internetexplorer">
-                <version id="3.7.0">
+                <version id="3.9.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/3.7/IEDriverServer_x64_3.7.0.zip</filelocation>
-                        <hash>f6a0d7939355acba00f7b1374bebda50bbead59b</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/3.9/IEDriverServer_x64_3.9.0.zip</filelocation>
+                        <hash>c9f885b6a339f3f0039d670a23f998868f539e65</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>http://selenium-release.storage.googleapis.com/3.7/IEDriverServer_Win32_3.7.0.zip</filelocation>
-                        <hash>ded0a82cab46538751ba17206f55c112674585d6</hash>
+                        <filelocation>http://selenium-release.storage.googleapis.com/3.9/IEDriverServer_Win32_3.9.0.zip</filelocation>
+                        <hash>dab42d7419599dd311d4fba424398fba2f20e883</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -149,24 +149,24 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="googlechrome">
-                <version id="2.33">
+                <version id="2.37">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.33/chromedriver_win32.zip</filelocation>
-                        <hash>b52ca785707eade99c56309ce9d66c1177b5d4a9</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip</filelocation>
+                        <hash>fe708aac4eeb919a4ce26cf4aa52a2dacc666a2f</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="operachromium">
-                <version id="2.30">
+                <version id="2.35">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.30/operadriver_win64.zip</filelocation>
-                        <hash>bf80617b01708ced97f7cc174e72a1b6953ae126</hash>
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.35/operadriver_win64.zip</filelocation>
+                        <hash>180a876f40dbc9734ebb81a3b6f2be35cadaf0cc</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.30/operadriver_win32.zip</filelocation>
-                        <hash>151dc7ae316be2ccc52c28395823c778ccfda5ac</hash>
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.35/operadriver_win32.zip</filelocation>
+                        <hash>55d43156716d7d1021733c2825e99896fea73815</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -181,15 +181,15 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.19.1">
+                <version id="0.20.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-win64.zip</filelocation>
-                        <hash>1d6a7ade773f98b3b5a15ace3b6a06b1ad97a8f1</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-win64.zip</filelocation>
+                        <hash>e96a24cf4147d6571449bdd279be65a5e773ba4c</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-win32.zip</filelocation>
-                        <hash>74258f5c73a8fce66fbc3ecd622dae890f1e475a</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-win32.zip</filelocation>
+                        <hash>9aa5bbdc68acc93c244a7ba5111a3858d8cbc41d</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -197,24 +197,19 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </windows>
         <linux>
             <driver id="googlechrome">
-                <version id="2.33">
+                <version id="2.37">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip</filelocation>
-                        <hash>717d67ab192b1c57819528161557ce2b66b9436c</hash>
-                        <hashtype>sha1</hashtype>
-                    </bitrate>
-                    <bitrate thirtytwobit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux32.zip</filelocation>
-                        <hash>cca39f74c1ddd2f2d7afd36f41a9f0db7be88dcf</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_linux64.zip</filelocation>
+                        <hash>b8515d09bb2d533ca3b85174c85cac1e062d04c6</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="operachromium">
-                <version id="2.30">
+                <version id="2.35">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.30/operadriver_linux64.zip</filelocation>
-                        <hash>a8528276dab36e5daa6213db16ac4ae227e8394d</hash>
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.35/operadriver_linux64.zip</filelocation>
+                        <hash>f75845a7e37e4c1a58c61677a2d6766477a4ced2</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -234,20 +229,20 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.19.1">
+                <version id="0.20.0">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz</filelocation>
-                        <hash>9284c82e1a6814ea2a63841cd532d69b87eb0d6e</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-linux64.tar.gz</filelocation>
+                        <hash>e23a6ae18bec896afe00e445e0152fba9ed92007</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate thirtytwobit="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux32.tar.gz</filelocation>
-                        <hash>9375768a70365d361029f050d73e03aba0ece351</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-linux32.tar.gz</filelocation>
+                        <hash>c80eb7a07ae3fe6eef2f52855007939c4b655a4c</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                     <bitrate arm="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-arm7hf.tar.gz</filelocation>
-                        <hash>115ad6e36c03445fed1499112156472eaa5faa1d</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-arm7hf.tar.gz</filelocation>
+                        <hash>2776db97a330c38bb426034d414a01c7bf19cc94</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -255,19 +250,19 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
         </linux>
         <osx>
             <driver id="googlechrome">
-                <version id="2.33">
+                <version id="2.37">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip</filelocation>
-                        <hash>eb28e6d716b04bfede98fbb74bae041d6a415aea</hash>
+                        <filelocation>https://chromedriver.storage.googleapis.com/2.37/chromedriver_mac64.zip</filelocation>
+                        <hash>714e7abb1a7aeea9a8997b64a356a44fb48f5ef4</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
             </driver>
             <driver id="operachromium">
-                <version id="2.30">
+                <version id="2.35">
                     <bitrate sixtyfourbit="true">
-                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.30/operadriver_mac64.zip</filelocation>
-                        <hash>2b5273762c7f7c3d8ad61c03f7cbf4d0825b918b</hash>
+                        <filelocation>https://github.com/operasoftware/operachromiumdriver/releases/download/v.2.35/operadriver_mac64.zip</filelocation>
+                        <hash>66a88c856b55f6c89ff5d125760d920e0d4db6ff</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
@@ -282,10 +277,10 @@ ___Below is an example RepositoryMap.xml that I will endeavour to keep up to dat
                 </version>
             </driver>
             <driver id="marionette">
-                <version id="0.19.1">
+                <version id="0.20.0">
                     <bitrate thirtytwobit="true" sixtyfourbit="true">
-                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-macos.tar.gz</filelocation>
-                        <hash>ae350f4510bbc0a8526f3fbfced8065b1b8586b2</hash>
+                        <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-macos.tar.gz</filelocation>
+                        <hash>87a63f8adc2767332f2eadb24dedff982ac4f902</hash>
                         <hashtype>sha1</hashtype>
                     </bitrate>
                 </version>
