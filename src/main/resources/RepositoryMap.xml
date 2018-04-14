@@ -70,6 +70,20 @@
                 </bitrate>
             </version>
         </driver>
+        <driver id="firefox">
+            <version id="56.0.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://www.firefox-usb.com/download/FirefoxPortable64-56.0.2.zip</filelocation>
+                    <hash>8b748fdce30c99f467718177ec56ede811953e53</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://www.firefox-usb.com/download/FirefoxPortable32-56.0.2.zip</filelocation>
+                    <hash>423ef16181fdab526a5f53d3272a75acd4911838</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
     </windows>
     <linux>
         <driver id="googlechrome">
@@ -119,6 +133,20 @@
                 <bitrate arm="true">
                     <filelocation>https://github.com/mozilla/geckodriver/releases/download/v0.20.0/geckodriver-v0.20.0-arm7hf.tar.gz</filelocation>
                     <hash>2776db97a330c38bb426034d414a01c7bf19cc94</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+            </version>
+        </driver>
+        <driver id="firefox">
+            <version id="56.0.2">
+                <bitrate sixtyfourbit="true">
+                    <filelocation>https://ftp.mozilla.org/pub/firefox/releases/56.0.2/linux-x86_64/en-US/firefox-56.0.2.tar.bz2</filelocation>
+                    <hash>2daf7f9e8dbc3e5c083b4eef923051cdca5fed3a</hash>
+                    <hashtype>sha1</hashtype>
+                </bitrate>
+                <bitrate thirtytwobit="true">
+                    <filelocation>https://ftp.mozilla.org/pub/firefox/releases/56.0.2/linux-i686/en-US/firefox-56.0.2.tar.bz2</filelocation>
+                    <hash>3808f8b852a20d748dd17cd69963f804bb1371ec</hash>
                     <hashtype>sha1</hashtype>
                 </bitrate>
             </version>

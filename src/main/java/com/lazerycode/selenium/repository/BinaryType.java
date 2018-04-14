@@ -40,7 +40,14 @@ public enum BinaryType {
             asList(
                     "MicrosoftWebDriver.exe"
             ),
-            "webdriver.edge.driver");
+            "webdriver.edge.driver"),
+    FIREFOX(
+            asList(
+                "*",
+                "firefox.exe",
+                "firefox"
+            ),
+            "webdriver.firefox.bin");
 
     private final List<String> binaryFilenames;
     private final String driverSystemProperty;

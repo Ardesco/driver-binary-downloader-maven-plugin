@@ -51,3 +51,4 @@ Thumbs.db
 \.settings
 \.dorsync
 /nbactions.xml
+/target/

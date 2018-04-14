@@ -9,6 +9,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.log4j.Logger;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class FileExtractor {
             case ZIP:
                 return unzipFile(downloadedCompressedFile, extractedToFilePath, possibleFilenames);
             case EXE:
-                if(possibleFilenames.getBinaryFilenames().contains(downloadedCompressedFile.getName())) {
+                if (possibleFilenames.getBinaryFilenames().contains(downloadedCompressedFile.getName())) {
                     return copyFileToDisk(new FileInputStream(downloadedCompressedFile), extractedToFilePath, downloadedCompressedFile.getName());
                 }
             default:
@@ -81,16 +83,22 @@ public class FileExtractor {
 
     String unzipFile(File downloadedCompressedFile, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from .zip file...");
-        List<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
+        ArrayList<String> filenamesWeAreSearchingFor = new ArrayList<String>(possibleFilenames.getBinaryFilenames());
         ZipFile zip = new ZipFile(downloadedCompressedFile);
         try {
             Enumeration<ZipArchiveEntry> zipFile = zip.getEntries();
-            while (zipFile.hasMoreElements()) {
-                ZipArchiveEntry zipFileEntry = zipFile.nextElement();
-                for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
-                    if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
-                        LOG.debug("Found: " + zipFileEntry.getName());
-                        return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, aFilenameWeAreSearchingFor);
+            if (filenamesWeAreSearchingFor.get(0).equals("*")) {
+                filenamesWeAreSearchingFor.remove(0);
+                LOG.debug("Extracting full archive");
+                return this.unzipFolder(zip, extractedToFilePath, filenamesWeAreSearchingFor);
+            } else {
+                while (zipFile.hasMoreElements()) {
+                    ZipArchiveEntry zipFileEntry = zipFile.nextElement();
+                    for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
+                        if (zipFileEntry.getName().endsWith(aFilenameWeAreSearchingFor)) {
+                            LOG.debug("Found: " + zipFileEntry.getName());
+                            return copyFileToDisk(zip.getInputStream(zipFileEntry), extractedToFilePath, aFilenameWeAreSearchingFor);
+                        }
                     }
                 }
             }
@@ -114,14 +122,20 @@ public class FileExtractor {
     private String untarFile(InputStream compressedFileInputStream, String extractedToFilePath, BinaryType possibleFilenames) throws IOException, ExpectedFileNotFoundException {
         LOG.debug("Attempting to extract binary from a .tar file...");
         ArchiveEntry currentFile;
-        List<String> filenamesWeAreSearchingFor = possibleFilenames.getBinaryFilenames();
-        ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
+        ArrayList<String> filenamesWeAreSearchingFor = new ArrayList<String>(possibleFilenames.getBinaryFilenames());
         try {
-            while ((currentFile = archiveInputStream.getNextEntry()) != null) {
-                for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
-                    if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
-                        LOG.debug("Found: " + currentFile.getName());
-                        return copyFileToDisk(archiveInputStream, extractedToFilePath, aFilenameWeAreSearchingFor);
+            if (filenamesWeAreSearchingFor.contains("*")) {
+                filenamesWeAreSearchingFor.remove(0);
+                LOG.debug("Extracting full archive");
+                return this.untarFolder(compressedFileInputStream, extractedToFilePath, filenamesWeAreSearchingFor);
+            } else {
+                ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
+                while ((currentFile = archiveInputStream.getNextEntry()) != null) {
+                    for (String aFilenameWeAreSearchingFor : filenamesWeAreSearchingFor) {
+                        if (currentFile.getName().endsWith(aFilenameWeAreSearchingFor)) {
+                            LOG.debug("Found: " + currentFile.getName());
+                            return copyFileToDisk(archiveInputStream, extractedToFilePath, aFilenameWeAreSearchingFor);
+                        }
                     }
                 }
             }
@@ -129,7 +143,67 @@ public class FileExtractor {
             compressedFileInputStream.close();
         }
 
-        throw new ExpectedFileNotFoundException("Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
+        throw new ExpectedFileNotFoundException(
+                "Unable to find any expected filed for " + possibleFilenames.getBinaryTypeAsString());
+    }
+
+    private String untarFolder(InputStream compressedFileInputStream, String destinationFolder, List<String> possibleFilenames) throws IOException {
+        String executablePath = "";
+        ArchiveEntry currentFile;
+        ArchiveInputStream archiveInputStream = new TarArchiveInputStream(compressedFileInputStream);
+        CloseShieldInputStream notClosableArchiveInputStream = new CloseShieldInputStream(archiveInputStream);
+        try {
+            while ((currentFile = archiveInputStream.getNextEntry()) != null) {
+                String name = currentFile.getName();
+                name = this.handlePathCreation(name, destinationFolder);
+                if (name.length() > 0) {
+                    String extractedFile = copyFileToDisk(notClosableArchiveInputStream, destinationFolder, name);
+                    for (String expectedFileName : possibleFilenames) {
+                        if (extractedFile.endsWith(expectedFileName)) {
+                            executablePath = extractedFile;
+                        }
+                    }
+                }
+            }
+        } finally {
+            compressedFileInputStream.close();
+            notClosableArchiveInputStream.close();
+        }
+
+        return executablePath;
+    }
+
+    private String unzipFolder(ZipFile zipFile, String destinationFolder, List<String> possibleFilenames) {
+        String executablePath = "";
+        try {
+            Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+            while (entries.hasMoreElements()) {
+                ZipArchiveEntry zipEntry = entries.nextElement();
+                String name = zipEntry.getName();
+
+                name = this.handlePathCreation(name, destinationFolder);
+                if (name.length() > 0) {
+                    String extractedFile = copyFileToDisk(zipFile.getInputStream(zipEntry), destinationFolder, name);
+                    for (String expectedFileName : possibleFilenames) {
+                        if (extractedFile.endsWith(expectedFileName)) {
+                            executablePath = extractedFile;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Unzip failed:" + e.getMessage());
+        } finally {
+            if (zipFile != null) {
+                try {
+                    zipFile.close();
+                } catch (IOException e) {
+                    LOG.error("Error closing zip file");
+                }
+            }
+        }
+
+        return executablePath;
     }
 
     /**
@@ -172,5 +246,26 @@ public class FileExtractor {
         }
 
         return outputFile.getAbsolutePath();
+    }
+
+    private String handlePathCreation(String name, String destinationFolder) {
+        name = name.replace('\\', '/');
+
+        File destinationFile = new File(destinationFolder, name);
+        if (name.endsWith("/")) {
+            if (!destinationFile.isDirectory() && !destinationFile.mkdirs()) {
+                LOG.error("Error creating temp directory:" + destinationFile.getPath());
+            }
+            return "";
+        } else {
+            // Create the the parent directory if it doesn't exist
+            File parentFolder = destinationFile.getParentFile();
+            if (!parentFolder.isDirectory()) {
+                if (!parentFolder.mkdirs()) {
+                    LOG.error("Error creating temp directory:" + parentFolder.getPath());
+                }
+            }
+            return name;
+        }
     }
 }
