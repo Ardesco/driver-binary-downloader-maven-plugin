@@ -42,7 +42,7 @@ import static com.lazerycode.selenium.repository.SystemArchitecture.getCurrentSy
  * @author Mark Collin
  */
 
-@Mojo(name = "selenium", defaultPhase = LifecyclePhase.TEST_COMPILE)
+@Mojo(name = "selenium", defaultPhase = LifecyclePhase.TEST_COMPILE,threadSafe = true)
 @SuppressWarnings({"UnusedDeclaration"})
 public class SeleniumServerMojo extends AbstractMojo {
     /**
