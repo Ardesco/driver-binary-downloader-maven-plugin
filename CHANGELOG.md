@@ -2,6 +2,13 @@
 
 ##Next Version (Release Date TBC) Release Notes
 
+##Version 1.0.18 Release Notes
+
+* Add support for SHA256 and SHA512 hashes (Thanks Juho Saarinen).
+* Fix #95 not able to download latest chrome edge driver binaries.
+* Fix #88 README.md typo.
+* Updated default list of driver binaries to the latest versions. 
+
 ##Version 1.0.17 Release Notes
 
 * Add Java 9 support (Thanks M.P. Korstanje)
