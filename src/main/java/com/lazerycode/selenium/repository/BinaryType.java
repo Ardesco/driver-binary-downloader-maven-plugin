@@ -38,7 +38,9 @@ public enum BinaryType {
             "webdriver.gecko.driver"),
     EDGE(
             asList(
-                    "MicrosoftWebDriver.exe"
+                    "MicrosoftWebDriver.exe",
+                    "msedgedriver.exe",
+                    "msedgedriver"
             ),
             "webdriver.edge.driver"),
     FIREFOX(
