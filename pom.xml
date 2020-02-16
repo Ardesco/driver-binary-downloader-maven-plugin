@@ -235,14 +235,14 @@
     <profiles>
         <profile>
             <id>release</id>
-            <repositories>
-                <repository>
+            <pluginRepositories>
+                <pluginRepository>
                     <id>central</id>
                     <name>Central Repository</name>
                     <url>https://repo.maven.apache.org/maven2/</url>
                     <layout>default</layout>
-                </repository>
-            </repositories>
+                </pluginRepository>
+            </pluginRepositories>
             <build>
                 <plugins>
                     <plugin>
