@@ -79,15 +79,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
@@ -244,6 +235,14 @@
     <profiles>
         <profile>
             <id>release</id>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <name>Central Repository</name>
+                    <url>https://repo.maven.apache.org/maven2/</url>
+                    <layout>default</layout>
+                </repository>
+            </repositories>
             <build>
                 <plugins>
                     <plugin>
