@@ -1,7 +1,7 @@
 architect:
   - ardesco
 docker:
-  image: "velo/rultor8"
+  image: "yegor256/java8"
 decrypt:
   settings.xml: "repo/settings.xml.asc"
   pubring.gpg: "repo/pubring.gpg.asc"
