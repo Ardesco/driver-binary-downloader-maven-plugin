@@ -22,7 +22,7 @@
     <licenses>
         <license>
             <name>Apache 2</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
             <comments>A business-friendly OSS license</comments>
         </license>
@@ -64,11 +64,6 @@
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin/issues</url>
     </issueManagement>
 
-    <ciManagement>
-        <system>TeamCity</system>
-        <url>http://build.lazerycode.com</url>
-    </ciManagement>
-
     <mailingLists>
         <mailingList>
             <name/>
@@ -83,6 +78,15 @@
         <url>https://github.com/Ardesco/selenium-standalone-server-plugin</url>
         <tag>HEAD</tag>
     </scm>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <snapshotRepository>
