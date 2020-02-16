@@ -13,6 +13,6 @@ release:
     sudo chmod -R 700 /home/r/gpg
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Prelease --settings ../settings.xml
+    mvn clean deploy -Prelease --settings /home/r/settings.xml
   commanders:
     - ardesco
