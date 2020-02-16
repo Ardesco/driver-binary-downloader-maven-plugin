@@ -52,3 +52,6 @@ Thumbs.db
 \.dorsync
 /nbactions.xml
 /target/
+/pubring.gpg
+/secring.gpg
+/settings.xml
