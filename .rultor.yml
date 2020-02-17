@@ -9,7 +9,6 @@ decrypt:
 release:
   pre: false
   script: |-
-    mkdir /home/r/.gnupg
     cp ../pubring.gpg /home/r/.gnupg/pubringring.gpg
     cp ../secring.gpg /home/r/.gnupg/secring.gpg
     chmod -R 600 /home/r/.gnupg
