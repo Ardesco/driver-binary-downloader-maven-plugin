@@ -10,7 +10,11 @@ release:
   pre: false
   script: |-
     mvn -Prelease versions:set "-DnewVersion=${tag}"
-    export PATH=$JAVA_HOME/bin:$PATH
+    printf "\n\n\n\n\n\n"
+    pwd
+    printf "\n\n\n\n\n\n"
+    ls -l
+    printf "\n\n\n\n\n\n"
     git commit -am "${tag}"
     mvn clean deploy -Prelease --settings /home/r/settings.xml
   commanders:
