@@ -9,9 +9,10 @@ decrypt:
 release:
   pre: false
   script: |-
-    cp ../pubring.gpg /home/r/.gnupg/pubringring.gpg
+    cp ../pubring.gpg /home/r/.gnupg/pubring.gpg
     cp ../secring.gpg /home/r/.gnupg/secring.gpg
-    chmod -R 600 /home/r/.gnupg
+    chmod 600 /home/r/.gnupg/pubring.gpg
+    chmod 600 /home/r/.gnupg/secring.gpg
     mvn -Prelease versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
     mvn clean deploy -Prelease --settings /home/r/settings.xml
