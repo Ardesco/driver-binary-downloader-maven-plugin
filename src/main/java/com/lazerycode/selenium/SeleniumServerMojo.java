@@ -63,7 +63,7 @@ public class SeleniumServerMojo extends AbstractMojo {
      * <h3>Path to the XML RepositoryMap</h3>
      * <p>&lt;xmlRepositoryMap&gt;${project.basedir}/src/test/resources/RepositoryMap.xml&lt;/xmlRepositoryMap&gt;</p>
      */
-    @Parameter
+    @Parameter(defaultValue = "${project.basedir}/src/test/resources/RepositoryMap.xml")
     protected String customRepositoryMap;
 
     /**
