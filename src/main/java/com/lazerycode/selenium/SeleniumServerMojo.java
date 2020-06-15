@@ -315,11 +315,12 @@ public class SeleniumServerMojo extends AbstractMojo {
                     throw new MojoExecutionException(ioe.getLocalizedMessage());
                 }
             } else {
-                throw new MojoExecutionException("Repository map '" + repositoryMap.getAbsolutePath() + "' does not exist");
+                LOG.warn("Repository map '" + repositoryMap.getAbsolutePath() + "' does not exist!");
             }
         }
 
         if (this.xmlRepositoryMap == null) {
+            LOG.info("Using internal RepositoryMap.xml.");
             this.xmlRepositoryMap = this.getClass().getResourceAsStream("/RepositoryMap.xml");
         }
     }
