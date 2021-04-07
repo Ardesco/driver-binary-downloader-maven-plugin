@@ -1,8 +1,7 @@
 package com.lazerycode.selenium;
 
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.Level;
 import org.apache.maven.plugin.logging.Log;
 
 class MavenLoggerLog4jBridge extends AppenderSkeleton {
@@ -12,16 +11,17 @@ class MavenLoggerLog4jBridge extends AppenderSkeleton {
         this.LOG = logger;
     }
 
-    protected void append(LoggingEvent event) {
+    @Override
+    protected void append(org.apache.log4j.spi.LoggingEvent event) {
         int level = event.getLevel().toInt();
         String msg = event.getMessage().toString();
-        if (level == Level.DEBUG_INT || level == Level.TRACE_INT) {
+        if (level == Level.DEBUG.intLevel() || level == Level.TRACE.intLevel()) {
             this.LOG.debug(msg);
-        } else if (level == Level.INFO_INT) {
+        } else if (level == Level.INFO.intLevel()) {
             this.LOG.info(msg);
-        } else if (level == Level.WARN_INT) {
+        } else if (level == Level.WARN.intLevel()) {
             this.LOG.warn(msg);
-        } else if (level == Level.ERROR_INT || level == Level.FATAL_INT) {
+        } else if (level == Level.ERROR.intLevel() || level == Level.FATAL.intLevel()) {
             this.LOG.error(msg);
         }
     }
