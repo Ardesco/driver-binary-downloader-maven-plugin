@@ -21,7 +21,7 @@ public enum SystemArchitecture {
 
     public static final SystemArchitecture defaultSystemArchitecture = ARCHITECTURE_32_BIT;
     private static List<String> architecture64bitNames = Arrays.asList("amd64", "x86_64");
-    private static List<String> architectureArmNames = Arrays.asList("arm", "armv41");
+    private static List<String> architectureArmNames = Arrays.asList("arm", "armv41", "aarch64");
 
     public static SystemArchitecture getSystemArchitecture(String currentArchitecture) {
         SystemArchitecture result = defaultSystemArchitecture;
